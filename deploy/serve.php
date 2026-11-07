@@ -29,20 +29,31 @@ if (PHP_SAPI === 'cli') {
     $host = $argv[1] ?? '127.0.0.1';
     $port = (int) ($argv[2] ?? 8080);
 
+    // proc_open with an ARRAY, not a string built with escapeshellarg():
+    // on Windows that string is handed to `cmd /c "<command>"`, and cmd then
+    // strips the outermost pair of quotes, mangling the first and last
+    // arguments. The router argument was being lost that way, so the built-in
+    // server fell back to serving dist/ only and every /api/... request came
+    // back as its own 404 page. The array form lets PHP do the per-argument
+    // Windows escaping itself.
+    $argvList = [PHP_BINARY, '-S', "{$host}:{$port}", '-t', $dist, __FILE__];
+
     fwrite(STDOUT, "سامانه روی http://{$host}:{$port} بالا آمد.\n");
     if ($host === '0.0.0.0') {
         fwrite(STDOUT, "از سیستم‌های دیگر با آی‌پیِ همین سرور باز کنید (و پورت {$port} را در فایروال باز بگذارید).\n");
     }
-    $cmd = sprintf(
-        '%s -S %s:%d -t %s %s',
-        escapeshellarg(PHP_BINARY),
-        $host,
-        $port,
-        escapeshellarg($dist),
-        escapeshellarg(__FILE__),
-    );
-    passthru($cmd, $code);
-    exit($code);
+    fwrite(STDOUT, "برای توقف: Ctrl+C\n\n");
+
+    $proc = proc_open($argvList, [0 => STDIN, 1 => STDOUT, 2 => STDERR], $pipes);
+    if (!is_resource($proc)) {
+        // Nothing started, so say exactly what to run by hand rather than
+        // leaving a dead window open.
+        fwrite(STDERR, "✗ اجرای سرور ناموفق بود. این دستور را دستی اجرا کنید:\n  "
+            . implode(' ', array_map(static fn ($a) => str_contains($a, ' ') ? '"' . $a . '"' : $a, $argvList))
+            . "\n");
+        exit(1);
+    }
+    exit(proc_close($proc));
 }
 
 // ── Router mode: called by the built-in server for every request ──────────
