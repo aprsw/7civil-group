@@ -2,23 +2,23 @@ import { defineStore } from 'pinia'
 import { api, setToken } from '../services/api'
 
 function readUser() {
-  const raw = localStorage.getItem('arta_user') || sessionStorage.getItem('arta_user')
+  const raw = localStorage.getItem('civil7_user') || sessionStorage.getItem('civil7_user')
   if (!raw) return null
   try {
     return JSON.parse(raw)
   } catch {
     // Corrupted/partial storage must not crash app boot.
-    localStorage.removeItem('arta_user')
-    sessionStorage.removeItem('arta_user')
+    localStorage.removeItem('civil7_user')
+    sessionStorage.removeItem('civil7_user')
     return null
   }
 }
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: localStorage.getItem('arta_token') || sessionStorage.getItem('arta_token') || null,
+    token: localStorage.getItem('civil7_token') || sessionStorage.getItem('civil7_token') || null,
     user: readUser(),
-    remember: localStorage.getItem('arta_token') !== null,
+    remember: localStorage.getItem('civil7_token') !== null,
   }),
 
   getters: {
@@ -35,9 +35,9 @@ export const useAuthStore = defineStore('auth', {
       setToken(this.token, this.remember)
       const store = this.remember ? localStorage : sessionStorage
       const other = this.remember ? sessionStorage : localStorage
-      other.removeItem('arta_user')
-      if (this.user) store.setItem('arta_user', JSON.stringify(this.user))
-      else { localStorage.removeItem('arta_user'); sessionStorage.removeItem('arta_user') }
+      other.removeItem('civil7_user')
+      if (this.user) store.setItem('civil7_user', JSON.stringify(this.user))
+      else { localStorage.removeItem('civil7_user'); sessionStorage.removeItem('civil7_user') }
     },
 
     async login(username, password, remember = true) {

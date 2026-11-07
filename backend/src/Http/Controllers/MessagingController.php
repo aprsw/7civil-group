@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Exceptions\NotFoundException;
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Domain\Enums\Permission;
-use ArtaPharma\Domain\Repositories\DepartmentRepositoryInterface;
-use ArtaPharma\Domain\Repositories\MessagingRuleRepositoryInterface;
-use ArtaPharma\Domain\Repositories\RoleRepositoryInterface;
-use ArtaPharma\Services\AccessControl;
+use SevenCivilGroup\Core\Exceptions\NotFoundException;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Domain\Enums\Permission;
+use SevenCivilGroup\Domain\Repositories\DepartmentRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\MessagingRuleRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\RoleRepositoryInterface;
+use SevenCivilGroup\Services\AccessControl;
 
 /**
  * Messaging permissions. The senior admin (messaging.manage) decides, for each

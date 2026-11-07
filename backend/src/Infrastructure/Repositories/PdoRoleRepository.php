@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Infrastructure\Repositories;
+namespace SevenCivilGroup\Infrastructure\Repositories;
 
-use ArtaPharma\Domain\Entities\Role;
-use ArtaPharma\Domain\Repositories\RoleRepositoryInterface;
-use ArtaPharma\Infrastructure\Database\Connection;
+use SevenCivilGroup\Domain\Entities\Role;
+use SevenCivilGroup\Domain\Repositories\RoleRepositoryInterface;
+use SevenCivilGroup\Infrastructure\Database\Connection;
 use PDO;
 
 final class PdoRoleRepository implements RoleRepositoryInterface

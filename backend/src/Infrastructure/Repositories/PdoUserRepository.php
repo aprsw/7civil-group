@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Infrastructure\Repositories;
+namespace SevenCivilGroup\Infrastructure\Repositories;
 
-use ArtaPharma\Domain\Entities\User;
-use ArtaPharma\Domain\Repositories\DepartmentRepositoryInterface;
-use ArtaPharma\Domain\Repositories\RoleRepositoryInterface;
-use ArtaPharma\Domain\Repositories\UserRepositoryInterface;
-use ArtaPharma\Infrastructure\Database\Connection;
+use SevenCivilGroup\Domain\Entities\User;
+use SevenCivilGroup\Domain\Repositories\DepartmentRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\RoleRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\UserRepositoryInterface;
+use SevenCivilGroup\Infrastructure\Database\Connection;
 use PDO;
 
 /**

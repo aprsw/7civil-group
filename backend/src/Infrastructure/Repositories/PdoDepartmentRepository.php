@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Infrastructure\Repositories;
+namespace SevenCivilGroup\Infrastructure\Repositories;
 
-use ArtaPharma\Domain\Entities\Department;
-use ArtaPharma\Domain\Repositories\DepartmentRepositoryInterface;
-use ArtaPharma\Infrastructure\Database\Connection;
+use SevenCivilGroup\Domain\Entities\Department;
+use SevenCivilGroup\Domain\Repositories\DepartmentRepositoryInterface;
+use SevenCivilGroup\Infrastructure\Database\Connection;
 use PDO;
 
 final class PdoDepartmentRepository implements DepartmentRepositoryInterface

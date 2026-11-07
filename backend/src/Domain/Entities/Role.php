@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Domain\Entities;
+namespace SevenCivilGroup\Domain\Entities;
 
-use ArtaPharma\Domain\Enums\Permission;
+use SevenCivilGroup\Domain\Enums\Permission;
 
 /**
  * A role carries an access level (1 = highest authority, e.g. مدیر عامل) and an

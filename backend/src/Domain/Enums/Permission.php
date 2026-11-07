@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Domain\Enums;
+namespace SevenCivilGroup\Domain\Enums;
 
 /**
  * Fine-grained permissions granted to roles (RBAC). Kept as an enum so the

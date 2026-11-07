@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Exceptions\NotFoundException;
-use ArtaPharma\Core\Exceptions\ValidationException;
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Domain\Enums\Permission;
-use ArtaPharma\Domain\Repositories\OfficeFileRepositoryInterface;
-use ArtaPharma\Services\AccessControl;
+use SevenCivilGroup\Core\Exceptions\NotFoundException;
+use SevenCivilGroup\Core\Exceptions\ValidationException;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Domain\Enums\Permission;
+use SevenCivilGroup\Domain\Repositories\OfficeFileRepositoryInterface;
+use SevenCivilGroup\Services\AccessControl;
 
 /**
  * Admin-managed Word/Excel library. Managers (templates.manage) upload and

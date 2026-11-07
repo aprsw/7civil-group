@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Core\Exceptions;
+namespace SevenCivilGroup\Core\Exceptions;
 
 /**
  * 404 — the requested route or resource does not exist.

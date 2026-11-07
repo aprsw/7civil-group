@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Core\Http;
+namespace SevenCivilGroup\Core\Http;
 
 /**
  * A single route definition: HTTP method, compiled path pattern,

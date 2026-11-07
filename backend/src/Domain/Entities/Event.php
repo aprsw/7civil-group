@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Domain\Entities;
+namespace SevenCivilGroup\Domain\Entities;
 
 /**
  * An organisation-wide event (رویداد) — a dated announcement/happening

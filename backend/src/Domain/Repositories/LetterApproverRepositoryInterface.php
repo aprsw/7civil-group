@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Domain\Repositories;
+namespace SevenCivilGroup\Domain\Repositories;
 
 interface LetterApproverRepositoryInterface
 {

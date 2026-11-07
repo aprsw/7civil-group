@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Domain\Enums\Permission;
-use ArtaPharma\Domain\Repositories\RoleRepositoryInterface;
-use ArtaPharma\Domain\Repositories\WorkflowRepositoryInterface;
-use ArtaPharma\Services\AccessControl;
-use ArtaPharma\Services\WorkflowService;
-use ArtaPharma\View\WorkflowTransformer;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Domain\Enums\Permission;
+use SevenCivilGroup\Domain\Repositories\RoleRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\WorkflowRepositoryInterface;
+use SevenCivilGroup\Services\AccessControl;
+use SevenCivilGroup\Services\WorkflowService;
+use SevenCivilGroup\View\WorkflowTransformer;
 
 final class WorkflowController extends Controller
 {
@@ -21,7 +21,7 @@ final class WorkflowController extends Controller
         private readonly WorkflowService $service,
         private readonly WorkflowTransformer $transformer,
         private readonly AccessControl $access,
-        private readonly \ArtaPharma\Domain\Repositories\UserRepositoryInterface $users,
+        private readonly \SevenCivilGroup\Domain\Repositories\UserRepositoryInterface $users,
     ) {
     }
 

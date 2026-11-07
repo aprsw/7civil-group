@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Infrastructure\Repositories;
+namespace SevenCivilGroup\Infrastructure\Repositories;
 
-use ArtaPharma\Domain\Entities\Letter;
-use ArtaPharma\Domain\Enums\LetterDirection;
-use ArtaPharma\Domain\Repositories\LetterRepositoryInterface;
-use ArtaPharma\Infrastructure\Database\Connection;
-use ArtaPharma\Services\NumberingService;
+use SevenCivilGroup\Domain\Entities\Letter;
+use SevenCivilGroup\Domain\Enums\LetterDirection;
+use SevenCivilGroup\Domain\Repositories\LetterRepositoryInterface;
+use SevenCivilGroup\Infrastructure\Database\Connection;
+use SevenCivilGroup\Services\NumberingService;
 use PDO;
 
 final class PdoLetterRepository implements LetterRepositoryInterface

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Infrastructure\Repositories;
+namespace SevenCivilGroup\Infrastructure\Repositories;
 
-use ArtaPharma\Domain\Entities\LetterAction;
-use ArtaPharma\Domain\Enums\LetterActionType;
-use ArtaPharma\Domain\Repositories\LetterActionRepositoryInterface;
-use ArtaPharma\Infrastructure\Database\Connection;
+use SevenCivilGroup\Domain\Entities\LetterAction;
+use SevenCivilGroup\Domain\Enums\LetterActionType;
+use SevenCivilGroup\Domain\Repositories\LetterActionRepositoryInterface;
+use SevenCivilGroup\Infrastructure\Database\Connection;
 use PDO;
 
 final class PdoLetterActionRepository implements LetterActionRepositoryInterface

@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Infrastructure\Database;
+namespace SevenCivilGroup\Infrastructure\Database;
 
-use ArtaPharma\Core\Config;
+use SevenCivilGroup\Core\Config;
 use PDO;
 use RuntimeException;
 
 /**
  * PDO connection factory (Factory pattern). Reads the configured driver and
  * builds a single, shared PDO instance. SQLite is the zero-config default;
- * MySQL is available by switching `database.driver`.
+ * MySQL and Microsoft SQL Server (2008 and later) are available by switching
+ * `database.driver`.
  */
 final class Connection
 {
@@ -39,6 +40,7 @@ final class Connection
             'sqlite' => $this->connectSqlite($options),
             'mysql' => $this->connectMysql($options),
             'sqlsrv', 'mssql' => $this->connectSqlsrv($options),
+            'dblib' => $this->connectDblib($options),
             default => throw new RuntimeException("درایور پایگاه‌داده پشتیبانی نمی‌شود: {$driver}"),
         };
     }
@@ -76,6 +78,10 @@ final class Connection
     /**
      * Microsoft SQL Server via the pdo_sqlsrv driver.
      *
+     * Note on SQL Server 2008: Microsoft's PHP driver dropped 2008 support
+     * after version 5.3, so that machine needs pdo_sqlsrv ≤ 5.3 (or the
+     * FreeTDS-based pdo_dblib driver below).
+     *
      * @param array<int, mixed> $options
      */
     private function connectSqlsrv(array $options): PDO
@@ -95,6 +101,11 @@ final class Connection
         }
         $dsn = sprintf('sqlsrv:Server=%s;Database=%s', $server, $c['database']);
 
+        // Without CharacterSet the driver talks in the server's 8-bit code
+        // page and every Persian string round-trips as «????». This is not
+        // optional for this application.
+        $dsn .= ';CharacterSet=UTF-8';
+
         // Local/self-signed instances need the certificate trusted; encryption
         // is negotiated by the driver. Both are opt-in via env.
         if (!empty($c['trust_cert'])) {
@@ -105,5 +116,32 @@ final class Connection
         }
 
         return new PDO($dsn, (string) $c['username'], (string) $c['password'], $sqlsrvOptions);
+    }
+
+    /**
+     * Microsoft SQL Server via FreeTDS (pdo_dblib) — the practical route to a
+     * SQL Server 2008 instance from Linux, and from PHP builds where
+     * pdo_sqlsrv is unavailable. Reads the same `database.sqlsrv` settings.
+     *
+     * @param array<int, mixed> $options
+     */
+    private function connectDblib(array $options): PDO
+    {
+        $c = (array) $this->config->get('database.sqlsrv');
+
+        $dsn = sprintf(
+            'dblib:host=%s:%s;dbname=%s;charset=UTF-8',
+            (string) $c['host'],
+            ($c['port'] ?? '') !== '' ? (string) $c['port'] : '1433',
+            (string) $c['database'],
+        );
+
+        // pdo_dblib cannot run native prepares, so emulation stays on here.
+        $dblibOptions = [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ];
+
+        return new PDO($dsn, (string) $c['username'], (string) $c['password'], $dblibOptions);
     }
 }

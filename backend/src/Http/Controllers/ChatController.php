@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Exceptions\ForbiddenException;
-use ArtaPharma\Core\Exceptions\NotFoundException;
-use ArtaPharma\Core\Exceptions\ValidationException;
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Domain\Enums\Permission;
-use ArtaPharma\Domain\Repositories\ChatRepositoryInterface;
-use ArtaPharma\Domain\Repositories\UserRepositoryInterface;
-use ArtaPharma\Services\AccessControl;
-use ArtaPharma\Support\Jalali;
+use SevenCivilGroup\Core\Exceptions\ForbiddenException;
+use SevenCivilGroup\Core\Exceptions\NotFoundException;
+use SevenCivilGroup\Core\Exceptions\ValidationException;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Domain\Enums\Permission;
+use SevenCivilGroup\Domain\Repositories\ChatRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\UserRepositoryInterface;
+use SevenCivilGroup\Services\AccessControl;
+use SevenCivilGroup\Support\Jalali;
 
 /**
  * Staff chat (گفتگو). Direct 1:1 conversations for any chat.use holder; groups
@@ -193,7 +193,7 @@ final class ChatController extends Controller
 
     // ── helpers ──────────────────────────────────────────────────────────
 
-    private function gate(Request $request): \ArtaPharma\Domain\Entities\User
+    private function gate(Request $request): \SevenCivilGroup\Domain\Entities\User
     {
         $me = $this->user($request);
         $this->access->authorize($me, Permission::ChatUse);

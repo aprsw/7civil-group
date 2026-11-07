@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Core\Exceptions;
+namespace SevenCivilGroup\Core\Exceptions;
 
 /**
  * 422 — the request was well-formed but failed validation rules.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Domain\Enums;
+namespace SevenCivilGroup\Domain\Enums;
 
 /**
  * Workflow status of a letter. `tone` maps to the design-system Badge colour.

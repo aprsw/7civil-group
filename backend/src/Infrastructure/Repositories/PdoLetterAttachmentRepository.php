@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Infrastructure\Repositories;
+namespace SevenCivilGroup\Infrastructure\Repositories;
 
-use ArtaPharma\Domain\Entities\LetterAttachment;
-use ArtaPharma\Domain\Repositories\LetterAttachmentRepositoryInterface;
-use ArtaPharma\Infrastructure\Database\Connection;
+use SevenCivilGroup\Domain\Entities\LetterAttachment;
+use SevenCivilGroup\Domain\Repositories\LetterAttachmentRepositoryInterface;
+use SevenCivilGroup\Infrastructure\Database\Connection;
 use PDO;
 
 final class PdoLetterAttachmentRepository implements LetterAttachmentRepositoryInterface

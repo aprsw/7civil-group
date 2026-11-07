@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Domain\Enums\LetterDirection;
-use ArtaPharma\Domain\Repositories\EventRepositoryInterface;
-use ArtaPharma\Domain\Repositories\LetterRepositoryInterface;
-use ArtaPharma\Services\DashboardService;
-use ArtaPharma\Services\LetterAccess;
-use ArtaPharma\Services\LetterService;
-use ArtaPharma\Support\Jalali;
-use ArtaPharma\View\LetterTransformer;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Domain\Enums\LetterDirection;
+use SevenCivilGroup\Domain\Repositories\EventRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\LetterRepositoryInterface;
+use SevenCivilGroup\Services\DashboardService;
+use SevenCivilGroup\Services\LetterAccess;
+use SevenCivilGroup\Services\LetterService;
+use SevenCivilGroup\Support\Jalali;
+use SevenCivilGroup\View\LetterTransformer;
 
 final class DashboardController extends Controller
 {
@@ -24,7 +24,7 @@ final class DashboardController extends Controller
         private readonly LetterAccess $visibility,
         private readonly LetterService $service,
         private readonly EventRepositoryInterface $events,
-        private readonly \ArtaPharma\Domain\Repositories\UserNoteRepositoryInterface $userNotes,
+        private readonly \SevenCivilGroup\Domain\Repositories\UserNoteRepositoryInterface $userNotes,
     ) {
     }
 

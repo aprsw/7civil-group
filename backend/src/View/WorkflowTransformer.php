@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\View;
+namespace SevenCivilGroup\View;
 
-use ArtaPharma\Domain\Entities\Role;
-use ArtaPharma\Domain\Entities\Workflow;
+use SevenCivilGroup\Domain\Entities\Role;
+use SevenCivilGroup\Domain\Entities\Workflow;
 
 final class WorkflowTransformer
 {

@@ -8,7 +8,7 @@ declare(strict_types=1);
  */
 return [
     'app' => [
-        'name' => 'سامانه اتوماسیون اداری آرتا فارما',
+        'name' => 'سامانه اتوماسیون اداری گروه متحد 7',
         // Production-safe default: no stack traces leak. Set APP_DEBUG=true locally.
         'debug' => filter_var($_ENV['APP_DEBUG'] ?? getenv('APP_DEBUG') ?: 'false', FILTER_VALIDATE_BOOL),
         // Comma-separated list of allowed CORS origins ('*' allows any).
@@ -38,7 +38,7 @@ return [
             return $secret;
         })(),
         'jwt_ttl' => 60 * 60 * 8, // 8 hours
-        'issuer' => 'arta-pharma-automation',
+        'issuer' => '7civil-group-automation',
     ],
 
     'database' => [
@@ -50,7 +50,7 @@ return [
         'mysql' => [
             'host' => $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?: '127.0.0.1',
             'port' => $_ENV['DB_PORT'] ?? getenv('DB_PORT') ?: '3306',
-            'database' => $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?: 'arta_pharma',
+            'database' => $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?: 'civil7_automation',
             'username' => $_ENV['DB_USER'] ?? getenv('DB_USER') ?: 'root',
             'password' => $_ENV['DB_PASS'] ?? getenv('DB_PASS') ?: '',
             'charset' => 'utf8mb4',
@@ -62,7 +62,7 @@ return [
         'sqlsrv' => [
             'host' => $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?: '127.0.0.1',
             'port' => $_ENV['DB_PORT'] ?? getenv('DB_PORT') ?: '1433',
-            'database' => $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?: 'arta_pharma',
+            'database' => $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?: 'civil7_automation',
             'username' => $_ENV['DB_USER'] ?? getenv('DB_USER') ?: 'sa',
             'password' => $_ENV['DB_PASS'] ?? getenv('DB_PASS') ?: '',
             'trust_cert' => filter_var($_ENV['DB_TRUST_CERT'] ?? getenv('DB_TRUST_CERT') ?: 'true', FILTER_VALIDATE_BOOL),

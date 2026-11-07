@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Core;
+namespace SevenCivilGroup\Core;
 
 /**
  * Immutable configuration holder with dot-notation access.

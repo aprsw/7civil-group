@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\View;
+namespace SevenCivilGroup\View;
 
-use ArtaPharma\Domain\Entities\User;
-use ArtaPharma\Domain\Repositories\UserPermissionRepositoryInterface;
-use ArtaPharma\Support\Jalali;
+use SevenCivilGroup\Domain\Entities\User;
+use SevenCivilGroup\Domain\Repositories\UserPermissionRepositoryInterface;
+use SevenCivilGroup\Support\Jalali;
 
 final class UserTransformer
 {

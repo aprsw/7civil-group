@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Domain\Enums\Confidentiality;
-use ArtaPharma\Domain\Enums\LetterPriority;
-use ArtaPharma\Domain\Enums\LetterScope;
-use ArtaPharma\Domain\Enums\ReferralType;
-use ArtaPharma\Domain\Repositories\DepartmentRepositoryInterface;
-use ArtaPharma\Domain\Repositories\UserRepositoryInterface;
-use ArtaPharma\Domain\Repositories\WorkflowRepositoryInterface;
-use ArtaPharma\Services\RecipientPolicy;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Domain\Enums\Confidentiality;
+use SevenCivilGroup\Domain\Enums\LetterPriority;
+use SevenCivilGroup\Domain\Enums\LetterScope;
+use SevenCivilGroup\Domain\Enums\ReferralType;
+use SevenCivilGroup\Domain\Repositories\DepartmentRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\UserRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\WorkflowRepositoryInterface;
+use SevenCivilGroup\Services\RecipientPolicy;
 
 /**
  * Supplies the options the compose form needs: recipients (people + units),

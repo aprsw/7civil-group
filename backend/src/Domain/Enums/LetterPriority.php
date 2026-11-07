@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Domain\Enums;
+namespace SevenCivilGroup\Domain\Enums;
 
 /**
  * Letter priority. `tone` maps to the design-system Tag colour used by the UI.

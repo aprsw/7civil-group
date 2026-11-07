@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Infrastructure\Repositories;
+namespace SevenCivilGroup\Infrastructure\Repositories;
 
-use ArtaPharma\Domain\Entities\Workflow;
-use ArtaPharma\Domain\Repositories\WorkflowRepositoryInterface;
-use ArtaPharma\Infrastructure\Database\Connection;
+use SevenCivilGroup\Domain\Entities\Workflow;
+use SevenCivilGroup\Domain\Repositories\WorkflowRepositoryInterface;
+use SevenCivilGroup\Infrastructure\Database\Connection;
 use PDO;
 
 final class PdoWorkflowRepository implements WorkflowRepositoryInterface

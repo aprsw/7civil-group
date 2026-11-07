@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\View;
+namespace SevenCivilGroup\View;
 
-use ArtaPharma\Domain\Entities\Letter;
-use ArtaPharma\Domain\Repositories\RoleRepositoryInterface;
-use ArtaPharma\Domain\Repositories\WorkflowRepositoryInterface;
-use ArtaPharma\Services\LetterService;
-use ArtaPharma\Support\Jalali;
+use SevenCivilGroup\Domain\Entities\Letter;
+use SevenCivilGroup\Domain\Repositories\RoleRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\WorkflowRepositoryInterface;
+use SevenCivilGroup\Services\LetterService;
+use SevenCivilGroup\Support\Jalali;
 
 /**
  * View layer (the "V" in MVC-R): turns a Letter entity into the JSON shape the

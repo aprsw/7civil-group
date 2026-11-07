@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Services\AuthService;
-use ArtaPharma\View\UserTransformer;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Services\AuthService;
+use SevenCivilGroup\View\UserTransformer;
 
 final class AuthController extends Controller
 {

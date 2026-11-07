@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Exceptions\NotFoundException;
-use ArtaPharma\Core\Exceptions\ValidationException;
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Domain\Entities\Department;
-use ArtaPharma\Domain\Enums\Permission;
-use ArtaPharma\Domain\Repositories\DepartmentRepositoryInterface;
-use ArtaPharma\Domain\Repositories\UserRepositoryInterface;
-use ArtaPharma\Services\AccessControl;
+use SevenCivilGroup\Core\Exceptions\NotFoundException;
+use SevenCivilGroup\Core\Exceptions\ValidationException;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Domain\Entities\Department;
+use SevenCivilGroup\Domain\Enums\Permission;
+use SevenCivilGroup\Domain\Repositories\DepartmentRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\UserRepositoryInterface;
+use SevenCivilGroup\Services\AccessControl;
 
 final class DepartmentController extends Controller
 {
@@ -28,7 +28,7 @@ final class DepartmentController extends Controller
     {
         $user = $this->user($request);
         if (!$this->access->can($user, Permission::DepartmentsView) && !$this->access->can($user, Permission::DepartmentsManage)) {
-            throw new \ArtaPharma\Core\Exceptions\ForbiddenException('مشاهدهٔ واحدها مجاز نیست.');
+            throw new \SevenCivilGroup\Core\Exceptions\ForbiddenException('مشاهدهٔ واحدها مجاز نیست.');
         }
 
         $canManage = $this->access->can($user, Permission::DepartmentsManage);

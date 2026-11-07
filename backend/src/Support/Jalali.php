@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Support;
+namespace SevenCivilGroup\Support;
 
 use DateTimeImmutable;
 use DateTimeZone;

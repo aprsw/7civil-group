@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * نصب‌کنندهٔ وبیِ سامانهٔ اتوماسیون اداری آرتا فارما
+ * نصب‌کنندهٔ وبیِ سامانهٔ اتوماسیون اداری گروه متحد 7
  * ---------------------------------------------------------------------------
  * این فایل، معادلِ وبیِ دستور  `php bin/console install`  است. آن را کنارِ
  * سایر فایل‌ها در پوشهٔ  public  قرار دهید و در مرورگر باز کنید:
@@ -50,7 +50,7 @@ $f = [
     'db_driver'  => $_POST['db_driver']  ?? 'sqlite',
     'db_host'    => $_POST['db_host']    ?? '127.0.0.1',
     'db_port'    => $_POST['db_port']    ?? '3306',
-    'db_name'    => $_POST['db_name']    ?? 'arta_pharma',
+    'db_name'    => $_POST['db_name']    ?? 'civil7_automation',
     'db_user'    => $_POST['db_user']    ?? 'root',
     'db_pass'    => $_POST['db_pass']    ?? '',
     'jwt_secret' => $_POST['jwt_secret'] ?? bin2hex(random_bytes(24)),
@@ -123,8 +123,8 @@ if ($isPost && isset($_POST['do_install'])) {
 
             // ۲) بارگذاریِ برنامه + اعمالِ همین تنظیمات در همین درخواست
             require_once $autoloader;
-            (new \ArtaPharma\Core\Autoloader())
-                ->addNamespace('ArtaPharma', $root . '/src')
+            (new \SevenCivilGroup\Core\Autoloader())
+                ->addNamespace('SevenCivilGroup', $root . '/src')
                 ->register();
 
             // مقادیر انتخابی را مستقیم در محیط بگذار تا Config همین‌ها را بخواند
@@ -145,19 +145,19 @@ if ($isPost && isset($_POST['do_install'])) {
                 putenv("$k=$v");
             }
 
-            $config     = \ArtaPharma\Core\Config::fromFile($configFile);
-            $connection = new \ArtaPharma\Infrastructure\Database\Connection($config);
+            $config     = \SevenCivilGroup\Core\Config::fromFile($configFile);
+            $connection = new \SevenCivilGroup\Infrastructure\Database\Connection($config);
 
             // اتصال را زودتر تست کن (خطای واضح‌تر برای MySQL)
             $connection->pdo();
 
             // ۳) ساختِ جداول
-            (new \ArtaPharma\Infrastructure\Database\Migrator($connection))->fresh();
+            (new \SevenCivilGroup\Infrastructure\Database\Migrator($connection))->fresh();
             $summary[] = 'جداولِ پایگاه‌داده ساخته شدند.';
 
             // ۴) دادهٔ اولیه
             if ($f['data_mode'] === 'seed') {
-                (new \ArtaPharma\Infrastructure\Database\Seeder($connection))->run();
+                (new \SevenCivilGroup\Infrastructure\Database\Seeder($connection))->run();
                 $summary[] = 'داده‌های نمونه بارگذاری شدند (کاربران، واحدها، نامه‌های نمونه).';
             } elseif ($f['data_mode'] === 'sql' && $sqlUploadPath !== null) {
                 $sql = (string) file_get_contents($sqlUploadPath);
@@ -208,7 +208,7 @@ $selfUrl = h($_SERVER['PHP_SELF'] ?? '/install.php');
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>نصب سامانهٔ آرتا فارما</title>
+<title>نصب سامانهٔ گروه متحد 7</title>
 <style>
   :root{--brand:#1f6feb;--brand2:#0a58ca;--ink:#0d1526;--ink2:#33415c;--ink3:#5b6b86;
     --line:#e3e8f0;--soft:#f4f7fb;--soft2:#eef3fa;--green:#1a9b5a;--red:#e0384d;--gold:#b8860b;}
@@ -255,7 +255,7 @@ $selfUrl = h($_SERVER['PHP_SELF'] ?? '/install.php');
 <body>
 <div class="card">
   <div class="hd">
-    <h1>نصب سامانهٔ اتوماسیون اداری آرتا فارما</h1>
+    <h1>نصب سامانهٔ اتوماسیون اداری گروه متحد 7</h1>
     <p>نصب‌کنندهٔ وبی — معادلِ دستور <code style="color:#fff;background:rgba(255,255,255,.15)">php bin/console install</code></p>
   </div>
   <div class="bd">

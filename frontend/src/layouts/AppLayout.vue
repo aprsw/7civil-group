@@ -112,9 +112,9 @@ onUnmounted(() => document.removeEventListener('mousedown', onDocClick))
       class="fixed inset-y-0 right-0 z-50 flex w-[276px] transform flex-col gap-1 overflow-y-auto border-l border-ink-200 bg-white p-[18px_14px] transition-transform md:static md:z-auto md:h-screen md:w-auto md:translate-x-0"
       :class="drawerOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'">
       <div class="flex items-center gap-3 px-2 pt-1.5 pb-4">
-        <img src="/assets/logo-mark.png" alt="آرتا فارما" class="h-10" />
+        <img src="/assets/logo-mark.png" alt="گروه متحد 7" class="h-10" />
         <div class="leading-tight">
-          <div class="text-[15px] font-extrabold text-brand-strong">آرتا فارما</div>
+          <div class="text-[15px] font-extrabold text-brand-strong">گروه متحد 7</div>
           <div class="text-[11px] text-ink-500">اتوماسیون اداری</div>
         </div>
       </div>

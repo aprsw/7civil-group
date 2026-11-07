@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Domain\Entities;
+namespace SevenCivilGroup\Domain\Entities;
 
-use ArtaPharma\Domain\Enums\Confidentiality;
-use ArtaPharma\Domain\Enums\LetterDirection;
-use ArtaPharma\Domain\Enums\LetterKind;
-use ArtaPharma\Domain\Enums\LetterPriority;
-use ArtaPharma\Domain\Enums\LetterScope;
-use ArtaPharma\Domain\Enums\LetterStatus;
-use ArtaPharma\Domain\Enums\PaperSize;
+use SevenCivilGroup\Domain\Enums\Confidentiality;
+use SevenCivilGroup\Domain\Enums\LetterDirection;
+use SevenCivilGroup\Domain\Enums\LetterKind;
+use SevenCivilGroup\Domain\Enums\LetterPriority;
+use SevenCivilGroup\Domain\Enums\LetterScope;
+use SevenCivilGroup\Domain\Enums\LetterStatus;
+use SevenCivilGroup\Domain\Enums\PaperSize;
 
 /**
  * A letter (نامه) flowing through the cartable and its workflow.

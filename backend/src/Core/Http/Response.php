@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Core\Http;
+namespace SevenCivilGroup\Core\Http;
 
 /**
  * JSON response value object. A tiny "View" transport for the API:

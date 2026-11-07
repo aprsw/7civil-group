@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Domain\Entities;
+namespace SevenCivilGroup\Domain\Entities;
 
 /**
  * A staff member. Belongs to exactly one role (position/tier) and one

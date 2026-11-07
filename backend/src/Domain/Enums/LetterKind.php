@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Domain\Enums;
+namespace SevenCivilGroup\Domain\Enums;
 
 /**
  * The expected-action classification of a letter (نوع کارتابل). Drives the

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Services;
+namespace SevenCivilGroup\Services;
 
-use ArtaPharma\Domain\Repositories\DepartmentRepositoryInterface;
-use ArtaPharma\Domain\Repositories\SettingsRepositoryInterface;
-use ArtaPharma\Support\Jalali;
+use SevenCivilGroup\Domain\Repositories\DepartmentRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\SettingsRepositoryInterface;
+use SevenCivilGroup\Support\Jalali;
 
 /**
  * Builds a letter's official registration number from an admin-configurable

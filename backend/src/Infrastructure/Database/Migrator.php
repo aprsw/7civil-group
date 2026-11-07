@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Infrastructure\Database;
+namespace SevenCivilGroup\Infrastructure\Database;
 
 use PDO;
 
@@ -17,7 +17,23 @@ final class Migrator
      * used by ensureSchema() to auto-add any missing tables after a code update,
      * so a partial/older database heals itself on the next request.
      */
-    public const SCHEMA_VERSION = '2026-09-15';
+    public const SCHEMA_VERSION = '2026-11-07';
+
+    /**
+     * Every table this schema owns, children before parents so a drop never
+     * trips over a dependency. Shared by fresh() and the seeder's clear().
+     *
+     * @var list<string>
+     */
+    public const TABLES = [
+        'org_logos', 'chat_messages', 'conversation_members', 'conversations',
+        'letter_folder_items', 'user_folders', 'letter_notes', 'letter_approvers',
+        'letter_reads', 'role_messaging_rules', 'messaging_rules', 'events',
+        'user_notes', 'secretariat_folders', 'user_permissions', 'office_files',
+        'letter_attachments', 'settings', 'letter_recipients', 'letter_actions',
+        'user_documents', 'templates', 'workflows', 'letters', 'users', 'roles',
+        'departments',
+    ];
 
     public function __construct(private readonly Connection $connection)
     {
@@ -64,6 +80,54 @@ final class Migrator
         foreach ($this->statements($pk, $engine) as $sql) {
             $pdo->exec($isSqlSrv ? $this->toTSql($sql) : $sql);
         }
+
+        $this->createIndexes($pdo, $isSqlSrv);
+    }
+
+    /**
+     * Secondary indexes for the columns every mailbox/cartable query filters
+     * on. Without them SQL Server scans `letters` and `letter_recipients` for
+     * each inbox render, which is the first thing to hurt in production.
+     *
+     * Each statement is guarded so re-running migrate() is a no-op, and a
+     * single failure never aborts the rest of the schema.
+     */
+    private function createIndexes(PDO $pdo, bool $isSqlSrv): void
+    {
+        $indexes = [
+            'ix_letters_direction' => 'letters (direction)',
+            'ix_letters_sender' => 'letters (sender_id)',
+            'ix_letters_thread' => 'letters (thread_id)',
+            'ix_letters_number' => 'letters (number)',
+            'ix_letters_secretariat' => 'letters (secretariat)',
+            'ix_recipients_letter' => 'letter_recipients (letter_id)',
+            'ix_recipients_user' => 'letter_recipients (user_id)',
+            'ix_recipients_dept' => 'letter_recipients (department_id)',
+            'ix_reads_letter_user' => 'letter_reads (letter_id, user_id)',
+            'ix_actions_letter' => 'letter_actions (letter_id)',
+            'ix_approvers_letter' => 'letter_approvers (letter_id, position)',
+            'ix_attachments_letter' => 'letter_attachments (letter_id)',
+            'ix_notes_letter' => 'letter_notes (letter_id)',
+            'ix_folder_items_user' => 'letter_folder_items (user_id, letter_id)',
+            'ix_user_permissions_user' => 'user_permissions (user_id)',
+            'ix_chat_messages_conv' => 'chat_messages (conversation_id, id)',
+            'ix_conv_members_user' => 'conversation_members (user_id)',
+            'ix_user_notes_user' => 'user_notes (user_id)',
+        ];
+
+        foreach ($indexes as $name => $target) {
+            [$table] = explode(' ', $target, 2);
+            $sql = $isSqlSrv
+                ? "IF OBJECT_ID(N'{$table}', N'U') IS NOT NULL AND NOT EXISTS "
+                    . "(SELECT 1 FROM sys.indexes WHERE name = N'{$name}' AND object_id = OBJECT_ID(N'{$table}')) "
+                    . "CREATE INDEX {$name} ON {$target}"
+                : "CREATE INDEX IF NOT EXISTS {$name} ON {$target}";
+            try {
+                $pdo->exec($sql);
+            } catch (\Throwable) {
+                // An index is an optimisation, never a correctness requirement.
+            }
+        }
     }
 
     /**
@@ -89,8 +153,16 @@ final class Migrator
     public function fresh(): void
     {
         $pdo = $this->connection->pdo();
-        foreach (['chat_messages', 'conversation_members', 'conversations', 'letter_folder_items', 'user_folders', 'letter_notes', 'letter_approvers', 'letter_reads', 'role_messaging_rules', 'messaging_rules', 'events', 'user_notes', 'secretariat_folders', 'user_permissions', 'office_files', 'letter_attachments', 'settings', 'letter_recipients', 'letter_actions', 'user_documents', 'templates', 'workflows', 'letters', 'users', 'roles', 'departments'] as $table) {
-            $pdo->exec("DROP TABLE IF EXISTS {$table}");
+        $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        // "DROP TABLE IF EXISTS" only reached T-SQL in SQL Server 2016; on 2008
+        // it is a syntax error, which used to make `console install` fail
+        // outright. OBJECT_ID() is the portable spelling on every version.
+        $isSqlSrv = in_array($driver, ['sqlsrv', 'dblib', 'mssql'], true);
+
+        foreach (self::TABLES as $table) {
+            $pdo->exec($isSqlSrv
+                ? "IF OBJECT_ID(N'{$table}', N'U') IS NOT NULL DROP TABLE {$table}"
+                : "DROP TABLE IF EXISTS {$table}");
         }
         $this->migrate();
     }
@@ -376,6 +448,19 @@ final class Migrator
                 note_date VARCHAR(20) NOT NULL,
                 note_gdate VARCHAR(20) NOT NULL,
                 remind_days_before INT NOT NULL DEFAULT 0,
+                created_at VARCHAR(40) NOT NULL
+            ){$engine}",
+
+            // The organisation's logo library. The group has several member
+            // companies; `settings` holds, per slot (letterhead/login/sidebar),
+            // the id of the logo chosen here.
+            "CREATE TABLE IF NOT EXISTS org_logos (
+                id {$pk},
+                title VARCHAR(150) NOT NULL,
+                path VARCHAR(255) NOT NULL,
+                mime VARCHAR(120) NULL,
+                size INT NULL,
+                uploaded_by INT NULL,
                 created_at VARCHAR(40) NOT NULL
             ){$engine}",
 

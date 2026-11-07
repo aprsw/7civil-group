@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Security;
+namespace SevenCivilGroup\Security;
 
-use ArtaPharma\Core\Exceptions\UnauthorizedException;
-use ArtaPharma\Security\Contracts\TokenServiceInterface;
+use SevenCivilGroup\Core\Exceptions\UnauthorizedException;
+use SevenCivilGroup\Security\Contracts\TokenServiceInterface;
 
 /**
  * Self-contained JWT (HS256) implementation — no firebase/php-jwt dependency.

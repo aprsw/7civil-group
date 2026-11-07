@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Exceptions\ValidationException;
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Domain\Repositories\UserRepositoryInterface;
-use ArtaPharma\View\UserTransformer;
+use SevenCivilGroup\Core\Exceptions\ValidationException;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Domain\Repositories\UserRepositoryInterface;
+use SevenCivilGroup\View\UserTransformer;
 
 /**
  * Self-service profile: a user edits their own contact details and photo.
@@ -20,7 +20,7 @@ final class ProfileController extends Controller
     public function __construct(
         private readonly UserRepositoryInterface $users,
         private readonly UserTransformer $transformer,
-        private readonly \ArtaPharma\Security\Contracts\HasherInterface $hasher,
+        private readonly \SevenCivilGroup\Security\Contracts\HasherInterface $hasher,
         private readonly string $photoDir,
         private readonly string $signatureDir,
     ) {

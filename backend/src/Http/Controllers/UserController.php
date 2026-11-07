@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Domain\Enums\Permission;
-use ArtaPharma\Domain\Repositories\UserRepositoryInterface;
-use ArtaPharma\Services\AccessControl;
-use ArtaPharma\Services\UserService;
-use ArtaPharma\View\UserTransformer;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Domain\Enums\Permission;
+use SevenCivilGroup\Domain\Repositories\UserRepositoryInterface;
+use SevenCivilGroup\Services\AccessControl;
+use SevenCivilGroup\Services\UserService;
+use SevenCivilGroup\View\UserTransformer;
 
 final class UserController extends Controller
 {

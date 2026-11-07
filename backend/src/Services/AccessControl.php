@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Services;
+namespace SevenCivilGroup\Services;
 
-use ArtaPharma\Core\Exceptions\ForbiddenException;
-use ArtaPharma\Domain\Entities\User;
-use ArtaPharma\Domain\Enums\Permission;
-use ArtaPharma\Domain\Repositories\UserPermissionRepositoryInterface;
+use SevenCivilGroup\Core\Exceptions\ForbiddenException;
+use SevenCivilGroup\Domain\Entities\User;
+use SevenCivilGroup\Domain\Enums\Permission;
+use SevenCivilGroup\Domain\Repositories\UserPermissionRepositoryInterface;
 
 /**
  * Central RBAC decision point. Controllers ask this service whether the

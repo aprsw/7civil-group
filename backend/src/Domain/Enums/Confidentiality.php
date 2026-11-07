@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Domain\Enums;
+namespace SevenCivilGroup\Domain\Enums;
 
 /**
  * Confidentiality classification of a letter. Drives who may read it:

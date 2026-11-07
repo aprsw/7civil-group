@@ -1,9 +1,9 @@
 {
-  "name": "arta-pharma-frontend",
+  "name": "civil7-automation-frontend",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "سامانه اتوماسیون اداری آرتا فارما — Vue 3 + Tailwind CSR client.",
+  "description": "سامانه اتوماسیون اداری گروه متحد 7 — Vue 3 + Tailwind CSR client.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

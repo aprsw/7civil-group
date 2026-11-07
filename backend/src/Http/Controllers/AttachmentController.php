@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Exceptions\ValidationException;
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
+use SevenCivilGroup\Core\Exceptions\ValidationException;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
 
 /**
  * Handles letter attachment uploads (multipart). Files are stored under

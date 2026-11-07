@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Services;
+namespace SevenCivilGroup\Services;
 
-use ArtaPharma\Core\Exceptions\NotFoundException;
-use ArtaPharma\Core\Exceptions\ValidationException;
-use ArtaPharma\Domain\Entities\User;
-use ArtaPharma\Domain\Enums\Permission;
-use ArtaPharma\Domain\Repositories\DepartmentRepositoryInterface;
-use ArtaPharma\Domain\Repositories\RoleRepositoryInterface;
-use ArtaPharma\Domain\Repositories\UserRepositoryInterface;
-use ArtaPharma\Security\Contracts\HasherInterface;
+use SevenCivilGroup\Core\Exceptions\NotFoundException;
+use SevenCivilGroup\Core\Exceptions\ValidationException;
+use SevenCivilGroup\Domain\Entities\User;
+use SevenCivilGroup\Domain\Enums\Permission;
+use SevenCivilGroup\Domain\Repositories\DepartmentRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\RoleRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\UserRepositoryInterface;
+use SevenCivilGroup\Security\Contracts\HasherInterface;
 
 /**
  * Staff (کارکنان) management use-cases: create / update / delete with

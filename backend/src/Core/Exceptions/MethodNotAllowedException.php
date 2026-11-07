@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Core\Exceptions;
+namespace SevenCivilGroup\Core\Exceptions;
 
 /**
  * 405 — the path exists but not for the requested HTTP method.

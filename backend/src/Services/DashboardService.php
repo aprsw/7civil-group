@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Services;
+namespace SevenCivilGroup\Services;
 
-use ArtaPharma\Domain\Entities\Letter;
-use ArtaPharma\Domain\Enums\LetterDirection;
-use ArtaPharma\Domain\Enums\LetterStatus;
-use ArtaPharma\Support\Jalali;
+use SevenCivilGroup\Domain\Entities\Letter;
+use SevenCivilGroup\Domain\Enums\LetterDirection;
+use SevenCivilGroup\Domain\Enums\LetterStatus;
+use SevenCivilGroup\Support\Jalali;
 
 /**
  * Aggregates dashboard KPIs from the letters the current user may see. The

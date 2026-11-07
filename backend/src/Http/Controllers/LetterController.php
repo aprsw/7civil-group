@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Exceptions\ForbiddenException;
-use ArtaPharma\Core\Exceptions\NotFoundException;
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Domain\Enums\LetterDirection;
-use ArtaPharma\Domain\Enums\Permission;
-use ArtaPharma\Domain\Repositories\LetterRepositoryInterface;
-use ArtaPharma\Domain\Repositories\UserRepositoryInterface;
-use ArtaPharma\Services\AccessControl;
-use ArtaPharma\Services\LetterAccess;
-use ArtaPharma\Services\LetterService;
-use ArtaPharma\Support\Jalali;
-use ArtaPharma\View\LetterTransformer;
+use SevenCivilGroup\Core\Exceptions\ForbiddenException;
+use SevenCivilGroup\Core\Exceptions\NotFoundException;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Domain\Enums\LetterDirection;
+use SevenCivilGroup\Domain\Enums\Permission;
+use SevenCivilGroup\Domain\Repositories\LetterRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\UserRepositoryInterface;
+use SevenCivilGroup\Services\AccessControl;
+use SevenCivilGroup\Services\LetterAccess;
+use SevenCivilGroup\Services\LetterService;
+use SevenCivilGroup\Support\Jalali;
+use SevenCivilGroup\View\LetterTransformer;
 
 final class LetterController extends Controller
 {
@@ -27,8 +27,8 @@ final class LetterController extends Controller
         private readonly AccessControl $access,
         private readonly LetterAccess $visibility,
         private readonly UserRepositoryInterface $users,
-        private readonly \ArtaPharma\Domain\Repositories\LetterAttachmentRepositoryInterface $attachments,
-        private readonly \ArtaPharma\Domain\Repositories\FolderRepositoryInterface $folders,
+        private readonly \SevenCivilGroup\Domain\Repositories\LetterAttachmentRepositoryInterface $attachments,
+        private readonly \SevenCivilGroup\Domain\Repositories\FolderRepositoryInterface $folders,
         private readonly string $uploadDir,
     ) {
     }
@@ -52,7 +52,7 @@ final class LetterController extends Controller
         $filed = $this->folders->filedLetterIds($user->id);
         $unfiled = fn ($l) => !in_array($l->id, $filed, true);
 
-        $isDraft = fn ($l) => $l->status === \ArtaPharma\Domain\Enums\LetterStatus::Draft;
+        $isDraft = fn ($l) => $l->status === \SevenCivilGroup\Domain\Enums\LetterStatus::Draft;
         // Letters registered through دبیرخانه belong to the secretariat screen,
         // not to the registering clerk's personal «ارسالی» box.
         $isSecretariat = static fn ($l) => $l->secretariat !== null;
@@ -102,7 +102,7 @@ final class LetterController extends Controller
                     $row['row_key'] = 'r' . $e['ref']['id'];
                     $row['referral_by'] = $e['ref']['by'];
                     $row['referral_label'] = $e['ref']['label'];
-                    $row['referral_at'] = \ArtaPharma\Support\Jalali::fromGregorian($e['ref']['at'])->format('Y/m/d — H:i');
+                    $row['referral_at'] = \SevenCivilGroup\Support\Jalali::fromGregorian($e['ref']['at'])->format('Y/m/d — H:i');
                 } else {
                     $row['row_key'] = 'l' . $e['letter']->id;
                 }
@@ -149,10 +149,10 @@ final class LetterController extends Controller
     /**
      * Attach per-user action flags to each transformed letter.
      *
-     * @param list<\ArtaPharma\Domain\Entities\Letter> $letters
+     * @param list<\SevenCivilGroup\Domain\Entities\Letter> $letters
      * @return list<array<string,mixed>>
      */
-    private function decorate(array $letters, \ArtaPharma\Domain\Entities\User $user): array
+    private function decorate(array $letters, \SevenCivilGroup\Domain\Entities\User $user): array
     {
         return array_map(function ($l) use ($user) {
             $row = $this->transformer->transform($l);
@@ -167,7 +167,7 @@ final class LetterController extends Controller
             $row['is_unread'] = $this->service->isRecipientOf($user, $l) && !$row['is_read'];
             // For the sender: has anyone opened it yet? (drives «ارسالی › خوانده‌نشده»)
             $row['is_unread_by_recipients'] = $l->senderId === $user->id
-                && $l->status !== \ArtaPharma\Domain\Enums\LetterStatus::Draft
+                && $l->status !== \SevenCivilGroup\Domain\Enums\LetterStatus::Draft
                 && !$this->service->isReadByAnyRecipient($l);
             $sndr = $l->senderId !== null ? $this->users->find($l->senderId) : null;
             $row['sender_photo_url'] = $sndr?->photoPath !== null && $sndr?->photoPath !== '' ? '/uploads/photos/' . $sndr->photoPath : null;
@@ -223,7 +223,7 @@ final class LetterController extends Controller
         $payload['can_reply'] = $this->access->can($user, Permission::LettersCreate)
             && $letter->senderId !== null
             && $letter->senderId !== $user->id
-            && $letter->scope !== \ArtaPharma\Domain\Enums\LetterScope::External;
+            && $letter->scope !== \SevenCivilGroup\Domain\Enums\LetterScope::External;
         $payload['can_approve'] = $this->service->canApprove($user, $letter);
         $payload['can_recall'] = $this->service->canDelete($user, $letter);
         $payload['can_delete'] = $this->service->canDelete($user, $letter);
@@ -243,7 +243,7 @@ final class LetterController extends Controller
         $payload['wf_status'] = $this->service->workflowStatus($letter);
         // Anyone who can see a letter may refer it onward (place it in others'
         // cartables) — except purely external dispatches.
-        $payload['can_refer'] = $letter->scope !== \ArtaPharma\Domain\Enums\LetterScope::External;
+        $payload['can_refer'] = $letter->scope !== \SevenCivilGroup\Domain\Enums\LetterScope::External;
         $payload['cartable_group'] = $this->service->cartableGroup($user, $letter);
 
         return Response::ok($payload);
@@ -255,9 +255,9 @@ final class LetterController extends Controller
      *
      * @return list<array<string,mixed>>
      */
-    private function signatures(\ArtaPharma\Domain\Entities\Letter $letter, ?\ArtaPharma\Domain\Entities\User $sender): array
+    private function signatures(\SevenCivilGroup\Domain\Entities\Letter $letter, ?\SevenCivilGroup\Domain\Entities\User $sender): array
     {
-        $sigUrl = static fn (?\ArtaPharma\Domain\Entities\User $u) => $u !== null && $u->signaturePath !== null && $u->signaturePath !== ''
+        $sigUrl = static fn (?\SevenCivilGroup\Domain\Entities\User $u) => $u !== null && $u->signaturePath !== null && $u->signaturePath !== ''
             ? '/uploads/signatures/' . $u->signaturePath : null;
 
         $out = [[
@@ -270,7 +270,7 @@ final class LetterController extends Controller
         // Workflow letters accumulate an approver's signature at each step.
         if ($letter->workflowId !== null) {
             foreach ($this->service->history($letter->id) as $a) {
-                if ($a->action !== \ArtaPharma\Domain\Enums\LetterActionType::Approved || $a->userId === null) {
+                if ($a->action !== \SevenCivilGroup\Domain\Enums\LetterActionType::Approved || $a->userId === null) {
                     continue;
                 }
                 $u = $this->users->find($a->userId);
@@ -385,8 +385,8 @@ final class LetterController extends Controller
             throw new ForbiddenException('این نامه برای شما قابل دسترسی نیست.');
         }
 
-        $type = \ArtaPharma\Domain\Enums\ReferralType::tryFrom((string) $request->input('referral_type', ''))
-            ?? throw new \ArtaPharma\Core\Exceptions\ValidationException(['referral_type' => 'نوع ارجاع را انتخاب کنید (اقدام/اطلاع/استحضار).']);
+        $type = \SevenCivilGroup\Domain\Enums\ReferralType::tryFrom((string) $request->input('referral_type', ''))
+            ?? throw new \SevenCivilGroup\Core\Exceptions\ValidationException(['referral_type' => 'نوع ارجاع را انتخاب کنید (اقدام/اطلاع/استحضار).']);
 
         $persons = $this->intList($request->input('recipient_ids'));
         $depts = $this->intList($request->input('recipient_department_ids'));
@@ -433,7 +433,7 @@ final class LetterController extends Controller
      * Ensure the current user may act on this letter *now* — it must be their
      * workflow step (or CEO override) and the letter must still be active.
      */
-    private function guardAction(Request $request): \ArtaPharma\Domain\Entities\Letter
+    private function guardAction(Request $request): \SevenCivilGroup\Domain\Entities\Letter
     {
         $user = $this->user($request);
         $letter = $this->letters->find((int) $request->attribute('id'))

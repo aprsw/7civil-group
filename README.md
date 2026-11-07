@@ -1,6 +1,6 @@
-# سامانه اتوماسیون اداری آرتا فارما
+# سامانه اتوماسیون اداری گروه متحد 7
 
-سیستم کامل اتوماسیون نامه‌های اداری گروه داروسازی **آرتا فارما** — پیاده‌سازی
+سیستم کامل اتوماسیون نامه‌های اداری گروه داروسازی **گروه متحد 7** — پیاده‌سازی
 واقعی و آمادهٔ production از دیزاینِ صادرشده از Claude Design.
 
 - **بک‌اند:** PHP خالص (بدون Laravel/فریم‌ورک)، معماری **MVC-R**، **PSR-4**،
@@ -32,10 +32,10 @@ npm run dev                      # /api خودکار به بک‌اند پراک
 ### اجرا روی MySQL (اختیاری)
 پیش‌فرض SQLite است. برای MySQL، پایگاه‌داده را بسازید و متغیرهای محیطی را تنظیم کنید:
 ```bash
-mysql -e "CREATE DATABASE arta_pharma CHARACTER SET utf8mb4;"
+mysql -e "CREATE DATABASE civil7_automation CHARACTER SET utf8mb4;"
 cd backend
 export DB_DRIVER=mysql DB_HOST=127.0.0.1 DB_PORT=3306 \
-       DB_NAME=arta_pharma DB_USER=root DB_PASS=yourpass
+       DB_NAME=civil7_automation DB_USER=root DB_PASS=yourpass
 php bin/console install       # همان جداول روی MySQL ساخته می‌شود
 php -S 127.0.0.1:8000 -t public
 ```
@@ -179,7 +179,7 @@ Chain of Responsibility (میان‌افزار)، Transformer/DTO، Value Object
 ## معماری فرانت‌اند — Vue 3 + Tailwind (CSR)
 ```
 frontend/src/
-├── assets/main.css          ← ایران‌سنس (self-host) + توکن‌های آرتا فارما در Tailwind v4 @theme
+├── assets/main.css          ← ایران‌سنس (self-host) + توکن‌های گروه متحد 7 در Tailwind v4 @theme
 ├── services/api.js          ← کلاینت fetch (get/post/put/del + upload + download)
 ├── stores/                  ← Pinia: auth · ui · toast
 ├── layouts/AppLayout.vue    ← سایدبار (منوی مبتنی بر دسترسی) + هدر (اعلان‌ها + منوی کاربر)
@@ -212,6 +212,6 @@ frontend/src/
 
 ## استفاده از MySQL (اختیاری)
 ```bash
-export DB_DRIVER=mysql DB_NAME=arta_pharma DB_USER=root DB_PASS=secret
+export DB_DRIVER=mysql DB_NAME=civil7_automation DB_USER=root DB_PASS=secret
 cd backend && php bin/console install
 ```

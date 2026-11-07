@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Middleware;
+namespace SevenCivilGroup\Http\Middleware;
 
-use ArtaPharma\Core\Exceptions\UnauthorizedException;
-use ArtaPharma\Core\Http\Middleware;
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Domain\Repositories\UserRepositoryInterface;
-use ArtaPharma\Services\AuthService;
+use SevenCivilGroup\Core\Exceptions\UnauthorizedException;
+use SevenCivilGroup\Core\Http\Middleware;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Domain\Repositories\UserRepositoryInterface;
+use SevenCivilGroup\Services\AuthService;
 use Closure;
 
 /**

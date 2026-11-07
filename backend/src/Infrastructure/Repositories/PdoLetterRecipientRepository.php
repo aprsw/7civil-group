@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Infrastructure\Repositories;
+namespace SevenCivilGroup\Infrastructure\Repositories;
 
-use ArtaPharma\Domain\Entities\LetterRecipient;
-use ArtaPharma\Domain\Repositories\LetterRecipientRepositoryInterface;
-use ArtaPharma\Infrastructure\Database\Connection;
+use SevenCivilGroup\Domain\Entities\LetterRecipient;
+use SevenCivilGroup\Domain\Repositories\LetterRecipientRepositoryInterface;
+use SevenCivilGroup\Infrastructure\Database\Connection;
 use PDO;
 
 final class PdoLetterRecipientRepository implements LetterRecipientRepositoryInterface

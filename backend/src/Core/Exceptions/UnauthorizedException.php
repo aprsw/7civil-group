@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Core\Exceptions;
+namespace SevenCivilGroup\Core\Exceptions;
 
 /**
  * 401 — authentication is required or the supplied token is invalid.

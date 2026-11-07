@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Domain\Repositories\LetterRepositoryInterface;
-use ArtaPharma\Services\LetterAccess;
-use ArtaPharma\Services\LetterService;
-use ArtaPharma\Support\Jalali;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Domain\Repositories\LetterRepositoryInterface;
+use SevenCivilGroup\Services\LetterAccess;
+use SevenCivilGroup\Services\LetterService;
+use SevenCivilGroup\Support\Jalali;
 
 /**
  * Real notifications = letters awaiting *this user's* action (their current

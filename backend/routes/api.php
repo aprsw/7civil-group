@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-use ArtaPharma\Core\Http\Router;
-use ArtaPharma\Http\Controllers\AttachmentController;
-use ArtaPharma\Http\Controllers\AuthController;
-use ArtaPharma\Http\Controllers\DashboardController;
-use ArtaPharma\Http\Controllers\DepartmentController;
-use ArtaPharma\Http\Controllers\LetterController;
-use ArtaPharma\Http\Controllers\MetaController;
-use ArtaPharma\Http\Controllers\NotificationController;
-use ArtaPharma\Http\Controllers\ProfileController;
-use ArtaPharma\Http\Controllers\RoleController;
-use ArtaPharma\Http\Controllers\TemplateController;
-use ArtaPharma\Http\Controllers\UserController;
-use ArtaPharma\Http\Controllers\WorkflowController;
-use ArtaPharma\Http\Middleware\AuthenticateMiddleware;
+use SevenCivilGroup\Core\Http\Router;
+use SevenCivilGroup\Http\Controllers\AttachmentController;
+use SevenCivilGroup\Http\Controllers\AuthController;
+use SevenCivilGroup\Http\Controllers\DashboardController;
+use SevenCivilGroup\Http\Controllers\DepartmentController;
+use SevenCivilGroup\Http\Controllers\LetterController;
+use SevenCivilGroup\Http\Controllers\MetaController;
+use SevenCivilGroup\Http\Controllers\NotificationController;
+use SevenCivilGroup\Http\Controllers\ProfileController;
+use SevenCivilGroup\Http\Controllers\RoleController;
+use SevenCivilGroup\Http\Controllers\TemplateController;
+use SevenCivilGroup\Http\Controllers\UserController;
+use SevenCivilGroup\Http\Controllers\WorkflowController;
+use SevenCivilGroup\Http\Middleware\AuthenticateMiddleware;
 
 /**
  * API route table. CORS is applied globally by the Application kernel (so
@@ -26,6 +26,8 @@ return static function (Router $router): void {
     $router->group(['prefix' => '/api'], function (Router $r): void {
         // Public
         $r->post('/auth/login', AuthController::class, 'login');
+        // Public: the login screen needs the org name/شعار/logo before sign-in.
+        $r->get('/branding', \SevenCivilGroup\Http\Controllers\BrandingController::class, 'show');
 
         $auth = [AuthenticateMiddleware::class];
 
@@ -51,46 +53,46 @@ return static function (Router $router): void {
         $r->post('/letters/{id}/reply', LetterController::class, 'reply', $auth);
 
         // کتابخانهٔ فایل‌های Word/Excel (مدیریت با ادمین، استفاده در ساخت نامه)
-        $r->get('/office-files', \ArtaPharma\Http\Controllers\OfficeFileController::class, 'index', $auth);
-        $r->post('/office-files', \ArtaPharma\Http\Controllers\OfficeFileController::class, 'store', $auth);
-        $r->get('/office-files/{id}/download', \ArtaPharma\Http\Controllers\OfficeFileController::class, 'download', $auth);
-        $r->delete('/office-files/{id}', \ArtaPharma\Http\Controllers\OfficeFileController::class, 'destroy', $auth);
+        $r->get('/office-files', \SevenCivilGroup\Http\Controllers\OfficeFileController::class, 'index', $auth);
+        $r->post('/office-files', \SevenCivilGroup\Http\Controllers\OfficeFileController::class, 'store', $auth);
+        $r->get('/office-files/{id}/download', \SevenCivilGroup\Http\Controllers\OfficeFileController::class, 'download', $auth);
+        $r->delete('/office-files/{id}', \SevenCivilGroup\Http\Controllers\OfficeFileController::class, 'destroy', $auth);
 
         // دبیرخانه (secretariat)
-        $r->get('/secretariat', \ArtaPharma\Http\Controllers\SecretariatController::class, 'index', $auth);
-        $r->get('/secretariat/folders', \ArtaPharma\Http\Controllers\SecretariatController::class, 'folders', $auth);
-        $r->get('/secretariat/last-number', \ArtaPharma\Http\Controllers\SecretariatController::class, 'lastNumber', $auth);
-        $r->get('/secretariat/check-number', \ArtaPharma\Http\Controllers\SecretariatController::class, 'checkNumber', $auth);
-        $r->post('/secretariat/folders', \ArtaPharma\Http\Controllers\SecretariatController::class, 'createFolder', $auth);
-        $r->put('/secretariat/folders/{id}', \ArtaPharma\Http\Controllers\SecretariatController::class, 'renameFolder', $auth);
-        $r->delete('/secretariat/folders/{id}', \ArtaPharma\Http\Controllers\SecretariatController::class, 'deleteFolder', $auth);
-        $r->post('/secretariat/incoming', \ArtaPharma\Http\Controllers\SecretariatController::class, 'incoming', $auth);
-        $r->post('/secretariat/outgoing', \ArtaPharma\Http\Controllers\SecretariatController::class, 'outgoing', $auth);
-        $r->put('/secretariat/{id}/folder', \ArtaPharma\Http\Controllers\SecretariatController::class, 'fileLetter', $auth);
+        $r->get('/secretariat', \SevenCivilGroup\Http\Controllers\SecretariatController::class, 'index', $auth);
+        $r->get('/secretariat/folders', \SevenCivilGroup\Http\Controllers\SecretariatController::class, 'folders', $auth);
+        $r->get('/secretariat/last-number', \SevenCivilGroup\Http\Controllers\SecretariatController::class, 'lastNumber', $auth);
+        $r->get('/secretariat/check-number', \SevenCivilGroup\Http\Controllers\SecretariatController::class, 'checkNumber', $auth);
+        $r->post('/secretariat/folders', \SevenCivilGroup\Http\Controllers\SecretariatController::class, 'createFolder', $auth);
+        $r->put('/secretariat/folders/{id}', \SevenCivilGroup\Http\Controllers\SecretariatController::class, 'renameFolder', $auth);
+        $r->delete('/secretariat/folders/{id}', \SevenCivilGroup\Http\Controllers\SecretariatController::class, 'deleteFolder', $auth);
+        $r->post('/secretariat/incoming', \SevenCivilGroup\Http\Controllers\SecretariatController::class, 'incoming', $auth);
+        $r->post('/secretariat/outgoing', \SevenCivilGroup\Http\Controllers\SecretariatController::class, 'outgoing', $auth);
+        $r->put('/secretariat/{id}/folder', \SevenCivilGroup\Http\Controllers\SecretariatController::class, 'fileLetter', $auth);
 
         // Per-user access grants (admin grants e.g. دبیرخانه to any user)
-        $r->get('/permission-grants', \ArtaPharma\Http\Controllers\PermissionGrantController::class, 'index', $auth);
-        $r->put('/permission-grants/user/{id}', \ArtaPharma\Http\Controllers\PermissionGrantController::class, 'update', $auth);
+        $r->get('/permission-grants', \SevenCivilGroup\Http\Controllers\PermissionGrantController::class, 'index', $auth);
+        $r->put('/permission-grants/user/{id}', \SevenCivilGroup\Http\Controllers\PermissionGrantController::class, 'update', $auth);
 
         // Per-user mailbox folders
-        $r->get('/folders', \ArtaPharma\Http\Controllers\FolderController::class, 'index', $auth);
-        $r->post('/folders', \ArtaPharma\Http\Controllers\FolderController::class, 'store', $auth);
-        $r->post('/folders/unfile', \ArtaPharma\Http\Controllers\FolderController::class, 'unfile', $auth);
-        $r->put('/folders/{id}', \ArtaPharma\Http\Controllers\FolderController::class, 'update', $auth);
-        $r->delete('/folders/{id}', \ArtaPharma\Http\Controllers\FolderController::class, 'destroy', $auth);
-        $r->post('/folders/{id}/letters', \ArtaPharma\Http\Controllers\FolderController::class, 'fileLetters', $auth);
+        $r->get('/folders', \SevenCivilGroup\Http\Controllers\FolderController::class, 'index', $auth);
+        $r->post('/folders', \SevenCivilGroup\Http\Controllers\FolderController::class, 'store', $auth);
+        $r->post('/folders/unfile', \SevenCivilGroup\Http\Controllers\FolderController::class, 'unfile', $auth);
+        $r->put('/folders/{id}', \SevenCivilGroup\Http\Controllers\FolderController::class, 'update', $auth);
+        $r->delete('/folders/{id}', \SevenCivilGroup\Http\Controllers\FolderController::class, 'destroy', $auth);
+        $r->post('/folders/{id}/letters', \SevenCivilGroup\Http\Controllers\FolderController::class, 'fileLetters', $auth);
 
         // Attachments (multipart upload)
         $r->post('/attachments', AttachmentController::class, 'store', $auth);
 
         // Staff chat (گفتگو) — gated by chat.use in the controller.
-        $r->get('/chat/contacts', \ArtaPharma\Http\Controllers\ChatController::class, 'contacts', $auth);
-        $r->get('/chat/conversations', \ArtaPharma\Http\Controllers\ChatController::class, 'index', $auth);
-        $r->post('/chat/conversations', \ArtaPharma\Http\Controllers\ChatController::class, 'store', $auth);
-        $r->delete('/chat/conversations/{id}', \ArtaPharma\Http\Controllers\ChatController::class, 'destroy', $auth);
-        $r->get('/chat/conversations/{id}/messages', \ArtaPharma\Http\Controllers\ChatController::class, 'messages', $auth);
-        $r->post('/chat/conversations/{id}/messages', \ArtaPharma\Http\Controllers\ChatController::class, 'send', $auth);
-        $r->get('/chat/messages/{id}/download', \ArtaPharma\Http\Controllers\ChatController::class, 'download', $auth);
+        $r->get('/chat/contacts', \SevenCivilGroup\Http\Controllers\ChatController::class, 'contacts', $auth);
+        $r->get('/chat/conversations', \SevenCivilGroup\Http\Controllers\ChatController::class, 'index', $auth);
+        $r->post('/chat/conversations', \SevenCivilGroup\Http\Controllers\ChatController::class, 'store', $auth);
+        $r->delete('/chat/conversations/{id}', \SevenCivilGroup\Http\Controllers\ChatController::class, 'destroy', $auth);
+        $r->get('/chat/conversations/{id}/messages', \SevenCivilGroup\Http\Controllers\ChatController::class, 'messages', $auth);
+        $r->post('/chat/conversations/{id}/messages', \SevenCivilGroup\Http\Controllers\ChatController::class, 'send', $auth);
+        $r->get('/chat/messages/{id}/download', \SevenCivilGroup\Http\Controllers\ChatController::class, 'download', $auth);
 
         // Self-service profile
         $r->get('/profile', ProfileController::class, 'show', $auth);
@@ -100,13 +102,19 @@ return static function (Router $router): void {
         $r->post('/profile/signature', ProfileController::class, 'signature', $auth);
 
         // Org settings (numbering pattern) — CEO only.
-        $r->get('/settings', \ArtaPharma\Http\Controllers\SettingsController::class, 'index', $auth);
-        $r->put('/settings', \ArtaPharma\Http\Controllers\SettingsController::class, 'update', $auth);
+        $r->get('/settings', \SevenCivilGroup\Http\Controllers\SettingsController::class, 'index', $auth);
+        $r->put('/settings', \SevenCivilGroup\Http\Controllers\SettingsController::class, 'update', $auth);
+
+        // Logo library (کتابخانهٔ لوگو) — settings.manage.
+        $r->get('/branding/logos', \SevenCivilGroup\Http\Controllers\BrandingController::class, 'logos', $auth);
+        $r->post('/branding/logos', \SevenCivilGroup\Http\Controllers\BrandingController::class, 'store', $auth);
+        $r->put('/branding/logos/{id}', \SevenCivilGroup\Http\Controllers\BrandingController::class, 'update', $auth);
+        $r->delete('/branding/logos/{id}', \SevenCivilGroup\Http\Controllers\BrandingController::class, 'destroy', $auth);
 
         // Per-unit messaging permissions — messaging.manage (CEO).
-        $r->get('/messaging-rules', \ArtaPharma\Http\Controllers\MessagingController::class, 'index', $auth);
-        $r->put('/messaging-rules/role/{id}', \ArtaPharma\Http\Controllers\MessagingController::class, 'updateRole', $auth);
-        $r->put('/messaging-rules/{id}', \ArtaPharma\Http\Controllers\MessagingController::class, 'update', $auth);
+        $r->get('/messaging-rules', \SevenCivilGroup\Http\Controllers\MessagingController::class, 'index', $auth);
+        $r->put('/messaging-rules/role/{id}', \SevenCivilGroup\Http\Controllers\MessagingController::class, 'updateRole', $auth);
+        $r->put('/messaging-rules/{id}', \SevenCivilGroup\Http\Controllers\MessagingController::class, 'update', $auth);
 
         // Staff (CRUD gated by users.manage in the controller)
         $r->get('/users', UserController::class, 'index', $auth);
@@ -128,16 +136,16 @@ return static function (Router $router): void {
         $r->delete('/roles/{id}', RoleController::class, 'destroy', $auth);
 
         // یادداشت کاربر — private per-user notes/reminders (any authenticated user).
-        $r->get('/user-notes', \ArtaPharma\Http\Controllers\UserNoteController::class, 'index', $auth);
-        $r->post('/user-notes', \ArtaPharma\Http\Controllers\UserNoteController::class, 'store', $auth);
-        $r->put('/user-notes/{id}', \ArtaPharma\Http\Controllers\UserNoteController::class, 'update', $auth);
-        $r->delete('/user-notes/{id}', \ArtaPharma\Http\Controllers\UserNoteController::class, 'destroy', $auth);
+        $r->get('/user-notes', \SevenCivilGroup\Http\Controllers\UserNoteController::class, 'index', $auth);
+        $r->post('/user-notes', \SevenCivilGroup\Http\Controllers\UserNoteController::class, 'store', $auth);
+        $r->put('/user-notes/{id}', \SevenCivilGroup\Http\Controllers\UserNoteController::class, 'update', $auth);
+        $r->delete('/user-notes/{id}', \SevenCivilGroup\Http\Controllers\UserNoteController::class, 'destroy', $auth);
 
         // Org-wide events (رویدادها) — view for all; CRUD for events.manage.
-        $r->get('/events', \ArtaPharma\Http\Controllers\EventController::class, 'index', $auth);
-        $r->post('/events', \ArtaPharma\Http\Controllers\EventController::class, 'store', $auth);
-        $r->put('/events/{id}', \ArtaPharma\Http\Controllers\EventController::class, 'update', $auth);
-        $r->delete('/events/{id}', \ArtaPharma\Http\Controllers\EventController::class, 'destroy', $auth);
+        $r->get('/events', \SevenCivilGroup\Http\Controllers\EventController::class, 'index', $auth);
+        $r->post('/events', \SevenCivilGroup\Http\Controllers\EventController::class, 'store', $auth);
+        $r->put('/events/{id}', \SevenCivilGroup\Http\Controllers\EventController::class, 'update', $auth);
+        $r->delete('/events/{id}', \SevenCivilGroup\Http\Controllers\EventController::class, 'destroy', $auth);
 
         // Templates (قالب‌ساز)
         $r->get('/templates', TemplateController::class, 'index', $auth);

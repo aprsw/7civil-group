@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Core\Http;
+namespace SevenCivilGroup\Core\Http;
 
-use ArtaPharma\Core\Container;
-use ArtaPharma\Core\Exceptions\MethodNotAllowedException;
-use ArtaPharma\Core\Exceptions\NotFoundException;
+use SevenCivilGroup\Core\Container;
+use SevenCivilGroup\Core\Exceptions\MethodNotAllowedException;
+use SevenCivilGroup\Core\Exceptions\NotFoundException;
 use Closure;
 
 /**

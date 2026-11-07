@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Core;
+namespace SevenCivilGroup\Core;
 
-use ArtaPharma\Core\Exceptions\HttpException;
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Core\Http\Router;
+use SevenCivilGroup\Core\Exceptions\HttpException;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Core\Http\Router;
 use Throwable;
 
 /**

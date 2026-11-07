@@ -310,7 +310,7 @@ onMounted(load)
             <div class="flex items-center gap-2.5">
               <img src="/assets/logo-mark.png" class="h-11" />
               <div>
-                <div class="text-[20pt] font-extrabold text-brand-strong">گروه داروسازی آرتا فارما</div>
+                <div class="text-[20pt] font-extrabold text-brand-strong">گروه متحد 7</div>
                 <div class="mt-0.5 text-[10.5pt] text-[#444]">آرتا قلب بهسان طب</div>
               </div>
             </div>

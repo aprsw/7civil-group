@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Services;
+namespace SevenCivilGroup\Services;
 
-use ArtaPharma\Core\Exceptions\NotFoundException;
-use ArtaPharma\Core\Exceptions\ValidationException;
-use ArtaPharma\Domain\Entities\User;
-use ArtaPharma\Domain\Entities\Workflow;
-use ArtaPharma\Domain\Entities\WorkflowStep;
-use ArtaPharma\Domain\Enums\Permission;
-use ArtaPharma\Domain\Repositories\RoleRepositoryInterface;
-use ArtaPharma\Domain\Repositories\WorkflowRepositoryInterface;
+use SevenCivilGroup\Core\Exceptions\NotFoundException;
+use SevenCivilGroup\Core\Exceptions\ValidationException;
+use SevenCivilGroup\Domain\Entities\User;
+use SevenCivilGroup\Domain\Entities\Workflow;
+use SevenCivilGroup\Domain\Entities\WorkflowStep;
+use SevenCivilGroup\Domain\Enums\Permission;
+use SevenCivilGroup\Domain\Repositories\RoleRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\WorkflowRepositoryInterface;
 
 /**
  * Workflow builder use-cases. Only department managers (WorkflowManage) may

@@ -1,6 +1,6 @@
 {
-    "name": "arta-pharma/automation-api",
-    "description": "سامانه اتوماسیون اداری آرتا فارما — Pure-PHP MVC-R JSON API (no framework).",
+    "name": "7civil-group/automation-api",
+    "description": "سامانه اتوماسیون اداری گروه متحد 7 — Pure-PHP MVC-R JSON API (no framework).",
     "type": "project",
     "license": "proprietary",
     "require": {
@@ -10,7 +10,7 @@
     },
     "autoload": {
         "psr-4": {
-            "ArtaPharma\\": "src/"
+            "SevenCivilGroup\\": "src/"
         }
     },
     "config": {

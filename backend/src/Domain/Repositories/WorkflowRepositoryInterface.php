@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Domain\Repositories;
+namespace SevenCivilGroup\Domain\Repositories;
 
-use ArtaPharma\Domain\Entities\Workflow;
+use SevenCivilGroup\Domain\Entities\Workflow;
 
 interface WorkflowRepositoryInterface
 {

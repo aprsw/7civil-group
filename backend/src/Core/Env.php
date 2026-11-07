@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Core;
+namespace SevenCivilGroup\Core;
 
 /**
  * Minimal .env loader (no external dependency). Parses simple KEY=VALUE lines

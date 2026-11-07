@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Services;
+namespace SevenCivilGroup\Services;
 
-use ArtaPharma\Domain\Entities\User;
-use ArtaPharma\Domain\Repositories\MessagingRuleRepositoryInterface;
+use SevenCivilGroup\Domain\Entities\User;
+use SevenCivilGroup\Domain\Repositories\MessagingRuleRepositoryInterface;
 
 /**
  * Messaging permissions. By default the org "pyramid" (item 12):
@@ -78,8 +78,8 @@ final class RecipientPolicy
     }
 
     /**
-     * @param list<\ArtaPharma\Domain\Entities\Department> $departments
-     * @return list<\ArtaPharma\Domain\Entities\Department>
+     * @param list<\SevenCivilGroup\Domain\Entities\Department> $departments
+     * @return list<\SevenCivilGroup\Domain\Entities\Department>
      */
     public function allowedDepartments(User $sender, array $departments): array
     {

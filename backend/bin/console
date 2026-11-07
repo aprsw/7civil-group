@@ -3,20 +3,20 @@
 
 declare(strict_types=1);
 
-use ArtaPharma\Core\Autoloader;
-use ArtaPharma\Core\Config;
-use ArtaPharma\Infrastructure\Database\Connection;
-use ArtaPharma\Infrastructure\Database\Migrator;
-use ArtaPharma\Infrastructure\Database\Seeder;
+use SevenCivilGroup\Core\Autoloader;
+use SevenCivilGroup\Core\Config;
+use SevenCivilGroup\Infrastructure\Database\Connection;
+use SevenCivilGroup\Infrastructure\Database\Migrator;
+use SevenCivilGroup\Infrastructure\Database\Seeder;
 
 /**
  * Tiny CLI: `php bin/console migrate|migrate:fresh|seed|install`.
  */
 
 require __DIR__ . '/../src/Core/Autoloader.php';
-(new Autoloader())->addNamespace('ArtaPharma', __DIR__ . '/../src')->register();
+(new Autoloader())->addNamespace('SevenCivilGroup', __DIR__ . '/../src')->register();
 
-\ArtaPharma\Core\Env::load(__DIR__ . '/../.env');
+\SevenCivilGroup\Core\Env::load(__DIR__ . '/../.env');
 date_default_timezone_set($_ENV['APP_TIMEZONE'] ?? getenv('APP_TIMEZONE') ?: 'Asia/Tehran');
 
 $command = $argv[1] ?? 'help';

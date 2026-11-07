@@ -70,13 +70,13 @@ async function submit() {
         </form>
       </div>
       <div class="text-center">
-        <img src="/assets/logo-full-white.png" alt="گروه داروسازی آرتا فارما" class="mx-auto w-[min(440px,82%)]" />
+        <img src="/assets/logo-full-white.png" alt="گروه متحد 7" class="mx-auto w-[min(440px,82%)]" />
       </div>
     </div>
 
     <div class="relative z-10 flex items-center justify-between border-t px-10 py-3.5"
       style="background: rgba(9,24,58,0.34); border-color: rgba(255,255,255,0.14); backdrop-filter: blur(6px)">
-      <span class="text-[13px] text-white/70">© ۱۴۰۳ گروه داروسازی آرتا فارما · آرتا قلب بهسان طب</span>
+      <span class="text-[13px] text-white/70">© ۱۴۰۳ گروه متحد 7 · آرتا قلب بهسان طب</span>
       <span class="inline-flex items-center gap-2 text-[13px] text-white">🌐 فارسی</span>
     </div>
   </div>

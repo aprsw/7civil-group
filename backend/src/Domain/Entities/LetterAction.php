@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Domain\Entities;
+namespace SevenCivilGroup\Domain\Entities;
 
-use ArtaPharma\Domain\Enums\LetterActionType;
+use SevenCivilGroup\Domain\Enums\LetterActionType;
 
 /**
  * One entry in a letter's audit trail / history (چه کسی، کِی، چه اقدامی).

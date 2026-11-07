@@ -4,14 +4,14 @@
 
 const BASE = import.meta.env.VITE_API_BASE || '/api'
 
-let authToken = localStorage.getItem('arta_token') || sessionStorage.getItem('arta_token') || null
+let authToken = localStorage.getItem('civil7_token') || sessionStorage.getItem('civil7_token') || null
 
 // persist=true → localStorage (survives restart, "remember me"); false → sessionStorage.
 export function setToken(token, persist = true) {
   authToken = token
-  localStorage.removeItem('arta_token')
-  sessionStorage.removeItem('arta_token')
-  if (token) (persist ? localStorage : sessionStorage).setItem('arta_token', token)
+  localStorage.removeItem('civil7_token')
+  sessionStorage.removeItem('civil7_token')
+  if (token) (persist ? localStorage : sessionStorage).setItem('civil7_token', token)
 }
 
 export class ApiError extends Error {
@@ -44,7 +44,7 @@ async function request(method, path, body) {
   // An authenticated call that comes back 401 means the session expired/was
   // revoked → tell the app to log out (not fired for the login call itself).
   if (res.status === 401 && authToken) {
-    window.dispatchEvent(new CustomEvent('arta:unauthorized'))
+    window.dispatchEvent(new CustomEvent('civil7:unauthorized'))
   }
 
   if (!res.ok || (payload && payload.success === false)) {

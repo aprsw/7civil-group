@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Security\Contracts;
+namespace SevenCivilGroup\Security\Contracts;
 
 interface TokenServiceInterface
 {
@@ -11,7 +11,7 @@ interface TokenServiceInterface
 
     /**
      * @return array<string, mixed> the validated payload
-     * @throws \ArtaPharma\Core\Exceptions\UnauthorizedException on invalid/expired tokens
+     * @throws \SevenCivilGroup\Core\Exceptions\UnauthorizedException on invalid/expired tokens
      */
     public function verify(string $token): array;
 }

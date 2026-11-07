@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Exceptions\NotFoundException;
-use ArtaPharma\Core\Exceptions\ValidationException;
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Domain\Repositories\UserNoteRepositoryInterface;
-use ArtaPharma\Support\Jalali;
+use SevenCivilGroup\Core\Exceptions\NotFoundException;
+use SevenCivilGroup\Core\Exceptions\ValidationException;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Domain\Repositories\UserNoteRepositoryInterface;
+use SevenCivilGroup\Support\Jalali;
 
 /**
  * یادداشت کاربر — private per-user notes/reminders. Each user sees only their

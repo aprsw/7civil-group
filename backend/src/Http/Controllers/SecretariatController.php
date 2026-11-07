@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Exceptions\ValidationException;
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Domain\Enums\Permission;
-use ArtaPharma\Domain\Repositories\LetterRepositoryInterface;
-use ArtaPharma\Domain\Repositories\SecretariatFolderRepositoryInterface;
-use ArtaPharma\Services\AccessControl;
-use ArtaPharma\Services\LetterAccess;
-use ArtaPharma\Services\LetterService;
-use ArtaPharma\View\LetterTransformer;
+use SevenCivilGroup\Core\Exceptions\ValidationException;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Domain\Enums\Permission;
+use SevenCivilGroup\Domain\Repositories\LetterRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\SecretariatFolderRepositoryInterface;
+use SevenCivilGroup\Services\AccessControl;
+use SevenCivilGroup\Services\LetterAccess;
+use SevenCivilGroup\Services\LetterService;
+use SevenCivilGroup\View\LetterTransformer;
 
 /**
  * دبیرخانهٔ رسمی — register incoming letters arriving from outside (scan +
@@ -206,7 +206,7 @@ final class SecretariatController extends Controller
         return Response::created($this->transformer->transform($letter), 'نامهٔ صادره با شمارهٔ ' . $letter->number . ' ثبت شد.');
     }
 
-    private function gate(Request $request): \ArtaPharma\Domain\Entities\User
+    private function gate(Request $request): \SevenCivilGroup\Domain\Entities\User
     {
         $me = $this->user($request);
         $this->access->authorize($me, Permission::SecretariatUse);
@@ -219,17 +219,17 @@ final class SecretariatController extends Controller
      * dedicated secretariat.manage permission or the access administrator
      * (roles.manage) — never a plain secretariat clerk.
      */
-    private function canManageFolders(\ArtaPharma\Domain\Entities\User $me): bool
+    private function canManageFolders(\SevenCivilGroup\Domain\Entities\User $me): bool
     {
         return $this->access->can($me, Permission::SecretariatManage)
             || $this->access->can($me, Permission::RolesManage);
     }
 
-    private function gateFolderAdmin(Request $request): \ArtaPharma\Domain\Entities\User
+    private function gateFolderAdmin(Request $request): \SevenCivilGroup\Domain\Entities\User
     {
         $me = $this->gate($request);
         if (!$this->canManageFolders($me)) {
-            throw new \ArtaPharma\Core\Exceptions\ForbiddenException('بخش‌بندی دبیرخانه فقط توسط مدیر سامانه قابل تغییر است.');
+            throw new \SevenCivilGroup\Core\Exceptions\ForbiddenException('بخش‌بندی دبیرخانه فقط توسط مدیر سامانه قابل تغییر است.');
         }
 
         return $me;
@@ -263,7 +263,7 @@ final class SecretariatController extends Controller
         // Arabic-Indic digits (٠-٩) → Latin, then everything → Persian digits.
         $n = strtr($n, ['٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4', '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9']);
 
-        return \ArtaPharma\Support\Jalali::toPersianDigits($n);
+        return \SevenCivilGroup\Support\Jalali::toPersianDigits($n);
     }
 
     /**

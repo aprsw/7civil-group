@@ -2,58 +2,58 @@
 
 declare(strict_types=1);
 
-use ArtaPharma\Core\Application;
-use ArtaPharma\Core\Autoloader;
-use ArtaPharma\Core\Config;
-use ArtaPharma\Core\Container;
-use ArtaPharma\Core\Http\Router;
-use ArtaPharma\Domain\Repositories\DepartmentRepositoryInterface;
-use ArtaPharma\Domain\Repositories\EventRepositoryInterface;
-use ArtaPharma\Domain\Repositories\LetterActionRepositoryInterface;
-use ArtaPharma\Domain\Repositories\LetterAttachmentRepositoryInterface;
-use ArtaPharma\Domain\Repositories\LetterRecipientRepositoryInterface;
-use ArtaPharma\Domain\Repositories\LetterRepositoryInterface;
-use ArtaPharma\Domain\Repositories\RoleRepositoryInterface;
-use ArtaPharma\Domain\Repositories\SettingsRepositoryInterface;
-use ArtaPharma\Domain\Repositories\TemplateRepositoryInterface;
-use ArtaPharma\Domain\Repositories\UserRepositoryInterface;
-use ArtaPharma\Domain\Repositories\WorkflowRepositoryInterface;
-use ArtaPharma\Http\Controllers\AttachmentController;
-use ArtaPharma\Http\Controllers\AuthController;
-use ArtaPharma\Http\Controllers\DashboardController;
-use ArtaPharma\Http\Controllers\DepartmentController;
-use ArtaPharma\Http\Controllers\LetterController;
-use ArtaPharma\Http\Controllers\MetaController;
-use ArtaPharma\Http\Controllers\NotificationController;
-use ArtaPharma\Http\Controllers\RoleController;
-use ArtaPharma\Http\Controllers\TemplateController;
-use ArtaPharma\Http\Controllers\UserController;
-use ArtaPharma\Http\Controllers\WorkflowController;
-use ArtaPharma\Http\Middleware\AuthenticateMiddleware;
-use ArtaPharma\Infrastructure\Database\Connection;
-use ArtaPharma\Infrastructure\Repositories\PdoDepartmentRepository;
-use ArtaPharma\Infrastructure\Repositories\PdoLetterActionRepository;
-use ArtaPharma\Infrastructure\Repositories\PdoLetterRecipientRepository;
-use ArtaPharma\Infrastructure\Repositories\PdoLetterRepository;
-use ArtaPharma\Infrastructure\Repositories\PdoRoleRepository;
-use ArtaPharma\Infrastructure\Repositories\PdoSettingsRepository;
-use ArtaPharma\Infrastructure\Repositories\PdoTemplateRepository;
-use ArtaPharma\Infrastructure\Repositories\PdoUserRepository;
-use ArtaPharma\Infrastructure\Repositories\PdoWorkflowRepository;
-use ArtaPharma\Security\BcryptHasher;
-use ArtaPharma\Security\Contracts\HasherInterface;
-use ArtaPharma\Security\Contracts\TokenServiceInterface;
-use ArtaPharma\Security\JwtTokenService;
-use ArtaPharma\Services\AccessControl;
-use ArtaPharma\Services\AuthService;
-use ArtaPharma\Services\DashboardService;
-use ArtaPharma\Services\LetterAccess;
-use ArtaPharma\Services\LetterService;
-use ArtaPharma\Services\UserService;
-use ArtaPharma\Services\WorkflowService;
-use ArtaPharma\View\LetterTransformer;
-use ArtaPharma\View\UserTransformer;
-use ArtaPharma\View\WorkflowTransformer;
+use SevenCivilGroup\Core\Application;
+use SevenCivilGroup\Core\Autoloader;
+use SevenCivilGroup\Core\Config;
+use SevenCivilGroup\Core\Container;
+use SevenCivilGroup\Core\Http\Router;
+use SevenCivilGroup\Domain\Repositories\DepartmentRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\EventRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\LetterActionRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\LetterAttachmentRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\LetterRecipientRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\LetterRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\RoleRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\SettingsRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\TemplateRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\UserRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\WorkflowRepositoryInterface;
+use SevenCivilGroup\Http\Controllers\AttachmentController;
+use SevenCivilGroup\Http\Controllers\AuthController;
+use SevenCivilGroup\Http\Controllers\DashboardController;
+use SevenCivilGroup\Http\Controllers\DepartmentController;
+use SevenCivilGroup\Http\Controllers\LetterController;
+use SevenCivilGroup\Http\Controllers\MetaController;
+use SevenCivilGroup\Http\Controllers\NotificationController;
+use SevenCivilGroup\Http\Controllers\RoleController;
+use SevenCivilGroup\Http\Controllers\TemplateController;
+use SevenCivilGroup\Http\Controllers\UserController;
+use SevenCivilGroup\Http\Controllers\WorkflowController;
+use SevenCivilGroup\Http\Middleware\AuthenticateMiddleware;
+use SevenCivilGroup\Infrastructure\Database\Connection;
+use SevenCivilGroup\Infrastructure\Repositories\PdoDepartmentRepository;
+use SevenCivilGroup\Infrastructure\Repositories\PdoLetterActionRepository;
+use SevenCivilGroup\Infrastructure\Repositories\PdoLetterRecipientRepository;
+use SevenCivilGroup\Infrastructure\Repositories\PdoLetterRepository;
+use SevenCivilGroup\Infrastructure\Repositories\PdoRoleRepository;
+use SevenCivilGroup\Infrastructure\Repositories\PdoSettingsRepository;
+use SevenCivilGroup\Infrastructure\Repositories\PdoTemplateRepository;
+use SevenCivilGroup\Infrastructure\Repositories\PdoUserRepository;
+use SevenCivilGroup\Infrastructure\Repositories\PdoWorkflowRepository;
+use SevenCivilGroup\Security\BcryptHasher;
+use SevenCivilGroup\Security\Contracts\HasherInterface;
+use SevenCivilGroup\Security\Contracts\TokenServiceInterface;
+use SevenCivilGroup\Security\JwtTokenService;
+use SevenCivilGroup\Services\AccessControl;
+use SevenCivilGroup\Services\AuthService;
+use SevenCivilGroup\Services\DashboardService;
+use SevenCivilGroup\Services\LetterAccess;
+use SevenCivilGroup\Services\LetterService;
+use SevenCivilGroup\Services\UserService;
+use SevenCivilGroup\Services\WorkflowService;
+use SevenCivilGroup\View\LetterTransformer;
+use SevenCivilGroup\View\UserTransformer;
+use SevenCivilGroup\View\WorkflowTransformer;
 
 /**
  * Composition root. Wires abstractions to concrete implementations in one place
@@ -61,10 +61,10 @@ use ArtaPharma\View\WorkflowTransformer;
  */
 
 require __DIR__ . '/../src/Core/Autoloader.php';
-(new Autoloader())->addNamespace('ArtaPharma', __DIR__ . '/../src')->register();
+(new Autoloader())->addNamespace('SevenCivilGroup', __DIR__ . '/../src')->register();
 
 // Load backend/.env (if present) so configured values take effect at runtime.
-\ArtaPharma\Core\Env::load(__DIR__ . '/../.env');
+\SevenCivilGroup\Core\Env::load(__DIR__ . '/../.env');
 
 // All timestamps are Iran (Tehran) local time so stored and displayed times match.
 date_default_timezone_set($_ENV['APP_TIMEZONE'] ?? getenv('APP_TIMEZONE') ?: 'Asia/Tehran');
@@ -73,6 +73,7 @@ $container = new Container();
 $uploadDir = __DIR__ . '/../storage/uploads';
 $photoDir = __DIR__ . '/../public/uploads/photos';
 $signatureDir = __DIR__ . '/../public/uploads/signatures';
+$logoDir = __DIR__ . '/../public/uploads/logos';
 
 // ── Configuration & database ─────────────────────────────────────────────
 $container->singleton(Config::class, static fn () => Config::fromFile(__DIR__ . '/../config/config.php'));
@@ -87,29 +88,34 @@ $container->singleton(UserRepositoryInterface::class, static fn (Container $c) =
     $c->get(DepartmentRepositoryInterface::class),
 ));
 $container->singleton(SettingsRepositoryInterface::class, static fn (Container $c) => new PdoSettingsRepository($c->get(Connection::class)));
-$container->singleton(\ArtaPharma\Services\NumberingService::class, static fn (Container $c) => new \ArtaPharma\Services\NumberingService(
+$container->singleton(\SevenCivilGroup\Domain\Repositories\OrgLogoRepositoryInterface::class, static fn (Container $c) => new \SevenCivilGroup\Infrastructure\Repositories\PdoOrgLogoRepository($c->get(Connection::class)));
+$container->singleton(\SevenCivilGroup\Services\OrgIdentity::class, static fn (Container $c) => new \SevenCivilGroup\Services\OrgIdentity(
+    $c->get(SettingsRepositoryInterface::class),
+    $c->get(\SevenCivilGroup\Domain\Repositories\OrgLogoRepositoryInterface::class),
+));
+$container->singleton(\SevenCivilGroup\Services\NumberingService::class, static fn (Container $c) => new \SevenCivilGroup\Services\NumberingService(
     $c->get(SettingsRepositoryInterface::class),
     $c->get(DepartmentRepositoryInterface::class),
 ));
 $container->singleton(LetterRepositoryInterface::class, static fn (Container $c) => new PdoLetterRepository(
     $c->get(Connection::class),
-    $c->get(\ArtaPharma\Services\NumberingService::class),
+    $c->get(\SevenCivilGroup\Services\NumberingService::class),
 ));
 $container->singleton(LetterActionRepositoryInterface::class, static fn (Container $c) => new PdoLetterActionRepository($c->get(Connection::class)));
 $container->singleton(LetterRecipientRepositoryInterface::class, static fn (Container $c) => new PdoLetterRecipientRepository($c->get(Connection::class)));
-$container->singleton(LetterAttachmentRepositoryInterface::class, static fn (Container $c) => new \ArtaPharma\Infrastructure\Repositories\PdoLetterAttachmentRepository($c->get(Connection::class)));
-$container->singleton(\ArtaPharma\Domain\Repositories\LetterReadRepositoryInterface::class, static fn (Container $c) => new \ArtaPharma\Infrastructure\Repositories\PdoLetterReadRepository($c->get(Connection::class)));
-$container->singleton(EventRepositoryInterface::class, static fn (Container $c) => new \ArtaPharma\Infrastructure\Repositories\PdoEventRepository($c->get(Connection::class)));
-$container->singleton(\ArtaPharma\Domain\Repositories\UserNoteRepositoryInterface::class, static fn (Container $c) => new \ArtaPharma\Infrastructure\Repositories\PdoUserNoteRepository($c->get(Connection::class)));
-$container->bind(\ArtaPharma\Http\Controllers\UserNoteController::class, static fn (Container $c) => new \ArtaPharma\Http\Controllers\UserNoteController($c->get(\ArtaPharma\Domain\Repositories\UserNoteRepositoryInterface::class)));
-$container->singleton(\ArtaPharma\Domain\Repositories\MessagingRuleRepositoryInterface::class, static fn (Container $c) => new \ArtaPharma\Infrastructure\Repositories\PdoMessagingRuleRepository($c->get(Connection::class)));
-$container->singleton(\ArtaPharma\Domain\Repositories\ChatRepositoryInterface::class, static fn (Container $c) => new \ArtaPharma\Infrastructure\Repositories\PdoChatRepository($c->get(Connection::class)));
-$container->singleton(\ArtaPharma\Domain\Repositories\FolderRepositoryInterface::class, static fn (Container $c) => new \ArtaPharma\Infrastructure\Repositories\PdoFolderRepository($c->get(Connection::class)));
-$container->singleton(\ArtaPharma\Domain\Repositories\LetterApproverRepositoryInterface::class, static fn (Container $c) => new \ArtaPharma\Infrastructure\Repositories\PdoLetterApproverRepository($c->get(Connection::class)));
-$container->singleton(\ArtaPharma\Domain\Repositories\LetterNoteRepositoryInterface::class, static fn (Container $c) => new \ArtaPharma\Infrastructure\Repositories\PdoLetterNoteRepository($c->get(Connection::class)));
+$container->singleton(LetterAttachmentRepositoryInterface::class, static fn (Container $c) => new \SevenCivilGroup\Infrastructure\Repositories\PdoLetterAttachmentRepository($c->get(Connection::class)));
+$container->singleton(\SevenCivilGroup\Domain\Repositories\LetterReadRepositoryInterface::class, static fn (Container $c) => new \SevenCivilGroup\Infrastructure\Repositories\PdoLetterReadRepository($c->get(Connection::class)));
+$container->singleton(EventRepositoryInterface::class, static fn (Container $c) => new \SevenCivilGroup\Infrastructure\Repositories\PdoEventRepository($c->get(Connection::class)));
+$container->singleton(\SevenCivilGroup\Domain\Repositories\UserNoteRepositoryInterface::class, static fn (Container $c) => new \SevenCivilGroup\Infrastructure\Repositories\PdoUserNoteRepository($c->get(Connection::class)));
+$container->bind(\SevenCivilGroup\Http\Controllers\UserNoteController::class, static fn (Container $c) => new \SevenCivilGroup\Http\Controllers\UserNoteController($c->get(\SevenCivilGroup\Domain\Repositories\UserNoteRepositoryInterface::class)));
+$container->singleton(\SevenCivilGroup\Domain\Repositories\MessagingRuleRepositoryInterface::class, static fn (Container $c) => new \SevenCivilGroup\Infrastructure\Repositories\PdoMessagingRuleRepository($c->get(Connection::class)));
+$container->singleton(\SevenCivilGroup\Domain\Repositories\ChatRepositoryInterface::class, static fn (Container $c) => new \SevenCivilGroup\Infrastructure\Repositories\PdoChatRepository($c->get(Connection::class)));
+$container->singleton(\SevenCivilGroup\Domain\Repositories\FolderRepositoryInterface::class, static fn (Container $c) => new \SevenCivilGroup\Infrastructure\Repositories\PdoFolderRepository($c->get(Connection::class)));
+$container->singleton(\SevenCivilGroup\Domain\Repositories\LetterApproverRepositoryInterface::class, static fn (Container $c) => new \SevenCivilGroup\Infrastructure\Repositories\PdoLetterApproverRepository($c->get(Connection::class)));
+$container->singleton(\SevenCivilGroup\Domain\Repositories\LetterNoteRepositoryInterface::class, static fn (Container $c) => new \SevenCivilGroup\Infrastructure\Repositories\PdoLetterNoteRepository($c->get(Connection::class)));
 $container->singleton(WorkflowRepositoryInterface::class, static fn (Container $c) => new PdoWorkflowRepository($c->get(Connection::class)));
 $container->singleton(TemplateRepositoryInterface::class, static fn (Container $c) => new PdoTemplateRepository($c->get(Connection::class)));
-$container->singleton(\ArtaPharma\Domain\Repositories\OfficeFileRepositoryInterface::class, static fn (Container $c) => new \ArtaPharma\Infrastructure\Repositories\PdoOfficeFileRepository($c->get(Connection::class)));
+$container->singleton(\SevenCivilGroup\Domain\Repositories\OfficeFileRepositoryInterface::class, static fn (Container $c) => new \SevenCivilGroup\Infrastructure\Repositories\PdoOfficeFileRepository($c->get(Connection::class)));
 
 // ── Security ─────────────────────────────────────────────────────────────
 $container->singleton(HasherInterface::class, static fn () => new BcryptHasher());
@@ -124,12 +130,12 @@ $container->singleton(TokenServiceInterface::class, static function (Container $
 });
 
 // ── Services ─────────────────────────────────────────────────────────────
-$container->singleton(\ArtaPharma\Domain\Repositories\UserPermissionRepositoryInterface::class, static fn (Container $c) => new \ArtaPharma\Infrastructure\Repositories\PdoUserPermissionRepository($c->get(Connection::class)));
-$container->singleton(\ArtaPharma\Domain\Repositories\SecretariatFolderRepositoryInterface::class, static fn (Container $c) => new \ArtaPharma\Infrastructure\Repositories\PdoSecretariatFolderRepository($c->get(Connection::class)));
-$container->singleton(AccessControl::class, static fn (Container $c) => new AccessControl($c->get(\ArtaPharma\Domain\Repositories\UserPermissionRepositoryInterface::class)));
-$container->singleton(LetterAccess::class, static fn (Container $c) => new LetterAccess($c->get(LetterRecipientRepositoryInterface::class), $c->get(\ArtaPharma\Domain\Repositories\LetterApproverRepositoryInterface::class)));
-$container->singleton(\ArtaPharma\Services\RecipientPolicy::class, static fn (Container $c) => new \ArtaPharma\Services\RecipientPolicy(
-    $c->get(\ArtaPharma\Domain\Repositories\MessagingRuleRepositoryInterface::class),
+$container->singleton(\SevenCivilGroup\Domain\Repositories\UserPermissionRepositoryInterface::class, static fn (Container $c) => new \SevenCivilGroup\Infrastructure\Repositories\PdoUserPermissionRepository($c->get(Connection::class)));
+$container->singleton(\SevenCivilGroup\Domain\Repositories\SecretariatFolderRepositoryInterface::class, static fn (Container $c) => new \SevenCivilGroup\Infrastructure\Repositories\PdoSecretariatFolderRepository($c->get(Connection::class)));
+$container->singleton(AccessControl::class, static fn (Container $c) => new AccessControl($c->get(\SevenCivilGroup\Domain\Repositories\UserPermissionRepositoryInterface::class)));
+$container->singleton(LetterAccess::class, static fn (Container $c) => new LetterAccess($c->get(LetterRecipientRepositoryInterface::class), $c->get(\SevenCivilGroup\Domain\Repositories\LetterApproverRepositoryInterface::class)));
+$container->singleton(\SevenCivilGroup\Services\RecipientPolicy::class, static fn (Container $c) => new \SevenCivilGroup\Services\RecipientPolicy(
+    $c->get(\SevenCivilGroup\Domain\Repositories\MessagingRuleRepositoryInterface::class),
 ));
 $container->singleton(AuthService::class, static fn (Container $c) => new AuthService(
     $c->get(UserRepositoryInterface::class),
@@ -143,14 +149,14 @@ $container->singleton(LetterService::class, static fn (Container $c) => new Lett
     $c->get(DepartmentRepositoryInterface::class),
     $c->get(LetterActionRepositoryInterface::class),
     $c->get(LetterRecipientRepositoryInterface::class),
-    $c->get(\ArtaPharma\Services\RecipientPolicy::class),
+    $c->get(\SevenCivilGroup\Services\RecipientPolicy::class),
     $c->get(LetterAttachmentRepositoryInterface::class),
-    $c->get(\ArtaPharma\Domain\Repositories\LetterReadRepositoryInterface::class),
-    $c->get(\ArtaPharma\Domain\Repositories\LetterApproverRepositoryInterface::class),
-    $c->get(\ArtaPharma\Domain\Repositories\LetterNoteRepositoryInterface::class),
+    $c->get(\SevenCivilGroup\Domain\Repositories\LetterReadRepositoryInterface::class),
+    $c->get(\SevenCivilGroup\Domain\Repositories\LetterApproverRepositoryInterface::class),
+    $c->get(\SevenCivilGroup\Domain\Repositories\LetterNoteRepositoryInterface::class),
 ));
-$container->bind(\ArtaPharma\Http\Controllers\FolderController::class, static fn (Container $c) => new \ArtaPharma\Http\Controllers\FolderController(
-    $c->get(\ArtaPharma\Domain\Repositories\FolderRepositoryInterface::class),
+$container->bind(\SevenCivilGroup\Http\Controllers\FolderController::class, static fn (Container $c) => new \SevenCivilGroup\Http\Controllers\FolderController(
+    $c->get(\SevenCivilGroup\Domain\Repositories\FolderRepositoryInterface::class),
 ));
 $container->singleton(WorkflowService::class, static fn (Container $c) => new WorkflowService(
     $c->get(WorkflowRepositoryInterface::class),
@@ -166,7 +172,7 @@ $container->singleton(UserService::class, static fn (Container $c) => new UserSe
 ));
 
 // ── View transformers ────────────────────────────────────────────────────
-$container->singleton(UserTransformer::class, static fn (Container $c) => new UserTransformer($c->get(\ArtaPharma\Domain\Repositories\UserPermissionRepositoryInterface::class)));
+$container->singleton(UserTransformer::class, static fn (Container $c) => new UserTransformer($c->get(\SevenCivilGroup\Domain\Repositories\UserPermissionRepositoryInterface::class)));
 $container->singleton(LetterTransformer::class, static fn (Container $c) => new LetterTransformer($c->get(WorkflowRepositoryInterface::class), $c->get(RoleRepositoryInterface::class)));
 $container->singleton(WorkflowTransformer::class, static fn () => new WorkflowTransformer());
 
@@ -185,7 +191,7 @@ $container->bind(DashboardController::class, static fn (Container $c) => new Das
     $c->get(LetterAccess::class),
     $c->get(LetterService::class),
     $c->get(EventRepositoryInterface::class),
-    $c->get(\ArtaPharma\Domain\Repositories\UserNoteRepositoryInterface::class),
+    $c->get(\SevenCivilGroup\Domain\Repositories\UserNoteRepositoryInterface::class),
 ));
 $container->bind(LetterController::class, static fn (Container $c) => new LetterController(
     $c->get(LetterRepositoryInterface::class),
@@ -195,7 +201,7 @@ $container->bind(LetterController::class, static fn (Container $c) => new Letter
     $c->get(LetterAccess::class),
     $c->get(UserRepositoryInterface::class),
     $c->get(LetterAttachmentRepositoryInterface::class),
-    $c->get(\ArtaPharma\Domain\Repositories\FolderRepositoryInterface::class),
+    $c->get(\SevenCivilGroup\Domain\Repositories\FolderRepositoryInterface::class),
     $uploadDir,
 ));
 $container->bind(UserController::class, static fn (Container $c) => new UserController(
@@ -227,8 +233,8 @@ $container->bind(TemplateController::class, static fn (Container $c) => new Temp
     $c->get(AccessControl::class),
 ));
 $container->bind(AttachmentController::class, static fn () => new AttachmentController($uploadDir));
-$container->bind(\ArtaPharma\Http\Controllers\OfficeFileController::class, static fn (Container $c) => new \ArtaPharma\Http\Controllers\OfficeFileController(
-    $c->get(\ArtaPharma\Domain\Repositories\OfficeFileRepositoryInterface::class),
+$container->bind(\SevenCivilGroup\Http\Controllers\OfficeFileController::class, static fn (Container $c) => new \SevenCivilGroup\Http\Controllers\OfficeFileController(
+    $c->get(\SevenCivilGroup\Domain\Repositories\OfficeFileRepositoryInterface::class),
     $c->get(AccessControl::class),
     $uploadDir,
 ));
@@ -236,46 +242,54 @@ $container->bind(MetaController::class, static fn (Container $c) => new MetaCont
     $c->get(UserRepositoryInterface::class),
     $c->get(DepartmentRepositoryInterface::class),
     $c->get(WorkflowRepositoryInterface::class),
-    $c->get(\ArtaPharma\Services\RecipientPolicy::class),
+    $c->get(\SevenCivilGroup\Services\RecipientPolicy::class),
 ));
-$container->bind(\ArtaPharma\Http\Controllers\ProfileController::class, static fn (Container $c) => new \ArtaPharma\Http\Controllers\ProfileController(
+$container->bind(\SevenCivilGroup\Http\Controllers\ProfileController::class, static fn (Container $c) => new \SevenCivilGroup\Http\Controllers\ProfileController(
     $c->get(UserRepositoryInterface::class),
     $c->get(UserTransformer::class),
     $c->get(HasherInterface::class),
     $photoDir,
     $signatureDir,
 ));
-$container->bind(\ArtaPharma\Http\Controllers\SettingsController::class, static fn (Container $c) => new \ArtaPharma\Http\Controllers\SettingsController(
+$container->bind(\SevenCivilGroup\Http\Controllers\SettingsController::class, static fn (Container $c) => new \SevenCivilGroup\Http\Controllers\SettingsController(
     $c->get(SettingsRepositoryInterface::class),
-    $c->get(\ArtaPharma\Services\NumberingService::class),
+    $c->get(\SevenCivilGroup\Services\NumberingService::class),
+    $c->get(\SevenCivilGroup\Services\OrgIdentity::class),
+    $c->get(\SevenCivilGroup\Domain\Repositories\OrgLogoRepositoryInterface::class),
     $c->get(AccessControl::class),
 ));
-$container->bind(\ArtaPharma\Http\Controllers\EventController::class, static fn (Container $c) => new \ArtaPharma\Http\Controllers\EventController(
+$container->bind(\SevenCivilGroup\Http\Controllers\BrandingController::class, static fn (Container $c) => new \SevenCivilGroup\Http\Controllers\BrandingController(
+    $c->get(\SevenCivilGroup\Services\OrgIdentity::class),
+    $c->get(\SevenCivilGroup\Domain\Repositories\OrgLogoRepositoryInterface::class),
+    $c->get(AccessControl::class),
+    $logoDir,
+));
+$container->bind(\SevenCivilGroup\Http\Controllers\EventController::class, static fn (Container $c) => new \SevenCivilGroup\Http\Controllers\EventController(
     $c->get(EventRepositoryInterface::class),
     $c->get(UserRepositoryInterface::class),
     $c->get(AccessControl::class),
 ));
-$container->bind(\ArtaPharma\Http\Controllers\MessagingController::class, static fn (Container $c) => new \ArtaPharma\Http\Controllers\MessagingController(
-    $c->get(\ArtaPharma\Domain\Repositories\MessagingRuleRepositoryInterface::class),
+$container->bind(\SevenCivilGroup\Http\Controllers\MessagingController::class, static fn (Container $c) => new \SevenCivilGroup\Http\Controllers\MessagingController(
+    $c->get(\SevenCivilGroup\Domain\Repositories\MessagingRuleRepositoryInterface::class),
     $c->get(DepartmentRepositoryInterface::class),
     $c->get(RoleRepositoryInterface::class),
     $c->get(AccessControl::class),
 ));
-$container->bind(\ArtaPharma\Http\Controllers\SecretariatController::class, static fn (Container $c) => new \ArtaPharma\Http\Controllers\SecretariatController(
+$container->bind(\SevenCivilGroup\Http\Controllers\SecretariatController::class, static fn (Container $c) => new \SevenCivilGroup\Http\Controllers\SecretariatController(
     $c->get(LetterService::class),
     $c->get(LetterRepositoryInterface::class),
     $c->get(LetterTransformer::class),
     $c->get(LetterAccess::class),
     $c->get(AccessControl::class),
-    $c->get(\ArtaPharma\Domain\Repositories\SecretariatFolderRepositoryInterface::class),
+    $c->get(\SevenCivilGroup\Domain\Repositories\SecretariatFolderRepositoryInterface::class),
 ));
-$container->bind(\ArtaPharma\Http\Controllers\PermissionGrantController::class, static fn (Container $c) => new \ArtaPharma\Http\Controllers\PermissionGrantController(
+$container->bind(\SevenCivilGroup\Http\Controllers\PermissionGrantController::class, static fn (Container $c) => new \SevenCivilGroup\Http\Controllers\PermissionGrantController(
     $c->get(UserRepositoryInterface::class),
-    $c->get(\ArtaPharma\Domain\Repositories\UserPermissionRepositoryInterface::class),
+    $c->get(\SevenCivilGroup\Domain\Repositories\UserPermissionRepositoryInterface::class),
     $c->get(AccessControl::class),
 ));
-$container->bind(\ArtaPharma\Http\Controllers\ChatController::class, static fn (Container $c) => new \ArtaPharma\Http\Controllers\ChatController(
-    $c->get(\ArtaPharma\Domain\Repositories\ChatRepositoryInterface::class),
+$container->bind(\SevenCivilGroup\Http\Controllers\ChatController::class, static fn (Container $c) => new \SevenCivilGroup\Http\Controllers\ChatController(
+    $c->get(\SevenCivilGroup\Domain\Repositories\ChatRepositoryInterface::class),
     $c->get(UserRepositoryInterface::class),
     $c->get(AccessControl::class),
     $uploadDir,
@@ -300,7 +314,7 @@ $config = $container->get(Config::class);
 // missing (non-destructive) on the first request. Cheap no-op once done; never
 // blocks boot if the database is unreachable.
 try {
-    (new \ArtaPharma\Infrastructure\Database\Migrator($container->get(Connection::class)))
+    (new \SevenCivilGroup\Infrastructure\Database\Migrator($container->get(Connection::class)))
         ->ensureSchema(__DIR__ . '/../storage');
 } catch (\Throwable $e) {
     // Ignore — a misconfigured/unreachable DB surfaces on the actual request.

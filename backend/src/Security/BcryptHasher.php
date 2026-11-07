@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Security;
+namespace SevenCivilGroup\Security;
 
-use ArtaPharma\Security\Contracts\HasherInterface;
+use SevenCivilGroup\Security\Contracts\HasherInterface;
 
 /**
  * Bcrypt password hasher (uses PHP's native password_* — no external library).

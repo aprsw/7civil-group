@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Domain\Entities;
+namespace SevenCivilGroup\Domain\Entities;
 
-use ArtaPharma\Domain\Enums\PaperSize;
+use SevenCivilGroup\Domain\Enums\PaperSize;
 
 /**
  * A reusable letter template (قالب) managed in the template builder.

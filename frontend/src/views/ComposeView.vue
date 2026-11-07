@@ -424,7 +424,7 @@ onMounted(async () => {
       <button @click="router.back()" class="h-9 rounded-[10px] border border-ink-200 bg-white px-3 text-[13px] text-ink-800">→ انصراف</button>
       <div class="flex items-center gap-2.5">
         <img src="/assets/logo-mark.png" class="h-[26px]" />
-        <b class="text-brand-strong">نگارش نامه — آرتا فارما</b>
+        <b class="text-brand-strong">نگارش نامه — گروه متحد 7</b>
       </div>
       <div class="h-6 w-px bg-ink-200"></div>
       <input v-model="form.subject" placeholder="موضوع نامه…"
@@ -666,7 +666,7 @@ onMounted(async () => {
               <div class="flex items-center gap-2.5">
                 <img src="/assets/logo-mark.png" :style="{ height: form.paper_size === 'a5' ? '34px' : '44px' }" />
                 <div>
-                  <div style="font-weight:800;color:#2340a4;white-space:nowrap" :style="{ fontSize: form.paper_size === 'a5' ? '14pt' : '20pt' }">گروه داروسازی آرتا فارما</div>
+                  <div style="font-weight:800;color:#2340a4;white-space:nowrap" :style="{ fontSize: form.paper_size === 'a5' ? '14pt' : '20pt' }">گروه متحد 7</div>
                   <div style="font-size:10.5pt;color:#444;margin-top:2px">آرتا قلب بهسان طب</div>
                 </div>
               </div>

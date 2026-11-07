@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Security\Contracts;
+namespace SevenCivilGroup\Security\Contracts;
 
 interface HasherInterface
 {

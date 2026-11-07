@@ -19,9 +19,9 @@ function onUnauthorized() {
 
 onMounted(() => {
   auth.refresh()
-  window.addEventListener('arta:unauthorized', onUnauthorized)
+  window.addEventListener('civil7:unauthorized', onUnauthorized)
 })
-onUnmounted(() => window.removeEventListener('arta:unauthorized', onUnauthorized))
+onUnmounted(() => window.removeEventListener('civil7:unauthorized', onUnauthorized))
 </script>
 
 <template>

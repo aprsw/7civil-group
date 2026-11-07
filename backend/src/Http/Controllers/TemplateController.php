@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Exceptions\NotFoundException;
-use ArtaPharma\Core\Exceptions\ValidationException;
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Core\Http\Response;
-use ArtaPharma\Domain\Entities\Template;
-use ArtaPharma\Domain\Enums\PaperSize;
-use ArtaPharma\Domain\Enums\Permission;
-use ArtaPharma\Domain\Repositories\TemplateRepositoryInterface;
-use ArtaPharma\Services\AccessControl;
+use SevenCivilGroup\Core\Exceptions\NotFoundException;
+use SevenCivilGroup\Core\Exceptions\ValidationException;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Core\Http\Response;
+use SevenCivilGroup\Domain\Entities\Template;
+use SevenCivilGroup\Domain\Enums\PaperSize;
+use SevenCivilGroup\Domain\Enums\Permission;
+use SevenCivilGroup\Domain\Repositories\TemplateRepositoryInterface;
+use SevenCivilGroup\Services\AccessControl;
 
 /**
  * قالب‌ساز — manage reusable letter templates. Listing needs templates.view;

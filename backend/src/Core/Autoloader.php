@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Core;
+namespace SevenCivilGroup\Core;
 
 /**
  * Hand-written PSR-4 autoloader.

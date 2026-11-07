@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Domain\Entities;
+namespace SevenCivilGroup\Domain\Entities;
 
-use ArtaPharma\Domain\Enums\ReferralType;
+use SevenCivilGroup\Domain\Enums\ReferralType;
 
 /**
  * A single addressee of a letter — either an original recipient (kind

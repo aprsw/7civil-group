@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Services;
+namespace SevenCivilGroup\Services;
 
-use ArtaPharma\Core\Exceptions\UnauthorizedException;
-use ArtaPharma\Core\Exceptions\ValidationException;
-use ArtaPharma\Domain\Entities\User;
-use ArtaPharma\Domain\Repositories\UserRepositoryInterface;
-use ArtaPharma\Security\Contracts\HasherInterface;
-use ArtaPharma\Security\Contracts\TokenServiceInterface;
+use SevenCivilGroup\Core\Exceptions\UnauthorizedException;
+use SevenCivilGroup\Core\Exceptions\ValidationException;
+use SevenCivilGroup\Domain\Entities\User;
+use SevenCivilGroup\Domain\Repositories\UserRepositoryInterface;
+use SevenCivilGroup\Security\Contracts\HasherInterface;
+use SevenCivilGroup\Security\Contracts\TokenServiceInterface;
 
 /**
  * Authentication use-cases: credential login (issues a JWT) and resolving the

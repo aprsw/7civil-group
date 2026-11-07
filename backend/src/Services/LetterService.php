@@ -2,31 +2,31 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Services;
+namespace SevenCivilGroup\Services;
 
-use ArtaPharma\Core\Exceptions\NotFoundException;
-use ArtaPharma\Core\Exceptions\ValidationException;
-use ArtaPharma\Domain\Entities\Letter;
-use ArtaPharma\Domain\Entities\User;
-use ArtaPharma\Domain\Enums\Confidentiality;
-use ArtaPharma\Domain\Enums\LetterDirection;
-use ArtaPharma\Domain\Enums\LetterKind;
-use ArtaPharma\Domain\Enums\LetterPriority;
-use ArtaPharma\Domain\Enums\LetterScope;
-use ArtaPharma\Domain\Enums\LetterActionType;
-use ArtaPharma\Domain\Enums\LetterStatus;
-use ArtaPharma\Domain\Enums\PaperSize;
-use ArtaPharma\Domain\Enums\Permission;
-use ArtaPharma\Domain\Enums\ReferralType;
-use ArtaPharma\Domain\Repositories\DepartmentRepositoryInterface;
-use ArtaPharma\Domain\Repositories\LetterActionRepositoryInterface;
-use ArtaPharma\Domain\Repositories\LetterAttachmentRepositoryInterface;
-use ArtaPharma\Domain\Repositories\LetterReadRepositoryInterface;
-use ArtaPharma\Domain\Repositories\LetterRecipientRepositoryInterface;
-use ArtaPharma\Domain\Repositories\LetterRepositoryInterface;
-use ArtaPharma\Domain\Repositories\UserRepositoryInterface;
-use ArtaPharma\Domain\Repositories\WorkflowRepositoryInterface;
-use ArtaPharma\Support\Jalali;
+use SevenCivilGroup\Core\Exceptions\NotFoundException;
+use SevenCivilGroup\Core\Exceptions\ValidationException;
+use SevenCivilGroup\Domain\Entities\Letter;
+use SevenCivilGroup\Domain\Entities\User;
+use SevenCivilGroup\Domain\Enums\Confidentiality;
+use SevenCivilGroup\Domain\Enums\LetterDirection;
+use SevenCivilGroup\Domain\Enums\LetterKind;
+use SevenCivilGroup\Domain\Enums\LetterPriority;
+use SevenCivilGroup\Domain\Enums\LetterScope;
+use SevenCivilGroup\Domain\Enums\LetterActionType;
+use SevenCivilGroup\Domain\Enums\LetterStatus;
+use SevenCivilGroup\Domain\Enums\PaperSize;
+use SevenCivilGroup\Domain\Enums\Permission;
+use SevenCivilGroup\Domain\Enums\ReferralType;
+use SevenCivilGroup\Domain\Repositories\DepartmentRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\LetterActionRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\LetterAttachmentRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\LetterReadRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\LetterRecipientRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\LetterRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\UserRepositoryInterface;
+use SevenCivilGroup\Domain\Repositories\WorkflowRepositoryInterface;
+use SevenCivilGroup\Support\Jalali;
 
 /**
  * Letter use-cases: compose & send (with scope, confidentiality, recipient,
@@ -48,8 +48,8 @@ final class LetterService
         private readonly RecipientPolicy $policy,
         private readonly LetterAttachmentRepositoryInterface $attachments,
         private readonly LetterReadRepositoryInterface $reads,
-        private readonly \ArtaPharma\Domain\Repositories\LetterApproverRepositoryInterface $approvers,
-        private readonly \ArtaPharma\Domain\Repositories\LetterNoteRepositoryInterface $notes,
+        private readonly \SevenCivilGroup\Domain\Repositories\LetterApproverRepositoryInterface $approvers,
+        private readonly \SevenCivilGroup\Domain\Repositories\LetterNoteRepositoryInterface $notes,
     ) {
     }
 
@@ -620,9 +620,9 @@ final class LetterService
         $letter = $this->letters->find($id) ?? throw new NotFoundException('نامه یافت نشد.');
         if (!$this->canDelete($user, $letter)) {
             if ($this->reads->anyRead($letter->id)) {
-                throw new \ArtaPharma\Core\Exceptions\ForbiddenException('حداقل یکی از گیرندگان نامه را مشاهده کرده و امکان حذف وجود ندارد.');
+                throw new \SevenCivilGroup\Core\Exceptions\ForbiddenException('حداقل یکی از گیرندگان نامه را مشاهده کرده و امکان حذف وجود ندارد.');
             }
-            throw new \ArtaPharma\Core\Exceptions\ForbiddenException('اجازهٔ حذف این نامه را ندارید.');
+            throw new \SevenCivilGroup\Core\Exceptions\ForbiddenException('اجازهٔ حذف این نامه را ندارید.');
         }
         $this->letters->delete($id);
     }
@@ -709,7 +709,7 @@ final class LetterService
         return $updated;
     }
 
-    /** @return list<\ArtaPharma\Domain\Entities\LetterAction> */
+    /** @return list<\SevenCivilGroup\Domain\Entities\LetterAction> */
     public function history(int $letterId): array
     {
         return $this->actions->forLetter($letterId);

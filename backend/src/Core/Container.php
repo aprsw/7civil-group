@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Core;
+namespace SevenCivilGroup\Core;
 
-use ArtaPharma\Core\Exceptions\ContainerException;
+use SevenCivilGroup\Core\Exceptions\ContainerException;
 use Closure;
 
 /**

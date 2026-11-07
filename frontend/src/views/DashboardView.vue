@@ -25,7 +25,7 @@ const DEFAULT_STATS = ['in', 'out', 'unseen', 'mine']
 const editing = ref(false)
 const layout = ref({ order: [...DEFAULT_ORDER], hidden: [], stats: [...DEFAULT_STATS] })
 
-function storageKey() { return `arta_dash_layout_${auth.user?.id ?? 'x'}` }
+function storageKey() { return `civil7_dash_layout_${auth.user?.id ?? 'x'}` }
 function loadLayout() {
   try {
     const raw = JSON.parse(localStorage.getItem(storageKey()) || 'null')

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Domain\Repositories;
+namespace SevenCivilGroup\Domain\Repositories;
 
-use ArtaPharma\Domain\Entities\Letter;
-use ArtaPharma\Domain\Enums\LetterDirection;
+use SevenCivilGroup\Domain\Entities\Letter;
+use SevenCivilGroup\Domain\Enums\LetterDirection;
 
 interface LetterRepositoryInterface
 {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Http\Controllers;
+namespace SevenCivilGroup\Http\Controllers;
 
-use ArtaPharma\Core\Exceptions\UnauthorizedException;
-use ArtaPharma\Core\Http\Request;
-use ArtaPharma\Domain\Entities\User;
+use SevenCivilGroup\Core\Exceptions\UnauthorizedException;
+use SevenCivilGroup\Core\Http\Request;
+use SevenCivilGroup\Domain\Entities\User;
 
 /**
  * Base controller — shared helper to read the authenticated user placed on the

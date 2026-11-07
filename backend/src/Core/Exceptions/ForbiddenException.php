@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Core\Exceptions;
+namespace SevenCivilGroup\Core\Exceptions;
 
 /**
  * 403 — the authenticated user lacks the required access level / permission.

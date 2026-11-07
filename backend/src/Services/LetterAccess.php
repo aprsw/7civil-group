@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace ArtaPharma\Services;
+namespace SevenCivilGroup\Services;
 
-use ArtaPharma\Domain\Entities\Letter;
-use ArtaPharma\Domain\Entities\User;
-use ArtaPharma\Domain\Enums\Confidentiality;
-use ArtaPharma\Domain\Enums\LetterScope;
-use ArtaPharma\Domain\Enums\LetterStatus;
-use ArtaPharma\Domain\Enums\Permission;
-use ArtaPharma\Domain\Repositories\LetterRecipientRepositoryInterface;
+use SevenCivilGroup\Domain\Entities\Letter;
+use SevenCivilGroup\Domain\Entities\User;
+use SevenCivilGroup\Domain\Enums\Confidentiality;
+use SevenCivilGroup\Domain\Enums\LetterScope;
+use SevenCivilGroup\Domain\Enums\LetterStatus;
+use SevenCivilGroup\Domain\Enums\Permission;
+use SevenCivilGroup\Domain\Repositories\LetterRecipientRepositoryInterface;
 
 /**
  * Decides who may read a letter (row-level visibility) — need-to-know.
@@ -27,7 +27,7 @@ final class LetterAccess
 {
     public function __construct(
         private readonly LetterRecipientRepositoryInterface $recipients,
-        private readonly ?\ArtaPharma\Domain\Repositories\LetterApproverRepositoryInterface $approvers = null,
+        private readonly ?\SevenCivilGroup\Domain\Repositories\LetterApproverRepositoryInterface $approvers = null,
     ) {
     }
 
