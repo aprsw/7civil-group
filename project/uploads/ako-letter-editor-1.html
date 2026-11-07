@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ادیتور نامه — گروه سرمایه‌گذاری آکو</title>
+<style>
+  /* ============================================================
+     صفر وابستگی: بدون CDN، بدون فونت خارجی، بدون کتابخانه.
+     همه چیز خودمیزبان و قابل سینک با پروژهٔ JS/jQuery.
+     ============================================================ */
+  :root{
+    --bg:#e9ecef; --chrome:#f4f5f7; --line:#d4d7dc; --line2:#e3e5e9;
+    --ink:#2b2f36; --muted:#6b7280; --accent:#2f6f4f; --accent2:#e8f2ec;
+    --btn:#fff; --btn-h:#eef1f4; --btn-a:#dbe7e0; --shadow:0 1px 2px rgba(0,0,0,.06);
+    --tok:#eaf2fb; --tok-b:#b9d4f2; --tok-ink:#1c5aa8;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    font-family:Tahoma,"Segoe UI","Iranian Sans",Arial,sans-serif;
+    background:var(--bg); color:var(--ink); font-size:13px; direction:rtl;
+  }
+  .app{display:flex;flex-direction:column;height:100vh}
+
+  /* ---------- نوار سند (تب‌ها + سوییچ اندازه) ---------- */
+  .docbar{
+    display:flex;align-items:center;gap:8px;padding:6px 12px;
+    background:var(--chrome);border-bottom:1px solid var(--line);
+  }
+  .docbar .title{font-weight:bold;color:var(--accent);white-space:nowrap}
+  .docbar .spacer{flex:1}
+  .sizeswitch{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+  .sizeswitch button{
+    border:0;background:var(--btn);padding:5px 14px;cursor:pointer;font-family:inherit;font-size:12px;
+  }
+  .sizeswitch button+button{border-right:1px solid var(--line)}
+  .sizeswitch button.active{background:var(--accent);color:#fff}
+  .docbar .ghost{
+    border:1px solid var(--line);background:var(--btn);border-radius:6px;
+    padding:5px 12px;cursor:pointer;font-family:inherit;font-size:12px;
+  }
+  .docbar .ghost:hover{background:var(--btn-h)}
+
+  /* ---------- نوار ابزار ---------- */
+  .toolbar{
+    display:flex;flex-wrap:wrap;align-items:center;gap:3px;
+    padding:6px 10px;background:var(--chrome);border-bottom:1px solid var(--line);
+  }
+  .tb{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:30px;height:30px;padding:0 6px;border:1px solid transparent;
+    background:transparent;border-radius:6px;cursor:pointer;color:var(--ink);
+    font-family:inherit;font-size:14px;line-height:1;user-select:none;
+  }
+  .tb:hover{background:var(--btn-h);border-color:var(--line)}
+  .tb:active,.tb.on{background:var(--btn-a);border-color:var(--line)}
+  .tb svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .tb.filled svg{fill:currentColor;stroke:none}
+  .sep{width:1px;height:22px;background:var(--line);margin:0 4px}
+  select.tb-select{
+    height:30px;border:1px solid var(--line);background:var(--btn);border-radius:6px;
+    padding:0 6px;font-family:inherit;font-size:12px;cursor:pointer;color:var(--ink);
+  }
+  .tb-color{position:relative}
+  .tb-color input[type=color]{position:absolute;inset:0;opacity:0;cursor:pointer}
+
+  /* ---------- محیط کار + کاغذ ---------- */
+  .workspace{flex:1;overflow:auto;padding:26px 16px;display:flex;justify-content:center;align-items:flex-start}
+  .paper{
+    background:#fff;box-shadow:0 6px 24px rgba(0,0,0,.14);border:1px solid #ccc;
+    padding:22mm 20mm;outline:0;transition:width .18s,min-height .18s;
+    font-size:12pt;line-height:2;color:#111;
+  }
+  .paper.a4{width:210mm;min-height:297mm}
+  .paper.a5{width:148mm;min-height:210mm}
+  .paper:focus{box-shadow:0 6px 24px rgba(47,111,79,.28)}
+
+  /* ---------- سربرگ ---------- */
+  .letterhead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}
+  .lh-brand h1{margin:0;font-size:22pt;font-weight:bold}
+  .lh-brand .sub{margin-top:6px;font-size:11pt;color:#333}
+  .lh-meta{border-collapse:collapse;font-size:10.5pt;min-width:170px}
+  .lh-meta td{border:1px solid #333;padding:3px 8px}
+  .lh-meta td.k{background:#f3f3f3;white-space:nowrap;width:1%}
+
+  .greet{margin:22px 0 4px}
+  .subject{margin:6px 0}
+  .salam{margin:16px 0 10px}
+  .body-text{margin:10px 0}
+
+  /* ---------- بلوک امضا ---------- */
+  .sign{margin-top:42px;border-collapse:collapse;width:60%}
+  .sign td{border:1px solid #333;padding:10px 12px;height:70px;vertical-align:top;font-size:10.5pt}
+  .sign .sig-line{display:block;margin-top:6px;color:#555}
+
+  /* ---------- چیپ توکن ---------- */
+  .token{
+    display:inline-block;background:var(--tok);border:1px solid var(--tok-b);color:var(--tok-ink);
+    border-radius:5px;padding:0 6px;margin:0 1px;font-size:.9em;white-space:nowrap;user-select:all;
+  }
+
+  /* ---------- پنل داده (پر کردن توکن‌ها) ---------- */
+  .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:40}
+  .backdrop.show{display:block}
+  .modal{
+    position:fixed;top:50%;right:50%;transform:translate(50%,-50%);z-index:41;
+    width:min(440px,92vw);background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.3);
+    display:none;overflow:hidden;
+  }
+  .modal.show{display:block}
+  .modal header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line2);background:var(--chrome)}
+  .modal header b{color:var(--accent)}
+  .modal .x{border:0;background:transparent;font-size:20px;cursor:pointer;color:var(--muted);line-height:1}
+  .modal .content{padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .fld{display:flex;flex-direction:column;gap:4px}
+  .fld.full{grid-column:1/-1}
+  .fld label{font-size:12px;color:var(--muted)}
+  .fld input{border:1px solid var(--line);border-radius:7px;padding:8px 10px;font-family:inherit;font-size:13px}
+  .fld input:focus{outline:0;border-color:var(--accent)}
+  .modal footer{display:flex;gap:8px;justify-content:flex-start;padding:12px 16px;border-top:1px solid var(--line2)}
+  .btn{border:0;border-radius:8px;padding:9px 18px;cursor:pointer;font-family:inherit;font-size:13px}
+  .btn.primary{background:var(--accent);color:#fff}
+  .btn.primary:hover{filter:brightness(1.06)}
+  .btn.soft{background:var(--btn-h);color:var(--ink)}
+
+  /* پاپ‌اور کاراکتر ویژه */
+  .charpop{
+    position:absolute;z-index:30;background:#fff;border:1px solid var(--line);border-radius:8px;
+    box-shadow:0 10px 30px rgba(0,0,0,.18);padding:8px;display:none;grid-template-columns:repeat(8,1fr);gap:2px;
+  }
+  .charpop.show{display:grid}
+  .charpop button{border:0;background:transparent;width:28px;height:28px;border-radius:5px;cursor:pointer;font-size:15px}
+  .charpop button:hover{background:var(--btn-h)}
+
+  /* ---------- چاپ ---------- */
+  @media print{
+    body{background:#fff}
+    .docbar,.toolbar,.backdrop,.modal,.charpop{display:none !important}
+    .workspace{padding:0;overflow:visible}
+    .paper{box-shadow:none;border:0;margin:0}
+    .token{background:transparent;border:0;color:#111;padding:0}
+    @page{margin:14mm}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ نوار سند ============ -->
+  <div class="docbar">
+    <span class="title">نامه — گروه سرمایه‌گذاری آکو</span>
+    <span class="spacer"></span>
+    <button class="ghost" id="fillBtn">پر کردن توکن‌ها</button>
+    <button class="ghost" id="printBtn">چاپ</button>
+    <div class="sizeswitch" id="sizeSwitch">
+      <button data-size="a4" class="active">A4</button>
+      <button data-size="a5">A5</button>
+    </div>
+  </div>
+
+  <!-- ============ نوار ابزار ============ -->
+  <div class="toolbar" id="toolbar">
+    <button class="tb" data-cmd="undo" title="واگرد">
+      <svg viewBox="0 0 24 24"><path d="M9 7L4 12l5 5"/><path d="M4 12h11a5 5 0 0 1 5 5"/></svg>
+    </button>
+    <button class="tb" data-cmd="redo" title="ازنو">
+      <svg viewBox="0 0 24 24"><path d="M15 7l5 5-5 5"/><path d="M20 12H9a5 5 0 0 0-5 5"/></svg>
+    </button>
+    <span class="sep"></span>
+
+    <select class="tb-select" id="fontName" title="قلم">
+      <option value="Tahoma">Tahoma</option>
+      <option value="Arial">Arial</option>
+      <option value="'Times New Roman'">Times</option>
+      <option value="'Courier New'">Courier</option>
+      <option value="'Segoe UI'">Segoe UI</option>
+    </select>
+    <select class="tb-select" id="fontSize" title="اندازه">
+      <option value="9pt">۹</option>
+      <option value="10pt">۱۰</option>
+      <option value="11pt">۱۱</option>
+      <option value="12pt" selected>۱۲</option>
+      <option value="14pt">۱۴</option>
+      <option value="16pt">۱۶</option>
+      <option value="18pt">۱۸</option>
+      <option value="22pt">۲۲</option>
+    </select>
+    <span class="sep"></span>
+
+    <button class="tb" data-cmd="bold" title="ضخیم"><b>B</b></button>
+    <button class="tb" data-cmd="italic" title="مورب"><i>I</i></button>
+    <button class="tb" data-cmd="underline" title="زیرخط"><u>U</u></button>
+    <button class="tb" data-cmd="strikeThrough" title="خط‌خورده"><s>S</s></button>
+
+    <button class="tb tb-color" title="رنگ متن">
+      <span>A</span><span style="display:block;height:3px;background:#d33;margin-top:1px;border-radius:2px"></span>
+      <input type="color" id="foreColor" value="#111111">
+    </button>
+    <button class="tb tb-color" title="هایلایت">
+      <svg viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M6 16l9-9 3 3-9 9H6z"/></svg>
+      <input type="color" id="hiliteColor" value="#ffff00">
+    </button>
+    <span class="sep"></span>
+
+    <button class="tb" data-cmd="justifyRight" title="راست‌چین">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18M8 12h13M3 18h18"/></svg>
+    </button>
+    <button class="tb" data-cmd="justifyCenter" title="وسط‌چین">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M3 18h18"/></svg>
+    </button>
+    <button class="tb" data-cmd="justifyLeft" title="چپ‌چین">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h13M3 18h18"/></svg>
+    </button>
+    <button class="tb" data-cmd="justifyFull" title="تراز دوطرفه">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <span class="sep"></span>
+
+    <button class="tb" data-cmd="insertUnorderedList" title="فهرست نقطه‌ای">
+      <svg viewBox="0 0 24 24"><circle cx="4" cy="6" r="1.4" class="d"/><circle cx="4" cy="12" r="1.4"/><circle cx="4" cy="18" r="1.4"/><path d="M9 6h11M9 12h11M9 18h11"/></svg>
+    </button>
+    <button class="tb" data-cmd="insertOrderedList" title="فهرست شماره‌ای">
+      <svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><text x="2" y="8" font-size="6" stroke="none" fill="currentColor">۱</text></svg>
+    </button>
+    <button class="tb" data-cmd="outdent" title="کاهش تورفتگی">
+      <svg viewBox="0 0 24 24"><path d="M20 6H9M20 12H12M20 18H9M7 9l-3 3 3 3"/></svg>
+    </button>
+    <button class="tb" data-cmd="indent" title="افزایش تورفتگی">
+      <svg viewBox="0 0 24 24"><path d="M4 6h11M4 12h8M4 18h11M17 9l3 3-3 3"/></svg>
+    </button>
+    <span class="sep"></span>
+
+    <button class="tb" id="insTable" title="درج جدول">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 10h18M3 15h18M9 4v16M15 4v16"/></svg>
+    </button>
+    <button class="tb" id="insToken" title="درج توکن">
+      <svg viewBox="0 0 24 24"><path d="M8 4H6a2 2 0 0 0-2 2v3l-2 3 2 3v3a2 2 0 0 0 2 2h2M16 4h2a2 2 0 0 1 2 2v3l2 3-2 3v3a2 2 0 0 1-2 2h-2"/></svg>
+    </button>
+    <button class="tb" data-cmd="createLink" title="پیوند">
+      <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+    </button>
+    <button class="tb" data-cmd="insertHorizontalRule" title="خط جداکننده">
+      <svg viewBox="0 0 24 24"><path d="M3 12h18"/></svg>
+    </button>
+    <button class="tb" data-cmd="formatBlock:blockquote" title="نقل‌قول">
+      <svg viewBox="0 0 24 24"><path d="M7 7H4v6h5V7H7zM17 7h-3v6h5V7h-2z"/></svg>
+    </button>
+    <button class="tb" id="specChar" title="کاراکتر ویژه">Ω</button>
+    <span class="sep"></span>
+
+    <button class="tb" id="dirToggle" title="جهت پاراگراف (راست/چپ)">
+      <svg viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
+    </button>
+    <button class="tb" data-cmd="removeFormat" title="پاک کردن قالب">
+      <svg viewBox="0 0 24 24"><path d="M5 5l14 14M6 6l4 12M13 4h6M9 4l1 3"/></svg>
+    </button>
+  </div>
+
+  <!-- ============ کاغذ ============ -->
+  <div class="workspace">
+    <div class="paper a4" id="paper" contenteditable="true" spellcheck="false">
+
+      <div class="letterhead">
+        <div class="lh-brand">
+          <h1>گروه سرمایه‌گذاری آکو</h1>
+          <div class="sub">آکو باتری – آکو مد – آکو طب</div>
+        </div>
+        <table class="lh-meta">
+          <tr><td class="k">شماره:</td><td><span class="token" contenteditable="false">{شماره}</span></td></tr>
+          <tr><td class="k">تاریخ:</td><td><span class="token" contenteditable="false">{تاریخ}</span></td></tr>
+          <tr><td class="k">پیوست:</td><td><span class="token" contenteditable="false">{پیوست}</span></td></tr>
+        </table>
+      </div>
+
+      <p class="greet">جناب آقای / سرکار خانم <span class="token" contenteditable="false">{گیرنده}</span> …</p>
+      <p class="subject">موضوع: <span class="token" contenteditable="false">{موضوع}</span></p>
+      <p class="salam">با سلام؛</p>
+      <p class="body-text">احتراماً …</p>
+
+      <table class="sign">
+        <tr>
+          <td>
+            <span class="token" contenteditable="false">{امضا}</span>
+            <span class="sig-line"><span class="token" contenteditable="false">{نام امضاکننده}</span></span>
+            <span class="sig-line"><span class="token" contenteditable="false">{سمت امضاکننده}</span></span>
+          </td>
+          <td></td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+</div>
+
+<!-- پاپ‌اور کاراکتر ویژه -->
+<div class="charpop" id="charpop"></div>
+
+<!-- پاپ‌اور توکن -->
+<div class="charpop" id="tokenpop" style="grid-template-columns:1fr"></div>
+
+<!-- مودال پر کردن توکن‌ها -->
+<div class="backdrop" id="backdrop"></div>
+<div class="modal" id="modal">
+  <header><b>پر کردن دادهٔ نامه</b><button class="x" id="modalX">×</button></header>
+  <div class="content">
+    <div class="fld"><label>شماره</label><input data-tok="شماره" placeholder="۵/۱/۷۶۶۵۸"></div>
+    <div class="fld"><label>تاریخ</label><input data-tok="تاریخ" placeholder="۱۴۰۵/۰۲/۰۲"></div>
+    <div class="fld"><label>پیوست</label><input data-tok="پیوست" placeholder="دارد / ندارد"></div>
+    <div class="fld"><label>گیرنده</label><input data-tok="گیرنده" placeholder="جناب آقای اسدی"></div>
+    <div class="fld full"><label>موضوع</label><input data-tok="موضوع" placeholder="خرید قفل سیددار"></div>
+    <div class="fld"><label>نام امضاکننده</label><input data-tok="نام امضاکننده" placeholder="میلاد حیدری"></div>
+    <div class="fld"><label>سمت امضاکننده</label><input data-tok="سمت امضاکننده" placeholder="مسئول حسابداری"></div>
+  </div>
+  <footer>
+    <button class="btn primary" id="applyFill">اعمال</button>
+    <button class="btn soft" id="resetFill">بازنشانی توکن‌ها</button>
+  </footer>
+</div>
+
+<script>
+/* =====================================================================
+   منطق ادیتور — Vanilla JS، بدون وابستگی.
+   جایگزینی راحت با jQuery: هرجا document.querySelector هست می‌تونی $()
+   بذاری. execCommand عمداً استفاده شده چون با استک jQuery/legacy سازگارتره.
+   ===================================================================== */
+(function(){
+  "use strict";
+  var paper = document.getElementById('paper');
+  var toolbar = document.getElementById('toolbar');
+  var savedRange = null;
+
+  /* --- نگه‌داشتن آخرین موقعیت کرسر داخل ادیتور --- */
+  function saveSelection(){
+    var sel = window.getSelection();
+    if(sel.rangeCount && paper.contains(sel.anchorNode)){
+      savedRange = sel.getRangeAt(0).cloneRange();
+    }
+  }
+  function restoreSelection(){
+    if(!savedRange) return;
+    var sel = window.getSelection();
+    sel.removeAllRanges(); sel.addRange(savedRange);
+  }
+  document.addEventListener('selectionchange', saveSelection);
+  paper.addEventListener('mouseup', saveSelection);
+  paper.addEventListener('keyup', saveSelection);
+
+  function focusEditor(){ paper.focus(); restoreSelection(); }
+  function exec(cmd, val){ focusEditor(); document.execCommand(cmd, false, val || null); refreshState(); }
+
+  try{ document.execCommand('styleWithCSS', false, true); }catch(e){}
+
+  /* --- دکمه‌های ساده با data-cmd --- */
+  toolbar.querySelectorAll('[data-cmd]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var c = b.getAttribute('data-cmd');
+      if(c.indexOf('formatBlock:')===0){ exec('formatBlock', c.split(':')[1]); return; }
+      if(c==='createLink'){
+        var url = prompt('نشانی پیوند:', 'https://');
+        if(url) exec('createLink', url);
+        return;
+      }
+      exec(c);
+    });
+  });
+
+  /* --- قلم و اندازه --- */
+  document.getElementById('fontName').addEventListener('change', function(){
+    exec('fontName', this.value);
+  });
+  document.getElementById('fontSize').addEventListener('change', function(){
+    applyFontSize(this.value);
+  });
+  // هک اندازهٔ واقعی pt (execCommand fontSize فقط ۱..۷ می‌پذیرد)
+  function applyFontSize(size){
+    focusEditor();
+    document.execCommand('fontSize', false, '7');
+    var marked = paper.querySelectorAll('font[size="7"]');
+    marked.forEach(function(f){
+      var span = document.createElement('span');
+      span.style.fontSize = size;
+      while(f.firstChild) span.appendChild(f.firstChild);
+      f.parentNode.replaceChild(span, f);
+    });
+  }
+
+  /* --- رنگ متن و هایلایت --- */
+  document.getElementById('foreColor').addEventListener('input', function(){
+    exec('foreColor', this.value);
+  });
+  document.getElementById('hiliteColor').addEventListener('input', function(){
+    focusEditor();
+    if(!document.execCommand('hiliteColor', false, this.value)){
+      document.execCommand('backColor', false, this.value);
+    }
+  });
+
+  /* --- درج جدول --- */
+  document.getElementById('insTable').addEventListener('click', function(){
+    var r = parseInt(prompt('تعداد سطر:', '2'),10);
+    var c = parseInt(prompt('تعداد ستون:', '2'),10);
+    if(!r||!c) return;
+    var html = '<table style="border-collapse:collapse;width:100%;margin:8px 0">';
+    for(var i=0;i<r;i++){ html+='<tr>'; for(var j=0;j<c;j++) html+='<td style="border:1px solid #555;padding:6px 8px;min-width:40px">&nbsp;</td>'; html+='</tr>'; }
+    html+='</table><p><br></p>';
+    exec('insertHTML', html);
+  });
+
+  /* --- جهت پاراگراف --- */
+  document.getElementById('dirToggle').addEventListener('click', function(){
+    focusEditor();
+    var sel = window.getSelection(); if(!sel.rangeCount) return;
+    var node = sel.anchorNode;
+    while(node && node!==paper && !(node.nodeType===1 && /^(P|DIV|LI|TD|H[1-6]|BLOCKQUOTE)$/.test(node.tagName))) node = node.parentNode;
+    if(node && node!==paper){
+      node.dir = (node.dir==='ltr') ? 'rtl' : 'ltr';
+      node.style.textAlign = node.dir==='ltr' ? 'left' : 'right';
+    }
+  });
+
+  /* --- کاراکتر ویژه --- */
+  var chars = '× ÷ ± ° € $ £ ٪ § © ® ™ « » ‹ › – — … ٬ ٫ √ ∞ ≈ ≤ ≥ → ← ↑ ↓ ✓ ★ ● ◆'.split(' ');
+  var charpop = document.getElementById('charpop');
+  chars.forEach(function(ch){
+    var b = document.createElement('button'); b.textContent = ch;
+    b.addEventListener('click', function(){ exec('insertText', ch); hidePops(); });
+    charpop.appendChild(b);
+  });
+  document.getElementById('specChar').addEventListener('click', function(e){
+    positionPop(charpop, this); toggle(charpop);
+  });
+
+  /* --- توکن‌ها --- */
+  var tokens = ['شماره','تاریخ','پیوست','گیرنده','موضوع','امضا','نام امضاکننده','سمت امضاکننده'];
+  var tokenpop = document.getElementById('tokenpop');
+  tokens.forEach(function(t){
+    var b = document.createElement('button'); b.textContent = '{'+t+'}';
+    b.style.textAlign='right'; b.style.width='100%'; b.style.padding='4px 8px';
+    b.addEventListener('click', function(){
+      exec('insertHTML', '<span class="token" contenteditable="false">{'+t+'}</span>&nbsp;');
+      hidePops();
+    });
+    tokenpop.appendChild(b);
+  });
+  document.getElementById('insToken').addEventListener('click', function(){
+    positionPop(tokenpop, this); toggle(tokenpop);
+  });
+
+  function positionPop(pop, btn){
+    var r = btn.getBoundingClientRect();
+    pop.style.top = (r.bottom+4)+'px';
+    pop.style.right = (window.innerWidth - r.right)+'px';
+  }
+  function toggle(el){ hidePops(el); el.classList.toggle('show'); }
+  function hidePops(except){
+    [charpop,tokenpop].forEach(function(p){ if(p!==except) p.classList.remove('show'); });
+  }
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('.charpop') && !e.target.closest('#specChar') && !e.target.closest('#insToken')) hidePops();
+  });
+
+  /* --- سوییچ A4/A5 --- */
+  document.getElementById('sizeSwitch').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    this.querySelectorAll('button').forEach(function(x){x.classList.remove('active')});
+    b.classList.add('active');
+    paper.classList.remove('a4','a5'); paper.classList.add(b.dataset.size);
+  });
+
+  /* --- چاپ --- */
+  document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+
+  /* --- پر کردن توکن‌ها --- */
+  var modal = document.getElementById('modal'), backdrop = document.getElementById('backdrop');
+  function openModal(){ modal.classList.add('show'); backdrop.classList.add('show'); }
+  function closeModal(){ modal.classList.remove('show'); backdrop.classList.remove('show'); }
+  document.getElementById('fillBtn').addEventListener('click', openModal);
+  document.getElementById('modalX').addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+
+  document.getElementById('applyFill').addEventListener('click', function(){
+    modal.querySelectorAll('input[data-tok]').forEach(function(inp){
+      var val = inp.value.trim(); if(!val) return;
+      var key = inp.getAttribute('data-tok');
+      paper.querySelectorAll('.token').forEach(function(tok){
+        if(tok.textContent === '{'+key+'}'){
+          var s = document.createElement('span'); s.textContent = val; // متن ساده جایگزین چیپ
+          tok.parentNode.replaceChild(s, tok);
+        }
+      });
+    });
+    closeModal();
+  });
+  document.getElementById('resetFill').addEventListener('click', function(){
+    modal.querySelectorAll('input[data-tok]').forEach(function(i){ i.value=''; });
+  });
+
+  /* --- روشن/خاموش کردن حالت دکمه‌ها بر اساس انتخاب --- */
+  var stateCmds = { bold:'bold', italic:'italic', underline:'underline', strikeThrough:'strikeThrough',
+                    justifyRight:'justifyRight', justifyCenter:'justifyCenter', justifyLeft:'justifyLeft', justifyFull:'justifyFull' };
+  function refreshState(){
+    for(var cmd in stateCmds){
+      var btn = toolbar.querySelector('[data-cmd="'+cmd+'"]'); if(!btn) continue;
+      try{ btn.classList.toggle('on', document.queryCommandState(cmd)); }catch(e){}
+    }
+  }
+  paper.addEventListener('keyup', refreshState);
+  paper.addEventListener('mouseup', refreshState);
+})();
+</script>
+</body>
+</html>

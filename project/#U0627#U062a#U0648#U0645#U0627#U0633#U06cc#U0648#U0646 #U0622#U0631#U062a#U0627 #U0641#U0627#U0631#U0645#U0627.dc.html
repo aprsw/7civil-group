@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/design-system-e25c5030-35c0-47f8-acfd-e40a8594a56a/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/design-system-e25c5030-35c0-47f8-acfd-e40a8594a56a/tokens/colors.css">
+<link rel="stylesheet" href="_ds/design-system-e25c5030-35c0-47f8-acfd-e40a8594a56a/tokens/typography.css">
+<link rel="stylesheet" href="_ds/design-system-e25c5030-35c0-47f8-acfd-e40a8594a56a/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/design-system-e25c5030-35c0-47f8-acfd-e40a8594a56a/tokens/radii-shadows.css">
+<link rel="stylesheet" href="_ds/design-system-e25c5030-35c0-47f8-acfd-e40a8594a56a/tokens/motion.css">
+<link rel="stylesheet" href="_ds/design-system-e25c5030-35c0-47f8-acfd-e40a8594a56a/styles.css">
+<script src="_ds/design-system-e25c5030-35c0-47f8-acfd-e40a8594a56a/_ds_bundle.js"></script>
+<script src="icons.jsx"></script>
+<style>
+  html,body{margin:0;height:100%;background:var(--bg-app)}
+  *{box-sizing:border-box}
+  @keyframes afToastIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes afModalIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+  @keyframes afFade{from{opacity:0}to{opacity:1}}
+  .af-tb{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 6px;border:1px solid transparent;background:transparent;border-radius:8px;cursor:pointer;color:var(--ink-700);font-family:var(--font-fa);font-size:14px;line-height:1;user-select:none}
+  .af-tb:hover{background:var(--ink-100);border-color:var(--border-subtle)}
+  .af-tb:active,.af-tb.on{background:var(--blue-50);border-color:var(--border-brand);color:var(--brand-strong)}
+  .af-tb svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .af-tb.filled svg{fill:currentColor;stroke:none}
+  .af-tbsel{height:30px;border:1px solid var(--border-subtle);background:#fff;border-radius:8px;padding:0 6px;font-family:var(--font-fa);font-size:12px;cursor:pointer;color:var(--ink-700)}
+  .af-token{display:inline-block;background:var(--blue-50);border:1px solid var(--border-brand);color:var(--brand-strong);border-radius:5px;padding:0 6px;margin:0 1px;font-size:.9em;white-space:nowrap;user-select:all}
+  .af-paper:focus{outline:0}
+  .af-scroll::-webkit-scrollbar{width:10px;height:10px}
+  .af-scroll::-webkit-scrollbar-track{background:transparent}
+  .af-scroll::-webkit-scrollbar-thumb{background:var(--ink-300);border-radius:8px;border:2px solid transparent;background-clip:content-box}
+  .af-pop{position:fixed;z-index:60;background:#fff;border:1px solid var(--border-subtle);border-radius:12px;box-shadow:var(--shadow-lg);padding:8px}
+  .af-pop button{border:0;background:transparent;border-radius:6px;cursor:pointer;font-family:var(--font-fa)}
+  .af-pop button:hover{background:var(--ink-100)}
+  .af-tplcard{cursor:pointer;transition:transform .12s,box-shadow .12s,border-color .12s}
+  .af-tplcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--border-brand)}
+  .af-sizecard{cursor:pointer;transition:transform .12s,box-shadow .12s,border-color .12s}
+  .af-navrow{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:10px;cursor:pointer;color:var(--ink-700);font-size:13.5px;font-weight:500;border:1px solid transparent}
+  .af-navrow:hover{background:var(--ink-100)}
+  .af-navrow.on{background:var(--blue-50);color:var(--brand-strong);border-color:var(--border-brand);font-weight:600}
+  @media print{
+    body *{visibility:hidden}
+    #af-paper,#af-paper *{visibility:visible}
+    #af-paper{position:absolute;top:0;left:0;right:0;margin:0 auto;box-shadow:none;border:0}
+  }
+</style>
+</helmet>
+
+<div style="min-height:100vh;font-family:var(--font-fa);color:var(--text-body)">
+
+<!-- ============================= LOGIN ============================= -->
+<sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+<div style="min-height:100vh;display:flex;flex-direction:column;background:var(--grad-brand);position:relative;overflow:hidden">
+  <div style="position:absolute;top:-120px;right:-80px;width:460px;height:460px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.22),transparent 65%);pointer-events:none"></div>
+  <div style="position:absolute;bottom:-160px;left:120px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(0,174,195,0.28),transparent 65%);pointer-events:none"></div>
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:40px;padding:48px 72px;position:relative;z-index:1">
+    <div style="display:flex;justify-content:center">
+      <div style="width:100%;max-width:430px;background:var(--glass-bg);border:1px solid var(--glass-border);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-radius:var(--r-2xl);padding:38px 34px;box-shadow:var(--shadow-xl)">
+        <div style="text-align:center;margin-bottom:28px">
+          <h1 style="margin:0;font:var(--text-h1);color:#fff">ورود کاربران</h1>
+          <p style="margin:8px 0 0;font-size:var(--fs-body);color:rgba(255,255,255,0.8)">سامانه یکپارچه اتوماسیون اداری</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:15px">
+          <input placeholder="نام کاربری" value="milad.heydari" onChange="{{ noop }}" style="width:100%;height:46px;border:1px solid var(--glass-border);background:rgba(255,255,255,0.16);border-radius:var(--r-control);padding:0 14px;color:#fff;font-family:var(--font-fa);font-size:14px" />
+          <input type="password" value="password" onChange="{{ noop }}" style="width:100%;height:46px;border:1px solid var(--glass-border);background:rgba(255,255,255,0.16);border-radius:var(--r-control);padding:0 14px;color:#fff;font-family:var(--font-fa);font-size:14px" />
+          <div style="display:flex;align-items:center;justify-content:space-between;color:rgba(255,255,255,0.85);font-size:13px">
+            <label style="display:flex;align-items:center;gap:7px;cursor:pointer"><input type="checkbox" checked="checked" /> مرا به خاطر بسپار</label>
+            <a href="#" style="color:var(--gold-300);text-decoration:none;font-weight:500">فراموشی رمز؟</a>
+          </div>
+          <button onClick="{{ login }}" style="width:100%;height:50px;border:0;border-radius:var(--r-control);background:var(--grad-gold);color:#3a2a02;font-family:var(--font-fa);font-weight:700;font-size:15px;cursor:pointer;box-shadow:var(--shadow-gold);display:flex;align-items:center;justify-content:center;gap:8px" style-hover="filter:brightness(1.05)">ورود به سامانه ‹</button>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center">
+      <img src="assets/logo-full-white.png" alt="گروه داروسازی آرتا فارما" style="width:min(440px,82%)" />
+    </div>
+  </div>
+  <div style="background:rgba(9,24,58,0.34);backdrop-filter:blur(6px);border-top:1px solid rgba(255,255,255,0.14);padding:14px 40px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1">
+    <span style="font-size:13px;color:rgba(255,255,255,0.7)">© ۱۴۰۳ گروه داروسازی آرتا فارما · آرتا قلب بهسان طب</span>
+    <span style="display:inline-flex;align-items:center;gap:8px;color:#fff;font-size:13px">🌐 فارسی</span>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============================= APP ============================= -->
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:var(--sidebar-w) 1fr;min-height:100vh;background:var(--bg-app)">
+
+  <!-- Sidebar -->
+  <aside class="af-noprint" style="background:var(--surface-card);border-inline-start:1px solid var(--border-subtle);display:flex;flex-direction:column;padding:18px 14px;gap:4px;position:sticky;top:0;height:100vh">
+    <div style="display:flex;align-items:center;gap:11px;padding:6px 8px 16px">
+      <img src="assets/logo-mark.png" alt="آرتا فارما" style="height:40px" />
+      <div style="line-height:1.3">
+        <div style="font-weight:800;font-size:15px;color:var(--brand-strong)">آرتا فارما</div>
+        <div style="font-size:11px;color:var(--text-subtle)">اتوماسیون اداری</div>
+      </div>
+    </div>
+    <button onClick="{{ openTemplate }}" style="display:flex;align-items:center;justify-content:center;gap:8px;margin:0 4px 10px;height:42px;border:0;border-radius:12px;background:var(--grad-brand);color:#fff;font-family:var(--font-fa);font-weight:600;font-size:14px;cursor:pointer;box-shadow:var(--shadow-brand)">✚ نامه جدید</button>
+    <div style="font-size:11px;font-weight:600;color:var(--text-subtle);padding:6px 10px 4px">منوی اصلی</div>
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6">
+      <div class="af-navrow {{ n.cls }}" onClick="{{ n.go }}">
+        <span style="display:flex;color:{{ n.color }}">{{ n.icon }}</span>
+        <span style="flex:1">{{ n.label }}</span>
+        <sc-if value="{{ n.count }}" hint-placeholder-val=""><span style="font-size:11px;background:var(--blue-50);color:var(--brand-strong);border-radius:999px;padding:1px 8px;font-weight:600" class="num">{{ n.count }}</span></sc-if>
+      </div>
+    </sc-for>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--border-subtle);padding-top:10px">
+      <div class="af-navrow" onClick="{{ noop }}"><span>⚙</span><span style="flex:1">تنظیمات</span></div>
+      <div class="af-navrow" onClick="{{ logout }}"><span>⇦</span><span style="flex:1">خروج</span></div>
+    </div>
+  </aside>
+
+  <!-- Main column -->
+  <div style="display:flex;flex-direction:column;min-width:0">
+    <!-- Topbar -->
+    <header class="af-noprint" style="height:66px;background:var(--surface-card);border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;gap:16px;padding:0 26px;position:sticky;top:0;z-index:20">
+      <div style="position:relative;flex:1;max-width:380px">
+        <span style="position:absolute;top:50%;right:12px;transform:translateY(-50%);color:var(--text-subtle)">⌕</span>
+        <input placeholder="جستجوی نامه، شخص یا شناسه…" style="width:100%;height:40px;border:1px solid var(--border-subtle);border-radius:var(--r-control);background:var(--surface-sunken);padding:0 36px 0 14px;font-family:var(--font-fa);font-size:13.5px" />
+      </div>
+      <div style="flex:1"></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:12px;color:var(--text-subtle)">نقش فعال:</span>
+        <select onChange="{{ setRole }}" style="height:38px;border:1px solid var(--border-subtle);border-radius:var(--r-control);background:#fff;padding:0 10px;font-family:var(--font-fa);font-size:13px;color:var(--text-body);cursor:pointer">
+          <sc-for list="{{ roleOptions }}" as="r" hint-placeholder-count="5"><option value="{{ r.idx }}" selected="{{ r.sel }}">{{ r.text }}</option></sc-for>
+        </select>
+      </div>
+      <div style="position:relative;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--ink-600);cursor:pointer" style-hover="background:var(--ink-100)">
+        <span style="font-size:18px">🔔</span>
+        <span style="position:absolute;top:8px;left:9px;width:8px;height:8px;border-radius:50%;background:var(--danger-500);border:2px solid var(--surface-card)"></span>
+      </div>
+      <div style="width:1px;height:28px;background:var(--border-subtle)"></div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:38px;height:38px;border-radius:50%;background:var(--grad-brand-soft);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">{{ meInitial }}</div>
+        <div style="line-height:1.3">
+          <div style="font-weight:600;font-size:13.5px;color:var(--text-strong)">{{ meName }}</div>
+          <div style="font-size:11.5px;color:var(--text-subtle)">{{ meRole }} · سطح {{ meLevel }}</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="af-scroll" style="flex:1;padding:26px;overflow-y:auto">
+
+      <!-- DASHBOARD -->
+      <sc-if value="{{ showDash }}" hint-placeholder-val="">
+      <div style="display:flex;flex-direction:column;gap:22px;max-width:var(--container-max)">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div>
+            <h1 style="margin:0;font:var(--text-h1);color:var(--text-strong)">سلام {{ meFirst }} 👋</h1>
+            <p style="margin:6px 0 0;color:var(--text-muted)">امروز ۳۷ نامه در کارتابل شما در انتظار اقدام است.</p>
+          </div>
+          <button onClick="{{ openTemplate }}" style="height:44px;padding:0 20px;border:0;border-radius:12px;background:var(--grad-brand);color:#fff;font-family:var(--font-fa);font-weight:600;font-size:14px;cursor:pointer;box-shadow:var(--shadow-brand);display:flex;align-items:center;gap:8px">✚ نامه جدید</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+          <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+            <x-import component-from-global-scope="DesignSystem_e25c50.StatCard" dc-props="{{ s }}" hint-size="100%,120px"></x-import>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;align-items:start">
+          <x-import component-from-global-scope="DesignSystem_e25c50.Card" dc-props="{{ recentCardProps }}" hint-size="100%,340px">
+            <x-import component-from-global-scope="DesignSystem_e25c50.Table" dc-props="{{ recentTableProps }}" hint-size="100%,300px"></x-import>
+          </x-import>
+          <x-import component-from-global-scope="DesignSystem_e25c50.Card" dc-props="{{ flowsCardProps }}" hint-size="100%,340px">
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <sc-for list="{{ workflows }}" as="w" hint-placeholder-count="3">
+                <div>
+                  <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13.5px">
+                    <span style="color:var(--text-body)">{{ w.name }}</span>
+                    <span style="color:var(--text-subtle)" class="num">{{ w.pctLabel }}</span>
+                  </div>
+                  <x-import component-from-global-scope="DesignSystem_e25c50.ProgressBar" dc-props="{{ w.props }}" hint-size="100%,10px"></x-import>
+                </div>
+              </sc-for>
+              <div style="border-top:1px solid var(--border-subtle);padding-top:14px;display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:13px">
+                <span style="color:var(--teal-600)">⚗</span> میانگین زمان تکمیل: ۲٫۴ روز
+              </div>
+            </div>
+          </x-import>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- CARTABLE -->
+      <sc-if value="{{ showCart }}" hint-placeholder-val="">
+      <div style="max-width:var(--container-max);display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+          <div>
+            <h1 style="margin:0;font:var(--text-h1);color:var(--text-strong)">{{ cartTitle }}</h1>
+            <p style="margin:6px 0 0;color:var(--text-muted)">مدیریت نامه‌ها و درخواست‌های در انتظار اقدام</p>
+          </div>
+          <button onClick="{{ openTemplate }}" style="height:44px;padding:0 20px;border:0;border-radius:12px;background:var(--grad-brand);color:#fff;font-family:var(--font-fa);font-weight:600;font-size:14px;cursor:pointer;box-shadow:var(--shadow-brand);display:flex;align-items:center;gap:8px">✚ نامه جدید</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--r-card);padding:8px 10px;box-shadow:var(--shadow-sm);flex-wrap:wrap">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+            <button onClick="{{ t.go }}" style="{{ t.style }}">{{ t.label }} <span class="num" style="opacity:.7">({{ t.count }})</span></button>
+          </sc-for>
+          <div style="flex:1"></div>
+          <button style="height:34px;padding:0 12px;border:1px solid var(--border-subtle);background:#fff;border-radius:9px;font-family:var(--font-fa);font-size:12.5px;color:var(--text-muted);cursor:pointer">⚙ سایر امکانات</button>
+          <button style="height:34px;padding:0 12px;border:0;background:var(--danger-500);color:#fff;border-radius:9px;font-family:var(--font-fa);font-size:12.5px;cursor:pointer">🗑 حذف / ارجاع</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:18px;align-items:start">
+          <x-import component-from-global-scope="DesignSystem_e25c50.Card" dc-props="{{ cartCardProps }}" hint-size="100%,420px">
+            <x-import component-from-global-scope="DesignSystem_e25c50.Table" dc-props="{{ cartTableProps }}" hint-size="100%,400px"></x-import>
+          </x-import>
+          <x-import component-from-global-scope="DesignSystem_e25c50.Card" dc-props="{{ detailCardProps }}" hint-size="100%,420px">
+            <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px">
+              <div style="width:40px;height:40px;flex:none;border-radius:50%;background:var(--grad-teal);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">{{ activeInitial }}</div>
+              <div>
+                <div style="font-weight:700;color:var(--text-strong);font-size:15px">{{ active.subject }}</div>
+                <div style="font-size:12.5px;color:var(--text-subtle);margin-top:3px">{{ active.from }} · {{ active.date }}</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:14px">{{ activePri }}{{ activeStatus }}</div>
+            <p style="margin:0;color:var(--text-body);line-height:var(--lh-normal);font-size:14px">{{ active.excerpt }}</p>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:16px;padding:10px 12px;background:var(--surface-sunken);border-radius:var(--r-md);font-size:13px;color:var(--text-muted)">📎 {{ active.attach }}</div>
+            <div style="margin-top:16px">{{ activeStepper }}</div>
+            <div style="display:flex;gap:10px;margin-top:18px">
+              <button onClick="{{ openActive }}" style="flex:1;height:42px;border:0;border-radius:12px;background:var(--grad-gold);color:#3a2a02;font-family:var(--font-fa);font-weight:700;font-size:13.5px;cursor:pointer;box-shadow:var(--shadow-gold)">مشاهده و اقدام</button>
+              <button onClick="{{ rejectActive }}" style="height:42px;padding:0 16px;border:1px solid var(--border-default);background:#fff;border-radius:12px;font-family:var(--font-fa);font-weight:600;font-size:13.5px;color:var(--text-body);cursor:pointer">عدم تأیید</button>
+            </div>
+          </x-import>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- LETTER VIEW -->
+      <sc-if value="{{ showView }}" hint-placeholder-val="">
+      <div style="max-width:1120px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button onClick="{{ backToCart }}" style="height:38px;padding:0 14px;border:1px solid var(--border-subtle);background:#fff;border-radius:10px;font-family:var(--font-fa);font-size:13px;cursor:pointer;color:var(--text-body)">→ بازگشت</button>
+          <h1 style="margin:0;font:var(--text-h2);color:var(--text-strong)">نمایش نامه</h1>
+          <div style="flex:1"></div>
+          <button onClick="{{ approveView }}" style="height:40px;padding:0 18px;border:0;border-radius:11px;background:var(--grad-gold);color:#3a2a02;font-family:var(--font-fa);font-weight:700;font-size:13.5px;cursor:pointer;box-shadow:var(--shadow-gold)">✔ تأیید و ارجاع</button>
+          <button onClick="{{ replyView }}" style="height:40px;padding:0 16px;border:1px solid var(--border-default);background:#fff;border-radius:11px;font-family:var(--font-fa);font-weight:600;font-size:13.5px;color:var(--text-body);cursor:pointer">↩ پاسخ</button>
+        </div>
+        <div style="background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--r-card);padding:14px 18px;box-shadow:var(--shadow-sm);display:flex;flex-wrap:wrap;gap:16px 26px;font-size:12.5px;color:var(--text-muted)">
+          <span>شماره ثبت: <b class="num" style="color:var(--text-body)">{{ vLetter.no }}</b></span>
+          <span>تاریخ: <b class="num" style="color:var(--text-body)">{{ vLetter.date }}</b></span>
+          <span>فرستنده: <b style="color:var(--text-body)">{{ vLetter.from }}</b></span>
+          <span>گیرنده: <b style="color:var(--text-body)">{{ vLetter.to }}</b></span>
+          <span>اولویت: {{ vPri }}</span>
+          <span>وضعیت: {{ vStatus }}</span>
+        </div>
+        <div style="background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--r-card);padding:22px;box-shadow:var(--shadow-sm)">{{ vStepper }}</div>
+        <div style="display:flex;justify-content:center;background:var(--ink-150);border-radius:var(--r-card);padding:28px 16px">
+          <div style="background:#fff;width:210mm;max-width:100%;min-height:297mm;box-shadow:var(--shadow-lg);padding:22mm 20mm;color:#111;font-size:12pt;line-height:2">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px">
+              <div>
+                <div style="display:flex;align-items:center;gap:10px"><img src="assets/logo-mark.png" style="height:44px" /><div><div style="font-size:20pt;font-weight:800;color:var(--brand-strong)">گروه داروسازی آرتا فارما</div><div style="font-size:10.5pt;color:#444;margin-top:2px">آرتا قلب بهسان طب</div></div></div>
+              </div>
+              <table style="border-collapse:collapse;font-size:10.5pt;min-width:190px">
+                <tr><td style="border:1px solid #333;padding:3px 8px;background:#f3f3f3;white-space:nowrap">شماره:</td><td style="border:1px solid #333;padding:3px 8px" class="num">{{ vLetter.no }}</td></tr>
+                <tr><td style="border:1px solid #333;padding:3px 8px;background:#f3f3f3">تاریخ:</td><td style="border:1px solid #333;padding:3px 8px" class="num">{{ vLetter.date }}</td></tr>
+                <tr><td style="border:1px solid #333;padding:3px 8px;background:#f3f3f3">پیوست:</td><td style="border:1px solid #333;padding:3px 8px">{{ vLetter.attachShort }}</td></tr>
+              </table>
+            </div>
+            <p style="margin:22px 0 4px">{{ vLetter.to }}</p>
+            <p style="margin:6px 0"><b>موضوع:</b> {{ vLetter.subject }}</p>
+            <p style="margin:16px 0 10px">با سلام و احترام؛</p>
+            <p style="margin:10px 0;text-align:justify">{{ vLetter.body }}</p>
+            <p style="margin:10px 0;text-align:justify">{{ vLetter.body2 }}</p>
+            <table style="border-collapse:collapse;width:58%;margin-top:44px">
+              <tr><td style="border:1px solid #333;padding:12px;height:78px;vertical-align:top;font-size:10.5pt">
+                <div style="color:#666">امضا</div>
+                <div style="margin-top:26px;font-weight:700">{{ vLetter.signName }}</div>
+                <div style="color:#555;margin-top:2px">{{ vLetter.signRole }}</div>
+              </td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- PERSONNEL -->
+      <sc-if value="{{ showPeople }}" hint-placeholder-val="">
+      <div style="max-width:var(--container-max);display:flex;flex-direction:column;gap:18px">
+        <div><h1 style="margin:0;font:var(--text-h1);color:var(--text-strong)">کارکنان و نقش‌ها</h1><p style="margin:6px 0 0;color:var(--text-muted)">ساختار سازمانی و سطوح دسترسی</p></div>
+        <x-import component-from-global-scope="DesignSystem_e25c50.Card" dc-props="{{ peopleCardProps }}" hint-size="100%,320px">
+          <x-import component-from-global-scope="DesignSystem_e25c50.Table" dc-props="{{ peopleTableProps }}" hint-size="100%,300px"></x-import>
+        </x-import>
+      </div>
+      </sc-if>
+
+      <!-- ARCHIVE -->
+      <sc-if value="{{ showArchive }}" hint-placeholder-val="">
+      <div style="max-width:var(--container-max);display:flex;flex-direction:column;gap:18px">
+        <div><h1 style="margin:0;font:var(--text-h1);color:var(--text-strong)">بایگانی نامه‌ها</h1><p style="margin:6px 0 0;color:var(--text-muted)">نامه‌های تکمیل‌شده و بایگانی‌شده</p></div>
+        <x-import component-from-global-scope="DesignSystem_e25c50.Card" dc-props="{{ archiveCardProps }}" hint-size="100%,320px">
+          <x-import component-from-global-scope="DesignSystem_e25c50.Table" dc-props="{{ archiveTableProps }}" hint-size="100%,300px"></x-import>
+        </x-import>
+      </div>
+      </sc-if>
+
+      <!-- FLOWS -->
+      <sc-if value="{{ showFlows }}" hint-placeholder-val="">
+      <div style="max-width:var(--container-max);display:flex;flex-direction:column;gap:20px">
+        <div><h1 style="margin:0;font:var(--text-h1);color:var(--text-strong)">گردش کارها</h1><p style="margin:6px 0 0;color:var(--text-muted)">طراحی چینش مراحل تأیید و پایش نامه‌های جاری</p></div>
+
+        <!-- Builder -->
+        <div style="background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--r-card);box-shadow:var(--shadow-sm);overflow:hidden">
+          <div style="height:4px;background:var(--grad-brand)"></div>
+          <div style="padding:20px 22px;display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap">
+              <div>
+                <div style="font-weight:700;font-size:16px;color:var(--text-strong)">طراحی گردش کار دپارتمان</div>
+                <div style="font-size:12.5px;color:var(--text-muted);margin-top:3px">مدیر دپارتمان می‌تواند مراحل و مسئول هر مرحله را چینش کند</div>
+              </div>
+              <sc-if value="{{ canEdit }}" hint-placeholder-val=""><span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--success-600);background:var(--success-50);border-radius:999px;padding:5px 12px">● حالت ویرایش مدیر</span></sc-if>
+            </div>
+
+            <sc-if value="{{ builderLocked }}" hint-placeholder-val="">
+            <div style="display:flex;align-items:center;gap:10px;background:var(--warning-50);border:1px solid var(--warning-500);border-radius:var(--r-md);padding:12px 14px;font-size:13px;color:var(--warning-600)">
+              <span style="font-size:16px">🔒</span> فقط مدیر دپارتمان مجاز به چینش گردش کار است. برای ویرایش، نقش فعال را به یکی از مدیران تغییر دهید.
+            </div>
+            </sc-if>
+
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <label style="font-size:12px;color:var(--text-muted)">عنوان گردش کار</label>
+              <input value="{{ builderName }}" onChange="{{ builderSetName }}" disabled="{{ builderLocked }}" style="max-width:420px;height:40px;border:1px solid var(--border-subtle);border-radius:var(--r-control);padding:0 12px;font-family:var(--font-fa);font-size:14px;background:var(--surface-sunken);color:var(--text-body)" />
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ builderRows }}" as="r" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:12px;background:var(--surface-sunken);border:1px solid var(--border-subtle);border-radius:var(--r-md);padding:10px 12px">
+                  <div style="width:30px;height:30px;flex:none;border-radius:50%;background:var(--grad-brand);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px" class="num">{{ r.num }}</div>
+                  <input value="{{ r.label }}" onChange="{{ r.onLabel }}" disabled="{{ builderLocked }}" style="flex:1;min-width:120px;height:38px;border:1px solid var(--border-subtle);border-radius:10px;padding:0 11px;font-family:var(--font-fa);font-size:13.5px;background:#fff;color:var(--text-body)" />
+                  <select onChange="{{ r.onRole }}" disabled="{{ builderLocked }}" style="height:38px;flex:1;max-width:250px;border:1px solid var(--border-subtle);border-radius:10px;padding:0 10px;font-family:var(--font-fa);font-size:12.5px;background:#fff;color:var(--text-body);cursor:pointer">
+                    <sc-for list="{{ r.roleOpts }}" as="o" hint-placeholder-count="6"><option value="{{ o.v }}" selected="{{ o.sel }}">{{ o.t }}</option></sc-for>
+                  </select>
+                  <sc-if value="{{ canEdit }}" hint-placeholder-val="">
+                  <div style="display:flex;gap:4px">
+                    <button onClick="{{ r.up }}" disabled="{{ r.isFirst }}" title="بالا" style="width:32px;height:32px;border:1px solid var(--border-subtle);background:#fff;border-radius:8px;cursor:pointer;color:var(--ink-600);font-size:13px">▲</button>
+                    <button onClick="{{ r.down }}" disabled="{{ r.isLast }}" title="پایین" style="width:32px;height:32px;border:1px solid var(--border-subtle);background:#fff;border-radius:8px;cursor:pointer;color:var(--ink-600);font-size:13px">▼</button>
+                    <button onClick="{{ r.remove }}" title="حذف" style="width:32px;height:32px;border:1px solid var(--danger-500);background:#fff;border-radius:8px;cursor:pointer;color:var(--danger-500);font-size:15px">×</button>
+                  </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+
+            <sc-if value="{{ canEdit }}" hint-placeholder-val="">
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button onClick="{{ builderAdd }}" style="height:38px;padding:0 16px;border:1px dashed var(--border-brand);background:var(--blue-50);color:var(--brand-strong);border-radius:10px;font-family:var(--font-fa);font-weight:600;font-size:13px;cursor:pointer">＋ افزودن مرحله</button>
+              <div style="flex:1"></div>
+              <button onClick="{{ builderReset }}" style="height:38px;padding:0 16px;border:1px solid var(--border-default);background:#fff;color:var(--text-body);border-radius:10px;font-family:var(--font-fa);font-weight:600;font-size:13px;cursor:pointer">بازنشانی</button>
+              <button onClick="{{ builderSave }}" style="height:38px;padding:0 20px;border:0;background:var(--grad-brand);color:#fff;border-radius:10px;font-family:var(--font-fa);font-weight:600;font-size:13px;cursor:pointer;box-shadow:var(--shadow-brand)">ذخیره و اعمال</button>
+            </div>
+            </sc-if>
+
+            <div style="border-top:1px solid var(--border-subtle);padding-top:16px">
+              <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">پیش‌نمایش زندهٔ چینش</div>
+              {{ builderPreview }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Active flows -->
+        <div style="font-weight:700;font-size:15px;color:var(--text-strong);margin-top:4px">گردش کارهای جاری</div>
+        <sc-for list="{{ flowItems }}" as="f" hint-placeholder-count="3">
+          <x-import component-from-global-scope="DesignSystem_e25c50.Card" dc-props="{{ f.card }}" hint-size="100%,140px">
+            <div style="padding:6px 2px 2px">{{ f.stepper }}</div>
+          </x-import>
+        </sc-for>
+      </div>
+      </sc-if>
+
+    </main>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============================= EDITOR (always mounted) ============================= -->
+<div id="af-editorScreen" style="{{ editorScreenStyle }}">
+  <div style="height:100vh;display:flex;flex-direction:column;background:var(--ink-150)">
+    <!-- docbar -->
+    <div class="af-noprint" style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--surface-card);border-bottom:1px solid var(--border-subtle)">
+      <button onClick="{{ cancelEditor }}" style="height:36px;padding:0 12px;border:1px solid var(--border-subtle);background:#fff;border-radius:10px;font-family:var(--font-fa);font-size:13px;cursor:pointer;color:var(--text-body)">→ انصراف</button>
+      <div style="display:flex;align-items:center;gap:9px">
+        <img src="assets/logo-mark.png" style="height:26px" />
+        <b style="color:var(--brand-strong)">نگارش نامه — آرتا فارما</b>
+      </div>
+      <div style="width:1px;height:24px;background:var(--border-subtle)"></div>
+      <input value="{{ editorSubject }}" onChange="{{ setEditorSubject }}" placeholder="موضوع نامه…" style="flex:1;max-width:340px;height:36px;border:1px solid var(--border-subtle);border-radius:10px;padding:0 12px;font-family:var(--font-fa);font-size:13px;background:var(--surface-sunken)" />
+      <div style="flex:1"></div>
+      <button onClick="{{ afFill }}" style="height:36px;padding:0 12px;border:1px solid var(--border-subtle);background:#fff;border-radius:10px;font-family:var(--font-fa);font-size:12.5px;cursor:pointer;color:var(--text-body)">پر کردن توکن‌ها</button>
+      <button onClick="{{ afPrint }}" style="height:36px;padding:0 12px;border:1px solid var(--border-subtle);background:#fff;border-radius:10px;font-family:var(--font-fa);font-size:12.5px;cursor:pointer;color:var(--text-body)">🖶 چاپ</button>
+      <div style="display:flex;border:1px solid var(--border-subtle);border-radius:9px;overflow:hidden">
+        <button id="af-sizeA4" onClick="{{ setA4 }}" style="border:0;background:#fff;padding:7px 14px;cursor:pointer;font-family:var(--font-fa);font-size:12px">A4</button>
+        <button id="af-sizeA5" onClick="{{ setA5 }}" style="border:0;border-right:1px solid var(--border-subtle);background:#fff;padding:7px 14px;cursor:pointer;font-family:var(--font-fa);font-size:12px">A5</button>
+      </div>
+      <button onClick="{{ openSize }}" style="height:36px;padding:0 18px;border:0;border-radius:10px;background:var(--grad-brand);color:#fff;font-family:var(--font-fa);font-weight:600;font-size:13px;cursor:pointer;box-shadow:var(--shadow-brand)">➤ ارسال</button>
+    </div>
+
+    <!-- toolbar -->
+    <div id="af-toolbar" class="af-noprint" style="display:flex;flex-wrap:wrap;align-items:center;gap:3px;padding:6px 12px;background:var(--surface-card);border-bottom:1px solid var(--border-subtle)">
+      <button class="af-tb" data-cmd="undo" title="واگرد"><svg viewBox="0 0 24 24"><path d="M9 7L4 12l5 5"></path><path d="M4 12h11a5 5 0 0 1 5 5"></path></svg></button>
+      <button class="af-tb" data-cmd="redo" title="ازنو"><svg viewBox="0 0 24 24"><path d="M15 7l5 5-5 5"></path><path d="M20 12H9a5 5 0 0 0-5 5"></path></svg></button>
+      <span style="width:1px;height:22px;background:var(--border-subtle);margin:0 4px"></span>
+      <select class="af-tbsel" id="af-fontName" title="قلم"><option value="Vazirmatn">وزیرمتن</option><option value="Tahoma">Tahoma</option><option value="Arial">Arial</option><option value="'Times New Roman'">Times</option></select>
+      <select class="af-tbsel" id="af-fontSize" title="اندازه"><option value="10pt">۱۰</option><option value="11pt">۱۱</option><option value="12pt" selected="selected">۱۲</option><option value="14pt">۱۴</option><option value="16pt">۱۶</option><option value="18pt">۱۸</option><option value="22pt">۲۲</option></select>
+      <span style="width:1px;height:22px;background:var(--border-subtle);margin:0 4px"></span>
+      <button class="af-tb" data-cmd="bold" title="ضخیم"><b>B</b></button>
+      <button class="af-tb" data-cmd="italic" title="مورب"><i>I</i></button>
+      <button class="af-tb" data-cmd="underline" title="زیرخط"><u>U</u></button>
+      <button class="af-tb" data-cmd="strikeThrough" title="خط‌خورده"><s>S</s></button>
+      <button class="af-tb" title="رنگ متن" style="position:relative"><span>A</span><span style="display:block;height:3px;background:#d33;margin-top:1px;border-radius:2px"></span><input type="color" id="af-foreColor" value="#111111" style="position:absolute;inset:0;opacity:0;cursor:pointer" /></button>
+      <button class="af-tb" title="هایلایت" style="position:relative"><svg viewBox="0 0 24 24"><path d="M4 20h16"></path><path d="M6 16l9-9 3 3-9 9H6z"></path></svg><input type="color" id="af-hiliteColor" value="#ffef8a" style="position:absolute;inset:0;opacity:0;cursor:pointer" /></button>
+      <span style="width:1px;height:22px;background:var(--border-subtle);margin:0 4px"></span>
+      <button class="af-tb" data-cmd="justifyRight" title="راست‌چین"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 12h13M3 18h18"></path></svg></button>
+      <button class="af-tb" data-cmd="justifyCenter" title="وسط‌چین"><svg viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M3 18h18"></path></svg></button>
+      <button class="af-tb" data-cmd="justifyLeft" title="چپ‌چین"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h13M3 18h18"></path></svg></button>
+      <button class="af-tb" data-cmd="justifyFull" title="تراز دوطرفه"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"></path></svg></button>
+      <span style="width:1px;height:22px;background:var(--border-subtle);margin:0 4px"></span>
+      <button class="af-tb" data-cmd="insertUnorderedList" title="فهرست نقطه‌ای"><svg viewBox="0 0 24 24"><circle cx="4" cy="6" r="1.4"></circle><circle cx="4" cy="12" r="1.4"></circle><circle cx="4" cy="18" r="1.4"></circle><path d="M9 6h11M9 12h11M9 18h11"></path></svg></button>
+      <button class="af-tb" data-cmd="insertOrderedList" title="فهرست شماره‌ای"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h1v3M4 15h2v3H4"></path></svg></button>
+      <button class="af-tb" data-cmd="outdent" title="کاهش تورفتگی"><svg viewBox="0 0 24 24"><path d="M20 6H9M20 12H12M20 18H9M7 9l-3 3 3 3"></path></svg></button>
+      <button class="af-tb" data-cmd="indent" title="افزایش تورفتگی"><svg viewBox="0 0 24 24"><path d="M4 6h11M4 12h8M4 18h11M17 9l3 3-3 3"></path></svg></button>
+      <span style="width:1px;height:22px;background:var(--border-subtle);margin:0 4px"></span>
+      <button class="af-tb" id="af-insTable" title="درج جدول"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1.5"></rect><path d="M3 10h18M3 15h18M9 4v16M15 4v16"></path></svg></button>
+      <button class="af-tb" id="af-insToken" title="درج توکن"><svg viewBox="0 0 24 24"><path d="M8 4H6a2 2 0 0 0-2 2v3l-2 3 2 3v3a2 2 0 0 0 2 2h2M16 4h2a2 2 0 0 1 2 2v3l2 3-2 3v3a2 2 0 0 1-2 2h-2"></path></svg></button>
+      <button class="af-tb" data-cmd="createLink" title="پیوند"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"></path><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"></path></svg></button>
+      <button class="af-tb" data-cmd="insertHorizontalRule" title="خط جداکننده"><svg viewBox="0 0 24 24"><path d="M3 12h18"></path></svg></button>
+      <button class="af-tb" data-cmd="formatBlock:blockquote" title="نقل‌قول"><svg viewBox="0 0 24 24"><path d="M7 7H4v6h5V7zM17 7h-3v6h5V7z"></path></svg></button>
+      <button class="af-tb" id="af-specChar" title="کاراکتر ویژه" style="font-size:15px">Ω</button>
+      <span style="width:1px;height:22px;background:var(--border-subtle);margin:0 4px"></span>
+      <button class="af-tb" id="af-dirToggle" title="جهت پاراگراف"><svg viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></button>
+      <button class="af-tb" data-cmd="removeFormat" title="پاک کردن قالب"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M6 6l4 12M13 4h6M9 4l1 3"></path></svg></button>
+    </div>
+
+    <!-- workspace -->
+    <div class="af-scroll" style="flex:1;overflow:auto;padding:26px 16px;display:flex;justify-content:center;align-items:flex-start">
+      <div class="af-paper a4" id="af-paper" contenteditable="true" spellcheck="false" style="background:#fff;box-shadow:var(--shadow-lg);border:1px solid #ccc;padding:22mm 20mm;outline:0;font-size:12pt;line-height:2;color:#111;width:210mm;min-height:297mm">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px">
+          <div style="display:flex;align-items:center;gap:10px"><img src="assets/logo-mark.png" style="height:44px" /><div><div style="font-size:20pt;font-weight:800;color:#2340a4">گروه داروسازی آرتا فارما</div><div style="font-size:10.5pt;color:#444;margin-top:2px">آرتا قلب بهسان طب</div></div></div>
+          <table style="border-collapse:collapse;font-size:10.5pt;min-width:190px">
+            <tr><td style="border:1px solid #333;padding:3px 8px;background:#f3f3f3;white-space:nowrap">شماره:</td><td style="border:1px solid #333;padding:3px 8px"><span class="af-token" contenteditable="false">{شماره}</span></td></tr>
+            <tr><td style="border:1px solid #333;padding:3px 8px;background:#f3f3f3">تاریخ:</td><td style="border:1px solid #333;padding:3px 8px"><span class="af-token" contenteditable="false">{تاریخ}</span></td></tr>
+            <tr><td style="border:1px solid #333;padding:3px 8px;background:#f3f3f3">پیوست:</td><td style="border:1px solid #333;padding:3px 8px"><span class="af-token" contenteditable="false">{پیوست}</span></td></tr>
+          </table>
+        </div>
+        <p style="margin:22px 0 4px">جناب آقای / سرکار خانم <span class="af-token" contenteditable="false">{گیرنده}</span> …</p>
+        <p style="margin:6px 0"><b>موضوع:</b> <span class="af-token" contenteditable="false">{موضوع}</span></p>
+        <p style="margin:16px 0 10px">با سلام و احترام؛</p>
+        <p style="margin:10px 0;text-align:justify">احتراماً، به استحضار می‌رساند …</p>
+        <table style="border-collapse:collapse;width:58%;margin-top:44px">
+          <tr><td style="border:1px solid #333;padding:12px;height:78px;vertical-align:top;font-size:10.5pt">
+            <span class="af-token" contenteditable="false">{امضا}</span>
+            <div style="margin-top:22px"><span class="af-token" contenteditable="false">{نام امضاکننده}</span></div>
+            <div style="margin-top:4px"><span class="af-token" contenteditable="false">{سمت امضاکننده}</span></div>
+          </td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- token pop -->
+<div class="af-pop" id="af-tokenpop" style="display:none;grid-template-columns:1fr;gap:2px"></div>
+<!-- char pop -->
+<div class="af-pop" id="af-charpop" style="display:none;grid-template-columns:repeat(8,1fr);gap:2px"></div>
+
+<!-- fill modal -->
+<div id="af-fillModal" style="display:none;position:fixed;inset:0;z-index:70;background:var(--overlay-scrim);align-items:center;justify-content:center;padding:24px">
+  <div style="width:min(460px,100%);background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow-xl);overflow:hidden;animation:afModalIn .2s ease">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border-subtle);background:var(--surface-sunken)"><b style="color:var(--brand-strong)">پر کردن دادهٔ نامه</b><button id="af-fillX" style="border:0;background:transparent;font-size:20px;cursor:pointer;color:var(--text-subtle)">×</button></div>
+    <div style="padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="display:flex;flex-direction:column;gap:4px"><label style="font-size:12px;color:var(--text-muted)">شماره</label><input data-tok="شماره" placeholder="۵/۱/۷۶۶۵۸" style="border:1px solid var(--border-subtle);border-radius:9px;padding:9px 11px;font-family:var(--font-fa);font-size:13px" /></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><label style="font-size:12px;color:var(--text-muted)">تاریخ</label><input data-tok="تاریخ" placeholder="۱۴۰۵/۰۲/۰۲" style="border:1px solid var(--border-subtle);border-radius:9px;padding:9px 11px;font-family:var(--font-fa);font-size:13px" /></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><label style="font-size:12px;color:var(--text-muted)">پیوست</label><input data-tok="پیوست" placeholder="دارد / ندارد" style="border:1px solid var(--border-subtle);border-radius:9px;padding:9px 11px;font-family:var(--font-fa);font-size:13px" /></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><label style="font-size:12px;color:var(--text-muted)">گیرنده</label><input data-tok="گیرنده" placeholder="جناب آقای اسدی" style="border:1px solid var(--border-subtle);border-radius:9px;padding:9px 11px;font-family:var(--font-fa);font-size:13px" /></div>
+      <div style="display:flex;flex-direction:column;gap:4px;grid-column:1/-1"><label style="font-size:12px;color:var(--text-muted)">موضوع</label><input data-tok="موضوع" placeholder="خرید مواد اولیه" style="border:1px solid var(--border-subtle);border-radius:9px;padding:9px 11px;font-family:var(--font-fa);font-size:13px" /></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><label style="font-size:12px;color:var(--text-muted)">نام امضاکننده</label><input data-tok="نام امضاکننده" placeholder="میلاد حیدری" style="border:1px solid var(--border-subtle);border-radius:9px;padding:9px 11px;font-family:var(--font-fa);font-size:13px" /></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><label style="font-size:12px;color:var(--text-muted)">سمت امضاکننده</label><input data-tok="سمت امضاکننده" placeholder="مسئول حسابداری" style="border:1px solid var(--border-subtle);border-radius:9px;padding:9px 11px;font-family:var(--font-fa);font-size:13px" /></div>
+    </div>
+    <div style="display:flex;gap:8px;padding:14px 18px;border-top:1px solid var(--border-subtle)"><button id="af-applyFill" style="border:0;border-radius:9px;padding:9px 18px;cursor:pointer;font-family:var(--font-fa);font-size:13px;background:var(--brand);color:#fff">اعمال</button><button id="af-resetFill" style="border:0;border-radius:9px;padding:9px 18px;cursor:pointer;font-family:var(--font-fa);font-size:13px;background:var(--ink-100);color:var(--text-body)">بازنشانی</button></div>
+  </div>
+</div>
+
+<!-- ============================= TEMPLATE PICKER MODAL ============================= -->
+<sc-if value="{{ showTemplate }}" hint-placeholder-val="">
+<div onClick="{{ closeModal }}" style="position:fixed;inset:0;z-index:80;background:var(--overlay-scrim);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px;animation:afFade .15s ease">
+  <div onClick="{{ stop }}" style="width:min(880px,100%);background:#fff;border-radius:var(--r-xl);box-shadow:var(--shadow-xl);overflow:hidden;animation:afModalIn .22s ease">
+    <div style="display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid var(--border-subtle)">
+      <b style="font-size:16px;color:var(--text-strong)">قالب مورد نظرتان را انتخاب کنید</b>
+      <div style="position:relative;flex:1;max-width:360px"><span style="position:absolute;top:50%;right:12px;transform:translateY(-50%);color:var(--text-subtle)">⌕</span><input placeholder="جستجو در قالب‌های نامه، فرم، گفتگوی سازمانی و …" style="width:100%;height:38px;border:1px solid var(--border-subtle);border-radius:10px;background:var(--surface-sunken);padding:0 34px 0 12px;font-family:var(--font-fa);font-size:12.5px" /></div>
+      <div style="flex:1"></div>
+      <button onClick="{{ closeModal }}" style="border:0;background:transparent;font-size:22px;cursor:pointer;color:var(--text-subtle)">×</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 210px;min-height:340px">
+      <div style="padding:26px 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-content:start">
+        <sc-for list="{{ templates }}" as="t" hint-placeholder-count="4">
+          <div class="af-tplcard" onClick="{{ t.pick }}" style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:22px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-lg);background:var(--surface-card)">
+            <div style="width:58px;height:58px;border-radius:14px;background:{{ t.bg }};color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px">{{ t.glyph }}</div>
+            <div style="font-size:12.5px;font-weight:600;color:var(--text-body);text-align:center">{{ t.name }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="border-inline-start:1px solid var(--border-subtle);background:var(--surface-sunken);padding:22px 16px;display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:11px;font-weight:600;color:var(--text-subtle);margin-bottom:2px">قالب‌های آماده</div>
+        <button onClick="{{ pickA5 }}" style="display:flex;align-items:center;gap:10px;padding:11px;border:1px solid var(--border-subtle);background:#fff;border-radius:11px;cursor:pointer;font-family:var(--font-fa);font-size:13px;text-align:right" style-hover="border-color:var(--border-brand)"><span style="font-size:20px">📄</span><span>نامه داخلی A5</span></button>
+        <button onClick="{{ pickA4 }}" style="display:flex;align-items:center;gap:10px;padding:11px;border:1px solid var(--border-subtle);background:#fff;border-radius:11px;cursor:pointer;font-family:var(--font-fa);font-size:13px;text-align:right" style-hover="border-color:var(--border-brand)"><span style="font-size:20px">📄</span><span>نامه داخلی A4</span></button>
+        <button onClick="{{ pickForm }}" style="display:flex;align-items:center;gap:10px;padding:11px;border:1px solid var(--border-subtle);background:#fff;border-radius:11px;cursor:pointer;font-family:var(--font-fa);font-size:13px;text-align:right" style-hover="border-color:var(--border-brand)"><span style="font-size:20px">🗂</span><span>پیش‌نویس فرم</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============================= SIZE MODAL (before send) ============================= -->
+<sc-if value="{{ showSize }}" hint-placeholder-val="">
+<div onClick="{{ closeModal }}" style="position:fixed;inset:0;z-index:85;background:var(--overlay-scrim);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px;animation:afFade .15s ease">
+  <div onClick="{{ stop }}" style="width:min(520px,100%);background:#fff;border-radius:var(--r-xl);box-shadow:var(--shadow-xl);overflow:hidden;animation:afModalIn .22s ease">
+    <div style="padding:20px 24px;border-bottom:1px solid var(--border-subtle)"><b style="font-size:16px;color:var(--text-strong)">اندازهٔ کاغذ نامه</b><div style="font-size:13px;color:var(--text-muted);margin-top:4px">پیش از ارسال، اندازهٔ نامه را انتخاب کنید</div></div>
+    <div style="padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="af-sizecard" onClick="{{ confirmA4 }}" style="border:2px solid var(--border-subtle);border-radius:var(--r-lg);padding:20px;text-align:center;background:var(--surface-card)" style-hover="border-color:var(--brand);box-shadow:var(--shadow-md)">
+        <div style="width:74px;height:104px;margin:0 auto 14px;background:#fff;border:1px solid var(--border-default);box-shadow:var(--shadow-sm);border-radius:3px"></div>
+        <div style="font-weight:700;font-size:16px;color:var(--text-strong)">A4</div>
+        <div style="font-size:12px;color:var(--text-subtle);margin-top:2px">۲۱۰ × ۲۹۷ میلی‌متر</div>
+      </div>
+      <div class="af-sizecard" onClick="{{ confirmA5 }}" style="border:2px solid var(--border-subtle);border-radius:var(--r-lg);padding:20px;text-align:center;background:var(--surface-card)" style-hover="border-color:var(--brand);box-shadow:var(--shadow-md)">
+        <div style="width:74px;height:74px;margin:0 auto 14px;margin-top:30px;background:#fff;border:1px solid var(--border-default);box-shadow:var(--shadow-sm);border-radius:3px"></div>
+        <div style="font-weight:700;font-size:16px;color:var(--text-strong)">A5</div>
+        <div style="font-size:12px;color:var(--text-subtle);margin-top:2px">۱۴۸ × ۲۱۰ میلی‌متر</div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-start;padding:14px 24px;border-top:1px solid var(--border-subtle)"><button onClick="{{ closeModal }}" style="border:1px solid var(--border-default);background:#fff;border-radius:10px;padding:9px 18px;cursor:pointer;font-family:var(--font-fa);font-size:13px;color:var(--text-body)">انصراف</button></div>
+  </div>
+</div>
+</sc-if>
+
+<!-- toast -->
+<sc-if value="{{ toast }}" hint-placeholder-val="">
+<div style="position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:90;background:var(--ink-900);color:#fff;padding:13px 22px;border-radius:12px;box-shadow:var(--shadow-xl);font-size:13.5px;display:flex;align-items:center;gap:10px;animation:afToastIn .3s ease">✔ {{ toast }}</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = {
+      loggedIn: false,
+      screen: 'dashboard',
+      roleIdx: 3,
+      cartTab: 'in',
+      selected: 0,
+      viewLetter: null,
+      modal: null,          // 'template' | 'size' | null
+      toast: null,
+      editorSubject: '',
+      editorOpen: false,
+      builder: { name:'گردش کار تأیید فاکتور خرید', steps:[
+        { label:'ثبت پیش‌نویس', role:3 },
+        { label:'تأیید کارشناس', role:3 },
+        { label:'تأیید مدیر واحد', role:1 },
+        { label:'امضا و تأیید نهایی', role:0 },
+        { label:'بایگانی', role:null },
+      ]},
+    };
+    this.roles = [
+      { name:'دکتر رضا صادقی', role:'مدیر عامل', unit:'مدیریت عامل', level:'۱' },
+      { name:'امیر اسدی', role:'مدیر مالی', unit:'واحد مالی', level:'۲' },
+      { name:'پارسا محمدی', role:'مدیر انفورماتیک', unit:'واحد فناوری اطلاعات', level:'۳' },
+      { name:'میلاد حیدری', role:'کارشناس حسابداری', unit:'واحد مالی', level:'۴' },
+      { name:'سارا نجفی', role:'کارشناس فروش', unit:'واحد فروش', level:'۵' },
+    ];
+    this.letters = {
+      in: [
+        { no:'۵/۱/۷۶۶۵۸', subject:'درخواست خرید مواد اولیه (استامینوفن)', from:'واحد تدارکات', to:'جناب آقای اسدی — مدیر مالی', pri:['gold','فوری'], status:['warning','در انتظار'], date:'امروز ۰۹:۲۴', stage:1, attach:'پیش‌فاکتور-۸۸۲.pdf', excerpt:'با سلام و احترام، در راستای تأمین به‌موقع مواد اولیهٔ خط تولید، خواهشمند است نسبت به بررسی و تأیید درخواست پیوست اقدام فرمایید.', body:'احتراماً با توجه به هماهنگی صورت‌گرفته، دستور لازم جهت خرید مواد اولیهٔ سری تولید مرداد را صادر فرمایید.', body2:'لازم به توضیح است تأیید معاونت محترم مالی به پیوست ارسال گردیده است.', signName:'میلاد حیدری', signRole:'مسئول حسابداری' },
+        { no:'۵/۱/۷۶۶۴۹', subject:'گزارش کنترل کیفیت سری ۸۸۲', from:'واحد کنترل کیفیت', to:'مدیریت تضمین کیفیت', pri:['neutral','عادی'], status:['brand','در حال بررسی'], date:'امروز ۰۸:۱۰', stage:2, attach:'QC-Report-882.pdf', excerpt:'گزارش کامل آزمون‌های کنترل کیفیت سری ۸۸۲ جهت استحضار و تأیید نهایی به پیوست تقدیم می‌گردد.', body:'کلیهٔ پارامترهای فیزیکوشیمیایی سری ۸۸۲ در محدودهٔ مجاز فارماکوپه قرار دارد.', body2:'خواهشمند است نسبت به صدور مجوز ترخیص سری اقدام فرمایید.', signName:'مهندس کریمی', signRole:'کارشناس کنترل کیفیت' },
+        { no:'۵/۱/۷۶۶۳۱', subject:'ابلاغ دستورالعمل انبار سرد', from:'مدیریت عملیات', to:'کلیه واحدها', pri:['neutral','عادی'], status:['success','تأیید شده'], date:'دیروز ۱۶:۴۰', stage:4, attach:'SOP-ColdChain.pdf', excerpt:'دستورالعمل به‌روزرسانی‌شدهٔ نگهداری اقلام در انبار سرد جهت اجرا ابلاغ می‌گردد.', body:'کلیهٔ واحدها موظف به رعایت دمای ۲ تا ۸ درجهٔ سانتی‌گراد برای اقلام حساس هستند.', body2:'مسئولیت پایش دمای انبار بر عهدهٔ سرپرست انبار می‌باشد.', signName:'دکتر رضا صادقی', signRole:'مدیر عامل' },
+        { no:'۵/۱/۷۶۶۰۲', subject:'صورت‌جلسهٔ کمیتهٔ دارویی', from:'دبیرخانه', to:'اعضای کمیته دارویی', pri:['teal','اطلاع'], status:['warning','در انتظار'], date:'دیروز ۱۱:۰۲', stage:1, attach:'Minutes-1405-02.pdf', excerpt:'صورت‌جلسهٔ نشست کمیتهٔ دارویی مورخ ۱۴۰۵/۰۲/۰۱ جهت استحضار و اقدام مقتضی ارسال می‌گردد.', body:'مصوبات جلسه شامل بازنگری فهرست اقلام راهبردی و تعیین سقف موجودی امن است.', body2:'خواهشمند است نظرات تکمیلی حداکثر تا پایان هفته اعلام گردد.', signName:'خانم رحیمی', signRole:'دبیر کمیته' },
+        { no:'۵/۱/۷۶۵۷۴', subject:'پیگیری مجوز صادرات به عراق', from:'واحد بازرگانی', to:'مدیریت بازرگانی', pri:['gold','فوری'], status:['brand','در حال بررسی'], date:'۲ روز پیش', stage:2, attach:'Export-IQ-2025.pdf', excerpt:'پیرو مکاتبات پیشین، پیگیری اخذ مجوز صادرات محموله به کشور عراق مورد استدعاست.', body:'مدارک بهداشتی و گواهی GMP آماده و به پیوست ارسال شده است.', body2:'مهلت اعتبار پیش‌فاکتور طرف عراقی تا ۱۰ روز آینده است.', signName:'مهندس فلاح', signRole:'کارشناس بازرگانی' },
+      ],
+      out: [
+        { no:'۵/۱/۷۶۷۰۱', subject:'پاسخ به استعلام سازمان غذا و دارو', from:'به: سازمان غذا و دارو', to:'سازمان غذا و دارو', pri:['neutral','عادی'], status:['success','ارسال شد'], date:'دیروز ۱۴:۲۰', stage:3, attach:'Reply-FDO.pdf', excerpt:'در پاسخ به استعلام آن سازمان، مدارک و مستندات درخواستی به شرح پیوست تقدیم می‌گردد.', body:'کلیهٔ مجوزهای تولید و پروانهٔ بهره‌برداری معتبر و به‌روز می‌باشد.', body2:'آمادگی کامل جهت بازدید کارشناسان آن سازمان اعلام می‌گردد.', signName:'دکتر رضا صادقی', signRole:'مدیر عامل' },
+        { no:'۵/۱/۷۶۶۸۸', subject:'ابلاغ بخشنامهٔ مرخصی تابستان', from:'به: کلیه واحدها', to:'کلیه واحدها', pri:['teal','اطلاع'], status:['success','ارسال شد'], date:'۳ روز پیش', stage:4, attach:'—', excerpt:'بخشنامهٔ نحوهٔ استفاده از مرخصی استحقاقی در فصل تابستان جهت اجرا ابلاغ می‌گردد.', body:'مدیران واحدها موظف به تنظیم برنامهٔ مرخصی پرسنل تا پایان خرداد هستند.', body2:'حداکثر مرخصی هم‌زمان هر واحد ۳۰ درصد نیرو می‌باشد.', signName:'خانم صابری', signRole:'مدیر منابع انسانی' },
+      ],
+      draft: [
+        { no:'—', subject:'پیش‌نویس قرارداد تأمین بسته‌بندی', from:'پیش‌نویس', to:'شرکت بسته‌بندی پارس', pri:['neutral','عادی'], status:['neutral','پیش‌نویس'], date:'ذخیره خودکار', stage:0, attach:'Draft-Packaging.docx', excerpt:'پیش‌نویس قرارداد تأمین اقلام بسته‌بندی جهت بازبینی و تکمیل بندهای مالی.', body:'مفاد اولیهٔ قرارداد شامل حجم سفارش، زمان تحویل و شرایط پرداخت است.', body2:'بندهای ضمانت کیفیت در حال نهایی‌سازی است.', signName:'میلاد حیدری', signRole:'کارشناس حسابداری' },
+      ],
+    };
+  }
+
+  componentDidMount(){ this._initEditor(); }
+  componentDidUpdate(){ this._initEditor(); }
+
+  // ---------- app helpers ----------
+  toast(msg){ this.setState({ toast: msg }); clearTimeout(this._tt); this._tt = setTimeout(()=>this.setState({ toast:null }), 2600); }
+
+  renderVals(){
+    const S = this.state;
+    const DS = window.DesignSystem_e25c50 || {};
+    const R = React;
+    const AI = window.AfIcons || {};
+    const ic = (n, s) => AI[n] ? R.createElement(AI[n], { size: s || 18 }) : null;
+    const me = this.roles[S.roleIdx];
+    const stop = (e)=>{ if(e && e.stopPropagation) e.stopPropagation(); };
+
+    const badge = (t) => DS.Badge ? R.createElement(DS.Badge, { tone:t[0], dot:true }, t[1]) : t[1];
+    const tag = (t) => DS.Tag ? R.createElement(DS.Tag, { tone:t[0] }, t[1]) : t[1];
+    const avatar = (n, sz) => DS.Avatar ? R.createElement(DS.Avatar, { name:n, size:sz||26 }) : null;
+    const stepper = (cur) => DS.WorkflowStepper ? R.createElement(DS.WorkflowStepper, { current:cur, steps:['پیش‌نویس','تأیید','امضا','ارسال','بایگانی'] }) : null;
+
+    // ---- navigation ----
+    const navDef = [
+      { key:'dashboard', label:'داشبورد', icon:ic('home'), color:'var(--brand)' },
+      { key:'cartable', label:'کارتابل من', icon:ic('inbox'), color:'var(--teal-600)', count:'۳۷' },
+      { key:'letters', label:'نامه‌ها', icon:ic('file'), color:'var(--brand)', count:'۹' },
+      { key:'flows', label:'گردش کارها', icon:ic('chart'), color:'var(--gold-600)' },
+      { key:'people', label:'کارکنان', icon:ic('users'), color:'var(--brand)' },
+      { key:'archive', label:'بایگانی', icon:ic('archive'), color:'var(--ink-500)' },
+    ];
+    const activeKey = (S.screen==='cartable'||S.screen==='letterView') ? 'cartable'
+      : (S.screen==='letters') ? 'letters' : S.screen;
+    const nav = navDef.map(n => ({
+      label:n.label, icon:n.icon, color:n.color, count:n.count,
+      cls: activeKey===n.key ? 'on' : '',
+      go: () => this.setState({ screen: n.key==='letters' ? 'cartable' : n.key, editorOpen:false }),
+    }));
+
+    // ---- role select ----
+    const roleOptions = this.roles.map((r,i)=>({ idx:String(i), text:`${r.name} — ${r.role}`, sel: i===S.roleIdx }));
+    const setRole = (e)=> this.setState({ roleIdx: parseInt(e.target.value,10) });
+
+    // ---- dashboard ----
+    const stats = [
+      { tone:'teal', icon:ic('inbox',22), value:'۳۷', label:'در انتظار اقدام', delta:'۱۲٪', deltaDir:'up' },
+      { tone:'brand', icon:ic('send',22), value:'۱٬۲۴۸', label:'نامه ارسالی این ماه', delta:'۸٪', deltaDir:'up' },
+      { tone:'gold', icon:ic('clock',22), value:'۵', label:'نزدیک مهلت', delta:'۲', deltaDir:'down' },
+      { tone:'neutral', icon:ic('check',22), value:'۹۴٪', label:'نرخ پاسخ به‌موقع', delta:'۰٪', deltaDir:'flat' },
+    ];
+    const recentRows = this.letters.in.slice(0,4).map(l => ({ ...l }));
+    const recentCols = [
+      { key:'subject', header:'موضوع نامه' },
+      { key:'from', header:'فرستنده', render:(v)=> R.createElement('span',{style:{display:'inline-flex',alignItems:'center',gap:8}}, avatar(v,26), v) },
+      { key:'status', header:'وضعیت', render:(v)=> badge(v) },
+      { key:'date', header:'تاریخ', align:'end', nowrap:true },
+    ];
+    const openRecent = (r)=> this.openLetter(r);
+    const workflows = [
+      { name:'تأیید فاکتور خرید', pct:80, tone:'brand' },
+      { name:'صدور مجوز تولید', pct:55, tone:'teal' },
+      { name:'بازبینی اسناد صادرات', pct:32, tone:'gold' },
+    ].map(w => ({ name:w.name, pctLabel: this._fa(w.pct)+'٪', props:{ value:w.pct, tone:w.tone } }));
+
+    // ---- cartable ----
+    const tabsDef = [ {v:'in',label:'وارده',count:'۳۷'}, {v:'out',label:'صادره',count:'۹'}, {v:'draft',label:'پیش‌نویس',count:'۱'} ];
+    const tabs = tabsDef.map(t => ({
+      label:t.label, count:t.count,
+      go: ()=> this.setState({ cartTab:t.v, selected:0 }),
+      style: 'height:34px;padding:0 16px;border-radius:9px;font-family:var(--font-fa);font-size:13px;cursor:pointer;font-weight:600;border:1px solid '+(S.cartTab===t.v?'var(--border-brand)':'transparent')+';background:'+(S.cartTab===t.v?'var(--blue-50)':'transparent')+';color:'+(S.cartTab===t.v?'var(--brand-strong)':'var(--text-muted)'),
+    }));
+    const rows = this.letters[S.cartTab] || [];
+    const active = rows[S.selected] || rows[0] || {};
+    const cartCols = [
+      { key:'subject', header:'موضوع', render:(v,r)=> R.createElement('div',null,
+          R.createElement('div',{style:{fontWeight:600,color:'var(--text-strong)'}}, v),
+          R.createElement('div',{style:{fontSize:12,color:'var(--text-subtle)',marginTop:2}}, r.from)) },
+      { key:'pri', header:'اولویت', render:(v)=> tag(v) },
+      { key:'status', header:'وضعیت', render:(v)=> badge(v) },
+      { key:'date', header:'تاریخ', align:'end', nowrap:true },
+    ];
+    const selectRow = (r,i)=> this.setState({ selected:i });
+
+    // ---- letter view ----
+    const vL = S.viewLetter || active;
+    const vLetter = { ...vL, attachShort: (vL.attach && vL.attach!=='—') ? 'دارد' : 'ندارد' };
+
+    // ---- people ----
+    const peopleCols = [
+      { key:'name', header:'نام', render:(v)=> R.createElement('span',{style:{display:'inline-flex',alignItems:'center',gap:8}}, avatar(v,28), R.createElement('b',{style:{color:'var(--text-strong)'}},v)) },
+      { key:'role', header:'نقش' },
+      { key:'unit', header:'واحد' },
+      { key:'level', header:'سطح دسترسی', align:'end', render:(v)=> tag(['brand','سطح '+v]) },
+    ];
+    const peopleRows = this.roles.map(r=>({ name:r.name, role:r.role, unit:r.unit, level:r.level }));
+
+    // ---- archive ----
+    const archiveRows = [].concat(this.letters.in, this.letters.out)
+      .filter(l=>l.status[1]==='تأیید شده'||l.status[1]==='ارسال شد')
+      .map(l=>({ no:l.no, subject:l.subject, from:l.from, date:l.date, status:l.status }));
+    const archiveCols = [
+      { key:'no', header:'شماره', nowrap:true, render:(v)=>R.createElement('span',{className:'num',style:{color:'var(--brand)'}},v) },
+      { key:'subject', header:'موضوع', render:(v)=>R.createElement('b',{style:{color:'var(--text-strong)'}},v) },
+      { key:'from', header:'فرستنده / گیرنده' },
+      { key:'status', header:'وضعیت', render:(v)=>badge(v) },
+      { key:'date', header:'تاریخ', align:'end', nowrap:true },
+    ];
+
+    // ---- flows ----
+    const flowItems = this.letters.in.slice(0,3).map(l=>({
+      card:{ title:l.subject, subtitle:l.from+' · '+l.date, accent:'brand' },
+      stepper: stepper(l.stage),
+    }));
+
+    // ---- workflow builder (department manager arranges the chain) ----
+    const canEdit = S.roleIdx <= 2; // مدیر عامل / مدیر مالی / مدیر انفورماتیک
+    const B = S.builder;
+    const roleLabel = (ri)=> ri==null ? 'دبیرخانه / سیستم' : (this.roles[ri].role+' — '+this.roles[ri].name);
+    const roleOptsFor = (cur)=> [{ v:'-1', t:'دبیرخانه / سیستم', sel: cur==null }]
+      .concat(this.roles.map((r,i)=>({ v:String(i), t:r.role+' — '+r.name, sel: cur===i })));
+    const builderRows = B.steps.map((s,i)=>({
+      num: this._fa(i+1),
+      label: s.label,
+      roleLabel: roleLabel(s.role),
+      roleOpts: roleOptsFor(s.role),
+      isFirst: i===0,
+      isLast: i===B.steps.length-1,
+      onLabel: (e)=> this.builderSet(i,'label',e.target.value),
+      onRole: (e)=> this.builderSet(i,'role', e.target.value==='-1'?null:parseInt(e.target.value,10)),
+      up: ()=> this.builderMove(i,-1),
+      down: ()=> this.builderMove(i,1),
+      remove: ()=> this.builderRemove(i),
+    }));
+    const builderPreview = DS.WorkflowStepper ? R.createElement(DS.WorkflowStepper,{ current:0, steps:B.steps.map(s=>s.label) }) : null;
+
+    // ---- editor / modal handlers ----
+    const openTemplate = ()=> this.setState({ modal:'template' });
+    const pickTemplate = (size)=> { this.setState({ modal:null, editorOpen:true, editorSubject:'' }); setTimeout(()=>this.setPaperSize(size),40); };
+
+    return {
+      isLogin: !S.loggedIn,
+      isApp: S.loggedIn,
+      noop: ()=>{},
+      stop,
+      login: ()=> this.setState({ loggedIn:true, screen:'dashboard' }),
+      logout: ()=> this.setState({ loggedIn:false, editorOpen:false }),
+
+      nav, roleOptions, setRole, roleIdx:String(S.roleIdx),
+      meName: me.name, meRole: me.role, meLevel: me.level, meFirst: me.name.split(' ')[0],
+      meInitial: me.name.trim().charAt(0),
+
+      // screen flags
+      showDash: S.screen==='dashboard',
+      showCart: S.screen==='cartable',
+      showView: S.screen==='letterView',
+      showPeople: S.screen==='people',
+      showArchive: S.screen==='archive',
+      showFlows: S.screen==='flows',
+
+      // dashboard
+      stats,
+      recentCardProps:{ title:'آخرین نامه‌های کارتابل', subtitle:'۴ مورد اخیر', padding:false },
+      recentTableProps:{ columns:recentCols, rows:recentRows, onRowClick:openRecent },
+      flowsCardProps:{ title:'گردش کارهای فعال', accent:'teal' },
+      workflows,
+
+      // cartable
+      cartTitle: S.cartTab==='out' ? 'نامه‌های صادره' : (S.cartTab==='draft' ? 'پیش‌نویس‌ها' : 'کارتابل من'),
+      tabs,
+      cartCardProps:{ padding:false },
+      cartTableProps:{ columns:cartCols, rows, onRowClick:selectRow },
+      detailCardProps:{ accent:'brand' },
+      active,
+      activeInitial: (active.from||'؟').replace('به: ','').trim().charAt(0),
+      activePri: tag(active.pri||['neutral','عادی']),
+      activeStatus: badge(active.status||['neutral','—']),
+      activeStepper: stepper(active.stage||0),
+      openActive: ()=> this.openLetter(active),
+      rejectActive: ()=> this.toast('نامه جهت اصلاح بازگردانده شد'),
+
+      // letter view
+      vLetter,
+      vPri: tag(vLetter.pri||['neutral','عادی']),
+      vStatus: badge(vLetter.status||['neutral','—']),
+      vStepper: stepper(vLetter.stage||0),
+      backToCart: ()=> this.setState({ screen:'cartable' }),
+      approveView: ()=> { this.toast('نامه تأیید و ارجاع شد'); this.setState({ screen:'cartable' }); },
+      replyView: ()=> this.setState({ modal:'template' }),
+
+      // people / archive / flows
+      peopleCardProps:{ title:'فهرست کارکنان', subtitle:'۵ نفر', padding:false },
+      peopleTableProps:{ columns:peopleCols, rows:peopleRows },
+      archiveCardProps:{ title:'اسناد بایگانی‌شده', padding:false },
+      archiveTableProps:{ columns:archiveCols, rows:archiveRows },
+      flowItems,
+
+      // workflow builder
+      canEdit, builderLocked: !canEdit,
+      builderName: B.name,
+      builderRows, builderPreview,
+      builderSetName: (e)=> this.setState({ builder:{ ...this.state.builder, name:e.target.value } }),
+      builderAdd: ()=> this.builderAdd(),
+      builderSave: ()=> this.toast('گردش کار «'+this.state.builder.name+'» ذخیره و اعمال شد'),
+      builderReset: ()=> this.builderReset(),
+
+      // modals
+      showTemplate: S.modal==='template',
+      showSize: S.modal==='size',
+      closeModal: ()=> this.setState({ modal:null }),
+      openTemplate,
+      templates: [
+        { name:'قلم نوری', glyph:'✒', bg:'var(--grad-gold)', pick:()=>pickTemplate('a4') },
+        { name:'دریافت فایل', glyph:'⬆', bg:'var(--grad-teal)', pick:()=>pickTemplate('a4') },
+        { name:'Microsoft Word', glyph:'W', bg:'var(--grad-brand)', pick:()=>pickTemplate('a4') },
+        { name:'قالب وب', glyph:'🌐', bg:'var(--grad-brand-soft)', pick:()=>pickTemplate('a4') },
+      ],
+      pickA4: ()=>pickTemplate('a4'),
+      pickA5: ()=>pickTemplate('a5'),
+      pickForm: ()=>pickTemplate('a4'),
+
+      // editor
+      editorScreenStyle: S.editorOpen ? 'position:fixed;inset:0;z-index:40;display:block' : 'display:none',
+      editorSubject: S.editorSubject,
+      setEditorSubject: (e)=> this.setState({ editorSubject: e.target.value }),
+      cancelEditor: ()=> this.setState({ editorOpen:false }),
+      afFill: ()=> this.openFill(),
+      afPrint: ()=> window.print(),
+      setA4: ()=> this.setPaperSize('a4'),
+      setA5: ()=> this.setPaperSize('a5'),
+      openSize: ()=> this.setState({ modal:'size' }),
+      confirmA4: ()=> this.confirmSend('a4'),
+      confirmA5: ()=> this.confirmSend('a5'),
+
+      toast: S.toast,
+    };
+  }
+
+  _fa(n){ return String(n).replace(/[0-9]/g, d=>'۰۱۲۳۴۵۶۷۸۹'[d]); }
+
+  openLetter(l){ this.setState({ viewLetter:l, screen:'letterView' }); }
+
+  setPaperSize(size){
+    const p = document.getElementById('af-paper');
+    if(p){ p.classList.remove('a4','a5'); p.classList.add(size);
+      if(size==='a5'){ p.style.width='148mm'; p.style.minHeight='210mm'; }
+      else { p.style.width='210mm'; p.style.minHeight='297mm'; }
+    }
+    const a4=document.getElementById('af-sizeA4'), a5=document.getElementById('af-sizeA5');
+    if(a4&&a5){ const on='var(--brand)', onc='#fff', off='#fff', offc='var(--text-body)';
+      a4.style.background = size==='a4'?on:off; a4.style.color = size==='a4'?onc:offc;
+      a5.style.background = size==='a5'?on:off; a5.style.color = size==='a5'?onc:offc; }
+  }
+
+  confirmSend(size){
+    this.setPaperSize(size);
+    const subj = (this.state.editorSubject||'').trim() || 'نامهٔ صادرهٔ جدید';
+    const me = this.roles[this.state.roleIdx];
+    this.letters.out.unshift({ no:'۵/۱/۷۶۷۱۲', subject:subj, from:'به: '+ (me.unit), to:'واحد مربوطه', pri:['neutral','عادی'], status:['success','ارسال شد'], date:'هم‌اکنون', stage:3, attach:'—', excerpt:'نامهٔ صادرشده از طریق ادیتور سامانه.', body:subj, body2:'با تشکر.', signName:me.name, signRole:me.role });
+    this.setState({ modal:null, editorOpen:false, screen:'cartable', cartTab:'out', selected:0 });
+    this.toast('نامه با موفقیت ارسال شد ('+size.toUpperCase()+')');
+  }
+
+  openFill(){ const m=document.getElementById('af-fillModal'); if(m) m.style.display='flex'; }
+
+  builderSet(i,key,val){ const b={...this.state.builder}; b.steps=b.steps.slice(); b.steps[i]={...b.steps[i],[key]:val}; this.setState({ builder:b }); }
+  builderMove(i,d){ const j=i+d; const b={...this.state.builder}; if(j<0||j>=b.steps.length) return; b.steps=b.steps.slice(); const t=b.steps[i]; b.steps[i]=b.steps[j]; b.steps[j]=t; this.setState({ builder:b }); }
+  builderRemove(i){ const b={...this.state.builder}; if(b.steps.length<=1) return; b.steps=b.steps.filter((_,k)=>k!==i); this.setState({ builder:b }); }
+  builderAdd(){ const b={...this.state.builder}; b.steps=b.steps.concat([{ label:'مرحلهٔ جدید', role:null }]); this.setState({ builder:b }); }
+  builderReset(){ this.setState({ builder:{ name:'گردش کار تأیید فاکتور خرید', steps:[ {label:'ثبت پیش‌نویس',role:3},{label:'تأیید کارشناس',role:3},{label:'تأیید مدیر واحد',role:1},{label:'امضا و تأیید نهایی',role:0},{label:'بایگانی',role:null} ] } }); this.toast('چینش به حالت پیش‌فرض بازگشت'); }
+
+  _initEditor(){
+    if(this._ed) return;
+    const paper = document.getElementById('af-paper');
+    const toolbar = document.getElementById('af-toolbar');
+    if(!paper || !toolbar) return;
+    this._ed = true;
+    const self = this;
+    let savedRange = null;
+    try{ document.execCommand('styleWithCSS', false, true); }catch(e){}
+
+    function saveSel(){ const s=window.getSelection(); if(s.rangeCount && paper.contains(s.anchorNode)) savedRange=s.getRangeAt(0).cloneRange(); }
+    function restoreSel(){ if(!savedRange) return; const s=window.getSelection(); s.removeAllRanges(); s.addRange(savedRange); }
+    document.addEventListener('selectionchange', saveSel);
+    paper.addEventListener('mouseup', saveSel); paper.addEventListener('keyup', saveSel);
+    function focusEd(){ paper.focus(); restoreSel(); }
+    function exec(cmd,val){ focusEd(); document.execCommand(cmd,false,val||null); refreshState(); }
+
+    toolbar.querySelectorAll('[data-cmd]').forEach(function(b){
+      b.addEventListener('click', function(){
+        const c=b.getAttribute('data-cmd');
+        if(c.indexOf('formatBlock:')===0){ exec('formatBlock', c.split(':')[1]); return; }
+        if(c==='createLink'){ const u=prompt('نشانی پیوند:','https://'); if(u) exec('createLink',u); return; }
+        exec(c);
+      });
+    });
+
+    const fontName=document.getElementById('af-fontName');
+    if(fontName) fontName.addEventListener('change', function(){ exec('fontName', this.value); });
+    const fontSize=document.getElementById('af-fontSize');
+    if(fontSize) fontSize.addEventListener('change', function(){ applyFontSize(this.value); });
+    function applyFontSize(size){ focusEd(); document.execCommand('fontSize',false,'7');
+      paper.querySelectorAll('font[size="7"]').forEach(function(f){ const sp=document.createElement('span'); sp.style.fontSize=size; while(f.firstChild) sp.appendChild(f.firstChild); f.parentNode.replaceChild(sp,f); }); }
+
+    const fore=document.getElementById('af-foreColor');
+    if(fore) fore.addEventListener('input', function(){ exec('foreColor', this.value); });
+    const hil=document.getElementById('af-hiliteColor');
+    if(hil) hil.addEventListener('input', function(){ focusEd(); if(!document.execCommand('hiliteColor',false,this.value)) document.execCommand('backColor',false,this.value); });
+
+    const insTable=document.getElementById('af-insTable');
+    if(insTable) insTable.addEventListener('click', function(){
+      const r=parseInt(prompt('تعداد سطر:','2'),10), c=parseInt(prompt('تعداد ستون:','2'),10);
+      if(!r||!c) return; let h='<table style="border-collapse:collapse;width:100%;margin:8px 0">';
+      for(let i=0;i<r;i++){ h+='<tr>'; for(let j=0;j<c;j++) h+='<td style="border:1px solid #555;padding:6px 8px;min-width:40px">&nbsp;</td>'; h+='</tr>'; }
+      h+='</table><p><br></p>'; exec('insertHTML',h);
+    });
+
+    const dirBtn=document.getElementById('af-dirToggle');
+    if(dirBtn) dirBtn.addEventListener('click', function(){ focusEd(); const s=window.getSelection(); if(!s.rangeCount) return;
+      let n=s.anchorNode; while(n&&n!==paper&&!(n.nodeType===1&&/^(P|DIV|LI|TD|H[1-6]|BLOCKQUOTE)$/.test(n.tagName))) n=n.parentNode;
+      if(n&&n!==paper){ n.dir=(n.dir==='ltr')?'rtl':'ltr'; n.style.textAlign=n.dir==='ltr'?'left':'right'; } });
+
+    // special chars + tokens pops
+    const chars='× ÷ ± ° € $ £ ٪ § © ® ™ « » ‹ › – — … ٬ ٫ √ ∞ ≈ ≤ ≥ → ← ↑ ↓ ✓ ★ ● ◆'.split(' ');
+    const charpop=document.getElementById('af-charpop');
+    chars.forEach(function(ch){ const b=document.createElement('button'); b.textContent=ch; b.style.cssText='width:28px;height:28px;font-size:15px'; b.addEventListener('click',function(){ exec('insertText',ch); hidePops(); }); charpop.appendChild(b); });
+    const tokens=['شماره','تاریخ','پیوست','گیرنده','موضوع','امضا','نام امضاکننده','سمت امضاکننده'];
+    const tokenpop=document.getElementById('af-tokenpop');
+    tokens.forEach(function(t){ const b=document.createElement('button'); b.textContent='{'+t+'}'; b.style.cssText='text-align:right;width:150px;padding:6px 10px;font-size:13px'; b.addEventListener('click',function(){ exec('insertHTML','<span class="af-token" contenteditable="false">{'+t+'}</span>&nbsp;'); hidePops(); }); tokenpop.appendChild(b); });
+
+    function positionPop(pop,btn){ const r=btn.getBoundingClientRect(); pop.style.top=(r.bottom+4)+'px'; pop.style.right=(window.innerWidth-r.right)+'px'; }
+    function showPop(pop){ pop.style.display='grid'; }
+    function hidePops(except){ [charpop,tokenpop].forEach(function(p){ if(p!==except) p.style.display='none'; }); }
+    const specChar=document.getElementById('af-specChar');
+    if(specChar) specChar.addEventListener('click', function(e){ e.stopPropagation(); const vis=charpop.style.display==='grid'; hidePops(); positionPop(charpop,this); if(!vis) showPop(charpop); });
+    const insToken=document.getElementById('af-insToken');
+    if(insToken) insToken.addEventListener('click', function(e){ e.stopPropagation(); const vis=tokenpop.style.display==='grid'; hidePops(); positionPop(tokenpop,this); if(!vis) showPop(tokenpop); });
+    document.addEventListener('click', function(e){ if(!e.target.closest('.af-pop')&&!e.target.closest('#af-specChar')&&!e.target.closest('#af-insToken')) hidePops(); });
+
+    // fill modal
+    const fillModal=document.getElementById('af-fillModal');
+    const fillX=document.getElementById('af-fillX');
+    if(fillX) fillX.addEventListener('click', ()=> fillModal.style.display='none');
+    if(fillModal) fillModal.addEventListener('click', function(e){ if(e.target===fillModal) fillModal.style.display='none'; });
+    const applyFill=document.getElementById('af-applyFill');
+    if(applyFill) applyFill.addEventListener('click', function(){
+      fillModal.querySelectorAll('input[data-tok]').forEach(function(inp){ const val=inp.value.trim(); if(!val) return; const key=inp.getAttribute('data-tok');
+        paper.querySelectorAll('.af-token').forEach(function(tok){ if(tok.textContent==='{'+key+'}'){ const s=document.createElement('span'); s.textContent=val; tok.parentNode.replaceChild(s,tok); } }); });
+      fillModal.style.display='none';
+    });
+    const resetFill=document.getElementById('af-resetFill');
+    if(resetFill) resetFill.addEventListener('click', function(){ fillModal.querySelectorAll('input[data-tok]').forEach(i=>i.value=''); });
+
+    // state
+    const stateCmds=['bold','italic','underline','strikeThrough','justifyRight','justifyCenter','justifyLeft','justifyFull'];
+    function refreshState(){ stateCmds.forEach(function(cmd){ const btn=toolbar.querySelector('[data-cmd="'+cmd+'"]'); if(!btn) return; try{ btn.classList.toggle('on', document.queryCommandState(cmd)); }catch(e){} }); }
+    paper.addEventListener('keyup', refreshState); paper.addEventListener('mouseup', refreshState);
+  }
+}
+</script>
+</body>
+</html>

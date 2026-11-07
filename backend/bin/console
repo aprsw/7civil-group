@@ -1,0 +1,60 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use ArtaPharma\Core\Autoloader;
+use ArtaPharma\Core\Config;
+use ArtaPharma\Infrastructure\Database\Connection;
+use ArtaPharma\Infrastructure\Database\Migrator;
+use ArtaPharma\Infrastructure\Database\Seeder;
+
+/**
+ * Tiny CLI: `php bin/console migrate|migrate:fresh|seed|install`.
+ */
+
+require __DIR__ . '/../src/Core/Autoloader.php';
+(new Autoloader())->addNamespace('ArtaPharma', __DIR__ . '/../src')->register();
+
+\ArtaPharma\Core\Env::load(__DIR__ . '/../.env');
+date_default_timezone_set($_ENV['APP_TIMEZONE'] ?? getenv('APP_TIMEZONE') ?: 'Asia/Tehran');
+
+$command = $argv[1] ?? 'help';
+$config = Config::fromFile(__DIR__ . '/../config/config.php');
+$connection = new Connection($config);
+$migrator = new Migrator($connection);
+$seeder = new Seeder($connection);
+
+$line = static fn (string $msg) => fwrite(STDOUT, $msg . PHP_EOL);
+
+try {
+    switch ($command) {
+        case 'migrate':
+            $migrator->migrate();
+            $line('✓ جداول ساخته شدند.');
+            break;
+
+        case 'migrate:fresh':
+            $migrator->fresh();
+            $line('✓ جداول بازسازی شدند.');
+            break;
+
+        case 'seed':
+            $seeder->run();
+            $line('✓ داده‌های نمونه بارگذاری شدند.');
+            break;
+
+        case 'install':
+            $migrator->fresh();
+            $seeder->run();
+            $line('✓ نصب کامل شد: جداول ساخته و داده‌های نمونه بارگذاری شدند.');
+            $line('  کاربر نمونه: milad.heydari / password');
+            break;
+
+        default:
+            $line('دستورهای موجود: migrate | migrate:fresh | seed | install');
+    }
+} catch (\Throwable $e) {
+    fwrite(STDERR, '✗ خطا: ' . $e->getMessage() . PHP_EOL);
+    exit(1);
+}

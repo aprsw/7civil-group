@@ -1,0 +1,95 @@
+/* ═══════════════════════════════════════════════════════════════
+   COLORS — آرتا فارما / Arta Pharma automation system
+   Sampled directly from the brand login screen + heart logomark.
+   Blue gradient = primary surface. Gold + teal = brand accents.
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Brand blue (the gradient scale) ──────────────────────── */
+  --blue-950: #12285f;
+  --blue-900: #1a3576;
+  --blue-800: #2340a4;   /* deep gradient top-left */
+  --blue-700: #2b55bd;
+  --blue-600: #3467de;   /* core brand blue */
+  --blue-500: #3b87ea;
+  --blue-400: #4f9cf0;
+  --blue-300: #64b0f1;   /* light gradient bottom-right */
+  --blue-200: #9ecbf6;
+  --blue-100: #cfe3fb;
+  --blue-50:  #eaf3fe;
+
+  /* ── Gold / amber (logo outline, primary accent) ──────────── */
+  --gold-700: #b8860a;
+  --gold-600: #d49c0f;
+  --gold-500: #ebb011;   /* logo gold */
+  --gold-400: #f2c246;
+  --gold-300: #f7d477;
+  --gold-100: #fdf1cf;
+  --gold-50:  #fdf8ea;
+
+  /* ── Teal / cyan (logo fill, secondary accent) ────────────── */
+  --teal-700: #017a89;
+  --teal-600: #0093a6;
+  --teal-500: #00aec3;   /* logo teal */
+  --teal-400: #33c1d2;
+  --teal-300: #7bd7e2;
+  --teal-100: #cdf0f5;
+  --teal-50:  #e8f9fb;
+
+  /* ── Neutrals (cool-tinted greys) ─────────────────────────── */
+  --ink-950: #0d1526;
+  --ink-900: #16233c;
+  --ink-800: #22314f;
+  --ink-700: #38486a;
+  --ink-600: #566489;
+  --ink-500: #7b87a5;
+  --ink-400: #a3adc4;
+  --ink-300: #c8cfdd;
+  --ink-200: #e0e5ee;
+  --ink-150: #eaeef4;
+  --ink-100: #f1f4f9;
+  --ink-50:  #f8fafd;
+  --white:   #ffffff;
+
+  /* ── Semantic status ──────────────────────────────────────── */
+  --success-600: #12855a; --success-500: #1aa06d; --success-50: #e6f6ee;
+  --warning-600: #c8860a; --warning-500: #eaa514; --warning-50: #fdf4e0;
+  --danger-600:  #c8384a; --danger-500:  #e34d5f; --danger-50:  #fdeaec;
+  --info-600:    #2b6fd6; --info-500:    #3b87ea; --info-50:    #eaf3fe;
+
+  /* ── Gradients ────────────────────────────────────────────── */
+  --grad-brand: linear-gradient(135deg, #2340a4 0%, #3467de 42%, #64b0f1 100%); /* @kind color */
+  --grad-brand-soft: linear-gradient(135deg, #3467de 0%, #4f9cf0 100%); /* @kind color */
+  --grad-gold: linear-gradient(135deg, #f2c246 0%, #ebb011 100%); /* @kind color */
+  --grad-teal: linear-gradient(135deg, #33c1d2 0%, #0093a6 100%); /* @kind color */
+  --grad-sky:  linear-gradient(180deg, #eaf3fe 0%, #f8fafd 100%); /* @kind color */
+
+  /* ═══ SEMANTIC ALIASES ═══════════════════════════════════════ */
+  --brand:            var(--blue-600);
+  --brand-strong:     var(--blue-800);
+  --brand-soft:       var(--blue-50);
+  --accent-gold:      var(--gold-500);
+  --accent-teal:      var(--teal-500);
+
+  --bg-app:           var(--ink-100);
+  --bg-canvas:        var(--white);
+  --surface-card:     var(--white);
+  --surface-sunken:   var(--ink-50);
+  --surface-raised:   var(--white);
+  --surface-brand:    var(--grad-brand);
+
+  --text-strong:      var(--ink-900);
+  --text-body:        var(--ink-800);
+  --text-muted:       var(--ink-600);
+  --text-subtle:      var(--ink-500);
+  --text-on-brand:    var(--white);
+  --text-on-brand-dim:rgba(255,255,255,0.72);
+  --text-link:        var(--blue-600);
+
+  --border-subtle:    var(--ink-200);
+  --border-default:   var(--ink-300);
+  --border-strong:    var(--ink-400);
+  --border-brand:     var(--blue-300);
+
+  --focus-ring:       rgba(52,103,222,0.38);
+  --overlay-scrim:    rgba(13,21,38,0.48);
+}

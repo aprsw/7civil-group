@@ -1,0 +1,11 @@
+# deps & build
+backend/vendor/
+frontend/node_modules/
+frontend/dist/
+# runtime
+backend/storage/*.sqlite
+backend/storage/app_secret.key
+backend/storage/uploads/*
+backend/public/uploads/photos/u*
+backend/public/uploads/signatures/u*
+.DS_Store

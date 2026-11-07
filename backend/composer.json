@@ -1,0 +1,24 @@
+{
+    "name": "arta-pharma/automation-api",
+    "description": "سامانه اتوماسیون اداری آرتا فارما — Pure-PHP MVC-R JSON API (no framework).",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.1",
+        "ext-pdo": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "ArtaPharma\\": "src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    },
+    "scripts": {
+        "migrate": "php bin/console migrate",
+        "seed": "php bin/console seed",
+        "serve": "php -S 127.0.0.1:8000 -t public"
+    }
+}

@@ -1,0 +1,10 @@
+/* ─────────────────────────────────────────────────────────────
+   Vazirmatn — open-source twin of IRANYekan (near-identical letterforms).
+   SUBSTITUTION: the licensed "IRAN Yekan Pro V3.0" upload did not arrive.
+   Everything references var(--font-fa); swapping in the real IRANYekan
+   later means adding its @font-face here and changing --font-fa in typography.css.
+   ───────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Latin / numerals companion for mixed content */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
