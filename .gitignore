@@ -12,3 +12,5 @@ backend/public/uploads/signatures/u*
 # company marks seeded with the app are committed alongside them.
 backend/public/uploads/logos/l*
 .DS_Store
+# Apache logs written next to the vhost on the deployed server
+deploy/apache/*.log

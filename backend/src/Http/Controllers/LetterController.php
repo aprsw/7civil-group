@@ -183,7 +183,16 @@ final class LetterController extends Controller
     {
         $me = $this->user($request);
         $this->access->authorize($me, Permission::DepartmentsView);
-        $all = $this->letters->all();
+
+        // Executive oversight is not unlimited: LetterAccess withholds سری
+        // letters even from this permission, and other people's drafts from
+        // everyone. This list used to return letters->all() unfiltered, so the
+        // admin view leaked exactly what show() refuses to serve — subject and
+        // body included. Apply the same rule here.
+        $all = array_values(array_filter(
+            $this->letters->all(),
+            fn ($l) => $this->visibility->canView($me, $l),
+        ));
         usort($all, static fn ($a, $b) => $b->id <=> $a->id);
 
         return Response::ok(['items' => $this->decorate($all, $me)]);

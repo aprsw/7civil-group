@@ -57,6 +57,17 @@ final class Connection
         $pdo = new PDO('sqlite:' . $path, null, null, $options);
         $pdo->exec('PRAGMA foreign_keys = ON');
 
+        // Multi-user settings. The default rollback journal takes an exclusive
+        // lock for every write, so on a shared LAN install a second person
+        // saving a letter at the same moment gets "database is locked". WAL
+        // lets readers continue during a write, and busy_timeout makes a
+        // writer wait its turn instead of failing instantly.
+        $pdo->exec('PRAGMA journal_mode = WAL');
+        $pdo->exec('PRAGMA busy_timeout = 10000'); // ms
+        // With WAL this is durable across application crashes (only a power
+        // loss can lose the last commits) and much faster over a share.
+        $pdo->exec('PRAGMA synchronous = NORMAL');
+
         return $pdo;
     }
 

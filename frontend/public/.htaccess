@@ -1,0 +1,24 @@
+# Copied into dist/ by Vite. The app is a client-side SPA: a deep link such as
+# /letters/12 is a route the browser resolves, not a file on disk, so anything
+# that is not a real file falls back to index.html. Without this, refreshing
+# any page but the root returns 404.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    # Never swallow the API or uploaded files — those are served by PHP.
+    RewriteRule ^(api|uploads)/ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    # index.html must never be cached, or users keep running an old build
+    # after a deploy; the hashed assets beside it are safe to cache forever.
+    <FilesMatch "\.html$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+    <FilesMatch "\.(js|css|woff2|png|jpg|jpeg|svg)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
