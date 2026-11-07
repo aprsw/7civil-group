@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { api } from '../services/api'
 import { useAuthStore } from '../stores/auth'
 import { useToastStore } from '../stores/toast'
+import { useBrandingStore } from '../stores/branding'
 import { todayJalaali } from '../utils/jalali'
 import Icon from '../components/ui/Icon.vue'
 import PeoplePicker from '../components/ui/PeoplePicker.vue'
@@ -13,6 +14,7 @@ const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 const toast = useToastStore()
+const branding = useBrandingStore()
 
 const paper = ref(null)
 const fileInput = ref(null)
@@ -423,8 +425,8 @@ onMounted(async () => {
     <div class="flex items-center gap-2.5 border-b border-ink-200 bg-white px-4 py-2.5">
       <button @click="router.back()" class="h-9 rounded-[10px] border border-ink-200 bg-white px-3 text-[13px] text-ink-800">→ انصراف</button>
       <div class="flex items-center gap-2.5">
-        <img src="/assets/logo-mark.png" class="h-[26px]" />
-        <b class="text-brand-strong">نگارش نامه — گروه متحد 7</b>
+        <img :src="branding.sidebarLogoUrl" class="h-[26px]" />
+        <b class="text-brand-strong">نگارش نامه — {{ branding.name }}</b>
       </div>
       <div class="h-6 w-px bg-ink-200"></div>
       <input v-model="form.subject" placeholder="موضوع نامه…"
@@ -664,10 +666,10 @@ onMounted(async () => {
             :style="{ width: form.paper_size === 'a5' ? '148mm' : '210mm', minHeight: form.paper_size === 'a5' ? '210mm' : '297mm', padding: '22mm 20mm', border: '1px solid #ccc' }">
             <div class="mb-4 flex items-start justify-between gap-4">
               <div class="flex items-center gap-2.5">
-                <img src="/assets/logo-mark.png" :style="{ height: form.paper_size === 'a5' ? '34px' : '44px' }" />
+                <img :src="branding.letterheadLogoUrl" :style="{ height: form.paper_size === 'a5' ? '34px' : '44px' }" />
                 <div>
-                  <div style="font-weight:800;color:#2340a4;white-space:nowrap" :style="{ fontSize: form.paper_size === 'a5' ? '14pt' : '20pt' }">گروه متحد 7</div>
-                  <div style="font-size:10.5pt;color:#444;margin-top:2px">آرتا قلب بهسان طب</div>
+                  <div style="font-weight:800;color:#2340a4;white-space:nowrap" :style="{ fontSize: form.paper_size === 'a5' ? '14pt' : '20pt' }">{{ branding.name }}</div>
+                  <div v-if="branding.tagline" style="font-size:10.5pt;color:#444;margin-top:2px">{{ branding.tagline }}</div>
                 </div>
               </div>
               <table style="border-collapse:collapse;font-size:10.5pt;min-width:180px">

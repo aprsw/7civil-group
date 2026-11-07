@@ -303,9 +303,12 @@ final class Seeder
             return;
         }
         $set = $pdo->prepare('INSERT INTO settings (skey, svalue) VALUES (?, ?)');
-        foreach (OrgIdentity::LOGO_SLOTS as $slot) {
-            $set->execute([$slot, (string) $groupLogoId]);
-        }
+        // Letterhead and sidebar sit on white, so the colour mark fits there.
+        // The login screen is dark navy: left unset, it falls back to the
+        // bundled white version of the same mark, which reads properly.
+        $set->execute([OrgIdentity::KEY_LOGO_LETTERHEAD, (string) $groupLogoId]);
+        $set->execute([OrgIdentity::KEY_LOGO_SIDEBAR, (string) $groupLogoId]);
+        $set->execute([OrgIdentity::KEY_LOGO_LOGIN, '']);
         $set->execute([OrgIdentity::KEY_NAME, OrgIdentity::DEFAULT_NAME]);
         $set->execute([OrgIdentity::KEY_NAME_LATIN, OrgIdentity::DEFAULT_NAME_LATIN]);
         $set->execute([OrgIdentity::KEY_TAGLINE, 'شرکت‌های عمرانی و صنعتی عضو گروه متحد ۷']);

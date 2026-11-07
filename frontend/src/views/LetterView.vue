@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { api } from '../services/api'
 import { useToastStore } from '../stores/toast'
 import { useConfirmStore } from '../stores/confirm'
+import { useBrandingStore } from '../stores/branding'
 import AppBadge from '../components/ui/AppBadge.vue'
 import AppTag from '../components/ui/AppTag.vue'
 import WorkflowStepper from '../components/ui/WorkflowStepper.vue'
@@ -15,6 +16,7 @@ const route = useRoute()
 const router = useRouter()
 const toast = useToastStore()
 const confirmStore = useConfirmStore()
+const branding = useBrandingStore()
 
 const letter = ref(null)
 const error = ref('')
@@ -308,10 +310,10 @@ onMounted(load)
           :style="{ width: letter.paper_size === 'a5' ? '148mm' : '210mm' }">
           <div class="mb-4 flex items-start justify-between gap-4">
             <div class="flex items-center gap-2.5">
-              <img src="/assets/logo-mark.png" class="h-11" />
+              <img :src="branding.letterheadLogoUrl" class="h-11" />
               <div>
-                <div class="text-[20pt] font-extrabold text-brand-strong">گروه متحد 7</div>
-                <div class="mt-0.5 text-[10.5pt] text-[#444]">آرتا قلب بهسان طب</div>
+                <div class="text-[20pt] font-extrabold text-brand-strong">{{ branding.name }}</div>
+                <div v-if="branding.tagline" class="mt-0.5 text-[10.5pt] text-[#444]">{{ branding.tagline }}</div>
               </div>
             </div>
             <table class="border-collapse text-[10.5pt]" style="min-width: 190px">

@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { useUiStore } from '../stores/ui'
+import { useBrandingStore } from '../stores/branding'
 import { api } from '../services/api'
 import Icon from '../components/ui/Icon.vue'
 import AppAvatar from '../components/ui/AppAvatar.vue'
@@ -12,6 +13,7 @@ const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 const ui = useUiStore()
+const branding = useBrandingStore()
 
 const counts = ref({ in: 0, in_unread: 0, out: 0, out_unread: 0, draft: 0 })
 const notifications = ref({ count: 0, items: [] })
@@ -112,9 +114,9 @@ onUnmounted(() => document.removeEventListener('mousedown', onDocClick))
       class="fixed inset-y-0 right-0 z-50 flex w-[276px] transform flex-col gap-1 overflow-y-auto border-l border-ink-200 bg-white p-[18px_14px] transition-transform md:static md:z-auto md:h-screen md:w-auto md:translate-x-0"
       :class="drawerOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'">
       <div class="flex items-center gap-3 px-2 pt-1.5 pb-4">
-        <img src="/assets/logo-mark.png" alt="گروه متحد 7" class="h-10" />
+        <img :src="branding.sidebarLogoUrl" :alt="branding.name" class="h-10" />
         <div class="leading-tight">
-          <div class="text-[15px] font-extrabold text-brand-strong">گروه متحد 7</div>
+          <div class="text-[15px] font-extrabold text-brand-strong">{{ branding.name }}</div>
           <div class="text-[11px] text-ink-500">اتوماسیون اداری</div>
         </div>
       </div>

@@ -55,10 +55,14 @@ async function request(method, path, body) {
   return payload ? payload.data : null
 }
 
-// Multipart upload (used for letter attachments). Returns the `data` envelope.
-async function upload(path, file) {
+// Multipart upload (used for letter attachments and logos). `fields` carries
+// any extra text parts (e.g. a logo's title). Returns the `data` envelope.
+async function upload(path, file, fields = {}) {
   const form = new FormData()
   form.append('file', file)
+  for (const [key, value] of Object.entries(fields)) {
+    if (value !== undefined && value !== null) form.append(key, value)
+  }
   const headers = {}
   if (authToken) headers.Authorization = `Bearer ${authToken}`
 
