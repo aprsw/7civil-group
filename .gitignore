@@ -8,4 +8,7 @@ backend/storage/app_secret.key
 backend/storage/uploads/*
 backend/public/uploads/photos/u*
 backend/public/uploads/signatures/u*
+# Logos uploaded from the admin panel (stored as l<random>); the bundled
+# company marks seeded with the app are committed alongside them.
+backend/public/uploads/logos/l*
 .DS_Store

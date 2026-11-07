@@ -55,16 +55,31 @@ return [
             'password' => $_ENV['DB_PASS'] ?? getenv('DB_PASS') ?: '',
             'charset' => 'utf8mb4',
         ],
-        // Microsoft SQL Server (needs the pdo_sqlsrv extension). Reuses the same
-        // DB_* variables as MySQL; the default port is 1433. TrustServerCertificate
+        // Microsoft SQL Server 2008+ (needs the pdo_sqlsrv extension). Reuses the
+        // same DB_* variables as MySQL; the default port is 1433. The default
+        // login mode is Windows Authentication — see 'windows_auth' below.
+        // TrustServerCertificate
         // defaults on for local/self-signed instances — set DB_TRUST_CERT=0 to require
         // a valid certificate, and DB_ENCRYPT to force/disable encryption.
         'sqlsrv' => [
             'host' => $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?: '127.0.0.1',
             'port' => $_ENV['DB_PORT'] ?? getenv('DB_PORT') ?: '1433',
             'database' => $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?: 'civil7_automation',
-            'username' => $_ENV['DB_USER'] ?? getenv('DB_USER') ?: 'sa',
+            'username' => $_ENV['DB_USER'] ?? getenv('DB_USER') ?: '',
             'password' => $_ENV['DB_PASS'] ?? getenv('DB_PASS') ?: '',
+            // Windows Authentication (Integrated Security): the connection is
+            // made as the process identity — the IIS application pool account
+            // for web requests, the signed-in user for `php bin/console`. That
+            // account needs rights on the database. Leaving DB_USER empty
+            // selects it automatically; DB_WINDOWS_AUTH forces it either way.
+            'windows_auth' => (static function (): bool {
+                $flag = $_ENV['DB_WINDOWS_AUTH'] ?? getenv('DB_WINDOWS_AUTH');
+                if (is_string($flag) && $flag !== '') {
+                    return filter_var($flag, FILTER_VALIDATE_BOOL);
+                }
+
+                return (string) ($_ENV['DB_USER'] ?? getenv('DB_USER') ?: '') === '';
+            })(),
             'trust_cert' => filter_var($_ENV['DB_TRUST_CERT'] ?? getenv('DB_TRUST_CERT') ?: 'true', FILTER_VALIDATE_BOOL),
             'encrypt' => $_ENV['DB_ENCRYPT'] ?? getenv('DB_ENCRYPT') ?: '',
         ],

@@ -115,6 +115,14 @@ final class Connection
             $dsn .= ';Encrypt=' . $c['encrypt'];
         }
 
+        // Windows Authentication: pdo_sqlsrv switches to a trusted connection
+        // only when NO credentials are supplied. Passing empty strings would
+        // instead attempt a SQL login as the user '' and fail, so the username
+        // and password must be omitted entirely.
+        if (!empty($c['windows_auth'])) {
+            return new PDO($dsn, null, null, $sqlsrvOptions);
+        }
+
         return new PDO($dsn, (string) $c['username'], (string) $c['password'], $sqlsrvOptions);
     }
 
@@ -128,6 +136,17 @@ final class Connection
     private function connectDblib(array $options): PDO
     {
         $c = (array) $this->config->get('database.sqlsrv');
+
+        // FreeTDS authenticates with a SQL login; Windows Authentication over
+        // it needs a Kerberos-enabled build and a domain ticket, which is not
+        // something this application can arrange. Fail with a clear message
+        // instead of a confusing login error from the driver.
+        if (!empty($c['windows_auth'])) {
+            throw new RuntimeException(
+                'ورود با Windows Authentication از طریق درایور dblib پشتیبانی نمی‌شود؛ '
+                . 'از pdo_sqlsrv روی ویندوز استفاده کنید یا یک SQL Login تعریف کنید.'
+            );
+        }
 
         $dsn = sprintf(
             'dblib:host=%s:%s;dbname=%s;charset=UTF-8',

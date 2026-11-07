@@ -1,0 +1,11 @@
+# Uploaded files are data, never code. Even though every upload path checks
+# the extension against an allow-list, stop Apache from handing anything in
+# this tree to an interpreter, and stop browsers from sniffing a stored file
+# into something executable.
+php_flag engine off
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .pl .py .cgi .asp .aspx
+RemoveType .php .phtml .php3 .php4 .php5 .php7 .php8
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set Content-Security-Policy "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'"
+</IfModule>

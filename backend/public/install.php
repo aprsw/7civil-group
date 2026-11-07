@@ -53,6 +53,7 @@ $f = [
     'db_name'    => $_POST['db_name']    ?? 'civil7_automation',
     'db_user'    => $_POST['db_user']    ?? 'root',
     'db_pass'    => $_POST['db_pass']    ?? '',
+    'db_winauth' => isset($_POST['db_winauth']) ? '1' : ($_SERVER['REQUEST_METHOD'] === 'POST' ? '0' : '1'),
     'jwt_secret' => $_POST['jwt_secret'] ?? bin2hex(random_bytes(24)),
     'app_debug'  => $_POST['app_debug']  ?? 'false',
     'cors'       => $_POST['cors']       ?? '*',
@@ -70,6 +71,16 @@ if ($isPost && isset($_POST['self_delete'])) {
 
 // ── پردازشِ نصب ─────────────────────────────────────────────────────────────
 if ($isPost && isset($_POST['do_install'])) {
+    // A finished install is a locked install. Without this guard anyone who
+    // can reach install.php on a live deployment could POST do_install and
+    // wipe every table (migrate:fresh) plus rewrite .env — no credentials
+    // required. Re-installing is a deliberate act: delete the lock file on
+    // the server first.
+    if ($alreadyDone) {
+        $errors[] = 'سامانه قبلاً نصب شده است. برای نصبِ دوباره، ابتدا فایل '
+            . 'backend/storage/installed.lock را روی سرور حذف کنید. '
+            . '(این محافظت جلوی پاک‌شدنِ تصادفی یا عمدیِ داده‌ها را می‌گیرد.)';
+    }
     if (!isset($_POST['confirm'])) {
         $errors[] = 'برای ادامه باید تیکِ «می‌دانم که داده‌های قبلی بازنویسی می‌شوند» را بزنید.';
     }
@@ -84,6 +95,14 @@ if ($isPost && isset($_POST['do_install'])) {
     }
     if ($f['db_driver'] === 'sqlsrv' && !$hasSqlsrv) {
         $errors[] = 'اکستنشن pdo_sqlsrv (درایور Microsoft SQL Server) فعال نیست.';
+    }
+    $winAuth = $f['db_driver'] === 'sqlsrv' && $f['db_winauth'] === '1';
+    if ($winAuth && !extension_loaded('pdo_sqlsrv')) {
+        // Trusted connections need Microsoft's driver; FreeTDS cannot do it.
+        $errors[] = 'ورود با Windows Authentication فقط با اکستنشن pdo_sqlsrv (روی ویندوز) ممکن است.';
+    }
+    if ($f['db_driver'] === 'sqlsrv' && !$winAuth && trim($f['db_user']) === '') {
+        $errors[] = 'برای ورود با SQL Login، نام کاربری را وارد کنید (یا گزینهٔ Windows Authentication را انتخاب کنید).';
     }
 
     // فایل SQL آپلودی (اختیاری)
@@ -110,10 +129,13 @@ if ($isPost && isset($_POST['do_install'])) {
                 $env[] = 'DB_HOST=' . $f['db_host'];
                 $env[] = 'DB_PORT=' . $f['db_port'];
                 $env[] = 'DB_NAME=' . $f['db_name'];
-                $env[] = 'DB_USER=' . $f['db_user'];
-                $env[] = 'DB_PASS=' . $f['db_pass'];
+                // Under Windows Authentication the connection is made as the
+                // process identity, so no credentials are stored at all.
+                $env[] = 'DB_USER=' . ($winAuth ? '' : $f['db_user']);
+                $env[] = 'DB_PASS=' . ($winAuth ? '' : $f['db_pass']);
             }
             if ($f['db_driver'] === 'sqlsrv') {
+                $env[] = 'DB_WINDOWS_AUTH=' . ($winAuth ? 'true' : 'false');
                 // Local/self-signed instances need the certificate trusted.
                 $env[] = 'DB_TRUST_CERT=true';
             }
@@ -136,8 +158,9 @@ if ($isPost && isset($_POST['do_install'])) {
                 'DB_HOST'     => $f['db_host'],
                 'DB_PORT'     => $f['db_port'],
                 'DB_NAME'     => $f['db_name'],
-                'DB_USER'     => $f['db_user'],
-                'DB_PASS'     => $f['db_pass'],
+                'DB_USER'     => $winAuth ? '' : $f['db_user'],
+                'DB_PASS'     => $winAuth ? '' : $f['db_pass'],
+                'DB_WINDOWS_AUTH' => $f['db_driver'] === 'sqlsrv' ? ($winAuth ? 'true' : 'false') : '',
                 'DB_TRUST_CERT' => $f['db_driver'] === 'sqlsrv' ? 'true' : '',
             ] as $k => $v) {
                 $_ENV[$k] = $v;
@@ -187,6 +210,9 @@ function runSqlDump(\PDO $pdo, string $sql): int
 {
     // حذفِ کامنت‌های خطی ساده
     $sql = preg_replace('/^\s*--.*$/m', '', $sql) ?? $sql;
+    // SQL Server dumps separate batches with a lone "GO" line rather than ';'
+    // — turn those into ordinary separators so sqlsrv does not choke on it.
+    $sql = preg_replace('/^\s*GO\s*;?\s*$/mi', ";\n", $sql) ?? $sql;
     $statements = array_filter(array_map('trim', explode(";\n", $sql . "\n")));
     $n = 0;
     foreach ($statements as $stmt) {
@@ -332,7 +358,13 @@ $selfUrl = h($_SERVER['PHP_SELF'] ?? '/install.php');
           <div><label>پورت</label><input class="ltr" type="number" name="db_port" value="<?= h($f['db_port']) ?>"></div>
         </div>
         <label>نام دیتابیس</label><input class="ltr" type="text" name="db_name" value="<?= h($f['db_name']) ?>">
-        <div class="row">
+        <div id="winAuthBox" style="display:none">
+          <label class="cbx"><input type="checkbox" name="db_winauth" value="1" id="winAuth" onchange="tgAuth()" <?= $f['db_winauth']==='1'?'checked':'' ?>>
+            <span>ورود با <b>Windows Authentication</b> (اتصال با همان حسابی که PHP اجرا می‌شود)</span></label>
+          <p class="muted" id="winAuthHint">در این حالت نام کاربری و رمز ذخیره نمی‌شود. مطمئن شوید حسابِ Application Pool در IIS
+            (یا کاربرِ واردشده، هنگام اجرای <code>php bin/console</code>) روی این دیتابیس دسترسی دارد.</p>
+        </div>
+        <div class="row" id="sqlLoginBox">
           <div><label>کاربر</label><input class="ltr" type="text" name="db_user" value="<?= h($f['db_user']) ?>"></div>
           <div><label>رمز عبور</label><input class="ltr" type="password" name="db_pass" value="<?= h($f['db_pass']) ?>"></div>
         </div>
@@ -382,9 +414,23 @@ $selfUrl = h($_SERVER['PHP_SELF'] ?? '/install.php');
     var v = document.querySelector('input[name=db_driver]:checked').value;
     var net = (v==='mysql'||v==='sqlsrv');
     document.getElementById('mysqlBox').style.display = net ? 'block' : 'none';
+    document.getElementById('winAuthBox').style.display = v==='sqlsrv' ? 'block' : 'none';
     var hint = document.getElementById('portHint');
     if (hint) hint.textContent = v==='sqlsrv' ? 'پورت پیش‌فرض SQL Server معمولاً 1433 است.'
                               : v==='mysql'  ? 'پورت پیش‌فرض MySQL برابر 3306 است.' : '';
+    // Move the port off the other driver's default when the user has not
+    // typed their own value.
+    var port = document.querySelector('input[name=db_port]');
+    if (port && (port.value==='' || port.value==='3306' || port.value==='1433')) {
+      port.value = v==='sqlsrv' ? '1433' : '3306';
+    }
+    tgAuth();
+  }
+  function tgAuth(){
+    var v = document.querySelector('input[name=db_driver]:checked').value;
+    var win = document.getElementById('winAuth');
+    var on = v==='sqlsrv' && win && win.checked;
+    document.getElementById('sqlLoginBox').style.display = on ? 'none' : 'flex';
   }
   function tgData(){document.getElementById('sqlBox').style.display =
     document.getElementById('dataMode').value==='sql'?'block':'none';}

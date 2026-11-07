@@ -47,8 +47,17 @@ try {
         case 'install':
             $migrator->fresh();
             $seeder->run();
+            // Write the same lock the web installer writes, so public/install.php
+            // refuses to re-run (and wipe this database) on a CLI-installed
+            // deployment. Delete it deliberately to re-install.
+            $storage = __DIR__ . '/../storage';
+            if (!is_dir($storage)) {
+                @mkdir($storage, 0775, true);
+            }
+            @file_put_contents($storage . '/installed.lock', 'installed at ' . date('c') . PHP_EOL);
             $line('✓ نصب کامل شد: جداول ساخته و داده‌های نمونه بارگذاری شدند.');
             $line('  کاربر نمونه: milad.heydari / password');
+            $line('  ⚠ اگر فایل public/install.php را روی سرور دارید، حذفش کنید.');
             break;
 
         default:
